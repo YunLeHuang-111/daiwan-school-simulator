@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#254c3e">
+  <meta name="description" content="從會考開始，寫下你的高中職與大學升學故事。">
+  <title>呆丸升學模擬｜你的下一站，由你決定</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a href="/" class="brand" aria-label="呆丸升學模擬首頁"><span class="brand-mark">呆</span><span>呆丸升學模擬<small>TAIWAN · NEXT CHAPTER</small></span></a>
+    <div class="header-actions"><span id="save-status" role="status">你的故事，從這裡開始</span><button id="help-button" class="text-button">遊戲說明</button><button id="restart-button" class="text-button" hidden>重新開始</button></div>
+  </header>
+  <main id="app" tabindex="-1"></main>
+  <footer><span>每條路，都有自己的風景。</span><span>虛構校名 · 遊戲模擬規則 · 本機自動存檔</span></footer>
+  <dialog id="help-dialog"><div class="dialog-content"><span class="eyebrow">HOW TO PLAY</span><h2>選擇，會慢慢變成你的樣子。</h2><p>先回答 18 道學科、常識與生活應用題，再完成一個寫作小任務。成績會換算為遊戲版會考積分，選填最多五個高中職志願。</p><p>高中職共有六學期，每學期三回合。分配三格行動、處理事件、領取成長點，累積專長與學習歷程。高三上結算升學排名與學測，高三下準備申請，最後選擇繁星、申請或分科。</p><p>會考滿分 36、學測每科最高 15、分科每科最高 60。繁星、個申與分發採簡化玩法，與現實招生規則不同。學校與科系為示範資料，不是全臺完整招生清單。高中職皆可遊玩本作的一般大學升學路線，技專統測尚未加入。</p><p>進度存在此瀏覽器，重新整理可以繼續。清除網站資料或更換瀏覽器不會保留。請使用 Java 啟動，勿直接雙擊 HTML。</p><button id="close-help" class="primary">開始我的故事</button></div></dialog>
+  <dialog id="restart-dialog"><div class="dialog-content"><h2>開始一段新的旅程？</h2><p>目前的遊戲進度將被清除。</p><div class="button-row"><button id="cancel-restart" class="secondary">繼續這段故事</button><button id="confirm-restart" class="primary">確定重新開始</button></div></div></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
