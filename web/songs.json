@@ -1,0 +1,227 @@
+[
+  {
+    "id": "song0",
+    "title": "倔強",
+    "artist": "五月天",
+    "excerpt": "逆風的方向",
+    "group": "band"
+  },
+  {
+    "id": "song1",
+    "title": "聽海",
+    "artist": "張惠妹",
+    "excerpt": "寫信告訴我今天",
+    "group": "female"
+  },
+  {
+    "id": "song2",
+    "title": "天黑黑",
+    "artist": "孫燕姿",
+    "excerpt": "我的小時候",
+    "group": "female"
+  },
+  {
+    "id": "song3",
+    "title": "勇氣",
+    "artist": "梁靜茹",
+    "excerpt": "終於做了這個決定",
+    "group": "female"
+  },
+  {
+    "id": "song4",
+    "title": "倒帶",
+    "artist": "蔡依林",
+    "excerpt": "我受夠了等待",
+    "group": "female"
+  },
+  {
+    "id": "song5",
+    "title": "戀人未滿",
+    "artist": "S.H.E",
+    "excerpt": "再靠近一點點",
+    "group": "group"
+  },
+  {
+    "id": "song6",
+    "title": "十年",
+    "artist": "陳奕迅",
+    "excerpt": "如果那兩個字",
+    "group": "male"
+  },
+  {
+    "id": "song7",
+    "title": "江南",
+    "artist": "林俊傑",
+    "excerpt": "風到這裡就是黏",
+    "group": "male"
+  },
+  {
+    "id": "song8",
+    "title": "小情歌",
+    "artist": "蘇打綠",
+    "excerpt": "這是一首簡單的",
+    "group": "band"
+  },
+  {
+    "id": "song9",
+    "title": "小幸運",
+    "artist": "田馥甄",
+    "excerpt": "我聽見雨滴落在",
+    "group": "female"
+  },
+  {
+    "id": "song10",
+    "title": "愛人錯過",
+    "artist": "告五人",
+    "excerpt": "我肯定在幾百年前",
+    "group": "band"
+  },
+  {
+    "id": "song11",
+    "title": "浪子回頭",
+    "artist": "茄子蛋",
+    "excerpt": "菸一支一支一支的點",
+    "group": "band"
+  },
+  {
+    "id": "song12",
+    "title": "以後別做朋友",
+    "artist": "周興哲",
+    "excerpt": "習慣聽你分享",
+    "group": "male"
+  },
+  {
+    "id": "song13",
+    "title": "如果可以",
+    "artist": "韋禮安",
+    "excerpt": "你的聲音",
+    "group": "male"
+  },
+  {
+    "id": "song14",
+    "title": "想見你想見你想見你",
+    "artist": "八三夭",
+    "excerpt": "當愛情遺忘成遺跡",
+    "group": "band"
+  },
+  {
+    "id": "song15",
+    "title": "愛我別走",
+    "artist": "張震嶽",
+    "excerpt": "我到了這個時候",
+    "group": "male"
+  },
+  {
+    "id": "song16",
+    "title": "普通朋友",
+    "artist": "陶喆",
+    "excerpt": "我隨時隨地在等待",
+    "group": "male"
+  },
+  {
+    "id": "song17",
+    "title": "唯一",
+    "artist": "王力宏",
+    "excerpt": "我的天空多麼的清晰",
+    "year": 2001,
+    "group": "male"
+  },
+  {
+    "id": "song18",
+    "title": "年少有為",
+    "artist": "李榮浩",
+    "excerpt": "電視一直閃",
+    "group": "male"
+  },
+  {
+    "id": "song19",
+    "title": "泡沫",
+    "artist": "鄧紫棋",
+    "excerpt": "陽光下的泡沫",
+    "group": "female"
+  },
+  {
+    "id": "song20",
+    "title": "王妃",
+    "artist": "蕭敬騰",
+    "excerpt": "搖晃的紅酒杯",
+    "group": "male"
+  },
+  {
+    "id": "song21",
+    "title": "曖昧",
+    "artist": "楊丞琳",
+    "excerpt": "曖昧讓人受盡委屈",
+    "group": "female"
+  },
+  {
+    "id": "song22",
+    "title": "不得不愛",
+    "artist": "潘瑋柏與弦子",
+    "excerpt": "天天都需要你愛",
+    "group": "duet"
+  },
+  {
+    "id": "song23",
+    "title": "隱形的翅膀",
+    "artist": "張韶涵",
+    "excerpt": "都在徘徊孤單中堅強",
+    "group": "female"
+  },
+  {
+    "id": "song24",
+    "title": "忘情水",
+    "artist": "劉德華",
+    "excerpt": "曾經年少愛追夢",
+    "group": "male"
+  },
+  {
+    "id": "song25",
+    "title": "吻別",
+    "artist": "張學友",
+    "excerpt": "前塵往事成雲煙",
+    "group": "male"
+  },
+  {
+    "id": "song26",
+    "title": "紅豆",
+    "artist": "王菲",
+    "excerpt": "還沒好好的感受",
+    "group": "female"
+  },
+  {
+    "id": "song27",
+    "title": "至少還有你",
+    "artist": "林憶蓮",
+    "excerpt": "我怕來不及",
+    "group": "female"
+  },
+  {
+    "id": "song28",
+    "title": "當",
+    "artist": "動力火車",
+    "excerpt": "當山峰沒有稜角",
+    "group": "band"
+  },
+  {
+    "id": "song29",
+    "title": "挪威的森林",
+    "artist": "伍佰",
+    "excerpt": "讓我將你心兒摘下",
+    "group": "band"
+  },
+  {
+    "id": "song30",
+    "title": "稻香",
+    "artist": "周杰倫",
+    "excerpt": "家是唯一的城堡",
+    "group": "male"
+  },
+  {
+    "id": "song31",
+    "title": "後來",
+    "artist": "劉若英",
+    "excerpt": "後來我總算學會了",
+    "group": "female"
+  }
+]

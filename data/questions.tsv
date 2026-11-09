@@ -1,0 +1,662 @@
+# id|subject|difficulty|theme|type|text|left|options|answer|explanation
+v3q0|國文|1|作家點名|choice|《背影》裡，父親爬過月台買橘子的身影出自誰的筆下？|-|徐志摩~魯迅~余光中~朱自清|3|《背影》的作者是朱自清。
+v3q1|國文|1|文學穿越|choice|想拜訪寫出《桃花源記》的作家，你應搭時光機找誰？|-|李白~陶淵明~蘇軾~韓愈|1|陶淵明是東晉詩人，也是《桃花源記》的作者。
+v3q2|國文|1|字形抓包|choice|哪張校慶海報沒有寫錯字？|-|再接再利~再接再厲~再接再勵~再接再力|1|正確字形是「再接再厲」，意思是持續努力。
+v3q3|國文|2|字音挑戰|choice|主持人說「這場演出令人咋舌」，「咋」讀作？|-|ㄗㄜˊ~ㄗㄚ~ㄗㄨㄛˋ~ㄓㄚˋ|0|「咋舌」的「咋」讀ㄗㄜˊ，形容驚訝。
+v3q4|國文|2|中文歌×文學|choice|歌名「但願人長久」聯想到的名句，出自哪位宋代文人？|-|蘇軾~辛棄疾~歐陽脩~李清照|0|「但願人長久」出自蘇軾《水調歌頭》。
+v3q5|國文|1|腦筋急轉彎|choice|什麼「書」不能用來閱讀，卻能代表一件事沒成功？|-|秘書~證書~輸~圖書|2|這是「書／輸」同音的語言遊戲，不是正式字義。
+v3q6|國文|1|文學史選角|choice|電影要找「盛唐、浪漫、常被稱為詩仙」的主角，最適合誰？|-|陸游~白居易~杜甫~李白|3|李白常被稱為詩仙；杜甫常被稱為詩聖。
+v3q7|國文|2|新詩與地名|choice|以《再別康橋》著名、曾赴英國求學的詩人是？|-|鄭愁予~洛夫~徐志摩~戴望舒|2|《再別康橋》的作者是徐志摩。
+v3q8|國文|2|作家與時代|choice|小說《阿Q正傳》是哪位作家的作品？|-|魯迅~巴金~沈從文~老舍|0|《阿Q正傳》由魯迅創作，以諷刺手法描寫人物與社會。
+v3q9|國文|3|臺灣文學|choice|想讀描寫臺灣日治時期社會的《一桿稱仔》，應找誰的作品？|-|張愛玲~賴和~余光中~徐志摩|1|《一桿稱仔》是賴和的代表小說之一。
+v3q10|國文|2|成語接劇情|choice|角色只聽見一點消息，就加油添醋到處說，最接近哪個成語？|-|不恥下問~以訛傳訛~按部就班~見微知著|1|未經查證的錯誤訊息輾轉流傳，是以訛傳訛。
+v3q11|國文|3|字形抓包|choice|校刊要寫「這份友情很珍貴」，哪個詞的用字正確？|-|漠逆之交~莫匿之交~莫逆之交~莫溺之交|2|「莫逆之交」形容心意相投的好友。
+v3q12|國文|2|作家配對|match|把作品送回正確的作家書架。|背影~桃花源記~再別康橋~目送|徐志摩~朱自清~陶淵明~龍應台|1,2,0,3|背影—朱自清；桃花源記—陶淵明；再別康橋—徐志摩。
+v3q13|國文|2|詩人稱號|match|幫文學社的角色卡配上稱號。|李白~杜甫~蘇軾~李清照|東坡居士~詩仙~詩聖~易安居士|1,2,0,3|李白—詩仙；杜甫—詩聖；蘇軾—東坡居士。
+v3q14|國文|2|時代配對|match|這些作家來自哪個時代？|陶淵明~李白~蘇軾~屈原|唐~宋~東晉~戰國|2,0,1,3|陶淵明—東晉；李白—唐；蘇軾—宋。
+v3q15|國文|1|文學短答|fill|《背影》的作者是誰？請輸入中文姓名。|-|-|朱自清|《背影》的作者是朱自清。
+v3q16|國文|2|歌詞的古典來源|fill|《水調歌頭》中「但願人長久」的作者是誰？|-|-|蘇軾/苏轼/蘇東坡/苏东坡|蘇軾，號東坡居士。
+v3q21|英文|1|Movie night|choice|A boy discovers he is a wizard and attends Hogwarts. Which film series?|-|Harry Potter~Star Wars~Jurassic Park~Frozen|0|Hogwarts is the school in Harry Potter.
+v3q22|英文|1|Movie plot|choice|A huge ship hits an iceberg. Jack and Rose fall in love aboard it. Which film?|-|La La Land~Avatar~Titanic~Interstellar|2|The ship and the characters point to Titanic.
+v3q23|英文|1|Movie plot|choice|A theme park brings dinosaurs back to life, but the animals escape. Which film?|-|Jurassic Park~Coco~The Matrix~Toy Story|0|Jurassic Park features a dinosaur theme park.
+v3q24|英文|2|Movie clues|choice|A thief enters dreams to steal secrets. A spinning top becomes a famous clue. Which film?|-|The Truman Show~Gladiator~Jaws~Inception|3|Inception follows a team working inside dreams.
+v3q25|英文|2|Movie twist|choice|A man learns his entire life has secretly been a television show. Which film?|-|The Dark Knight~The Truman Show~Up~Inside Out|1|The Truman Show follows Truman discovering the truth about his world.
+v3q26|英文|2|Animation night|choice|A young musician visits the Land of the Dead and learns about his family. Which film?|-|Zootopia~Coco~Finding Nemo~Shrek|1|Coco connects music, family memories and the Land of the Dead.
+v3q27|英文|2|Movie vocabulary|choice|A review says “The plot twist caught me off guard.” The twist was…|-|unfinished~silent~predictable~surprising|3|Caught me off guard means it was unexpected.
+v3q28|英文|3|Movie logic|choice|“Not every superhero wears a cape.” Which statement follows?|-|Some superheroes do not wear capes~All heroes wear capes~Every cape belongs to a hero~No superhero has a cape|0|Not every means at least one exception exists.
+v3q29|英文|3|TV subtitles|choice|“I would have called you if I had known.” What is implied?|-|The speaker did know~The speaker did not know~The call certainly happened~The phone was new|1|This is a counterfactual statement about the past.
+v3q30|英文|1|Song vocabulary|choice|A song describes someone as “fearless”. The closest meaning is…|-|always late~without fear~without music~very sleepy|1|The suffix -less means without.
+v3q31|英文|1|Movie plot|choice|Two sisters, Elsa and Anna, live in a kingdom affected by magical ice. Which film?|-|Moana~Tangled~Frozen~Brave|2|Elsa and Anna are the sisters in Frozen.
+v3q32|英文|2|Film matching|match|Match each plot clue to a movie.|Wizard school~A dinosaur park~Life as a secret TV show~A ring must be destroyed in a volcano|Jurassic Park~The Truman Show~Harry Potter~The Lord of the Rings|2,0,1,3|Hogwarts—Harry Potter; dinosaurs—Jurassic Park; secret TV life—The Truman Show.
+v3q33|英文|2|Movie vocabulary|match|Pair the words with their meanings.|sequel~soundtrack~plot twist~protagonist|劇情轉折~續集~原聲帶~主角|1,2,0,3|Sequel:續集；soundtrack:原聲帶；plot twist:劇情轉折。
+v3q34|英文|2|Music words|match|Pair the music words.|chorus~lyrics~rhythm~ballad|節奏~副歌~歌詞~抒情歌|1,2,0,3|Chorus:副歌；lyrics:歌詞；rhythm:節奏。
+v3q38|數學|2|動漫邏輯|choice|小隊三人只有一人說真話：甲說寶箱在左；乙說不在左；丙說在中。可以確定？|-|一定在右~在左~在中~不在中，但左右未定|3|甲乙互為否定，恰一真；所以丙必假，只能排除中。
+v3q39|數學|1|電影時間線|choice|時間旅行先回到1995年，再前進17年，最後倒退8年，停在哪一年？|-|2012~1986~2004~2008|2|1995＋17－8＝2004。
+v3q41|數學|2|偵探密碼|choice|數列2、6、12、20、30，下一個數字是？|-|40~42~44~60|1|差為4、6、8、10，下一差12，所以42。
+v3q43|數學|1|座位推理|choice|甲在乙左邊、丙在乙右邊，三人坐一排。由左至右是？|-|丙乙甲~甲丙乙~甲乙丙~乙甲丙|2|由兩項相對位置可排出甲、乙、丙。
+v3q45|數學|1|遊戲保底|choice|抽卡前四抽沒中，第五抽保證中。若只問第五抽是否中，答案是？|-|還是原始機率~必定中~一定不中~無法依規則判斷|1|題目已設定第五抽保證中，應依保底條件判斷。
+v3q47|數學|2|票房推理|choice|票價漲20%，人數少20%，總票房變化？|-|不變~減少40%~增加4%~減少4%|3|1.2×0.8＝0.96，減少4%。
+v3q48|數學|2|規則配合|match|把校園情境配上計算結果。|邊長6的正方形面積~2x＋3＝11的x~80元打75折~兩股3與4的直角三角形斜邊|60元~36平方單位~4~5|1,2,0,3|正方形面積6²＝36；2x＝8，所以x＝4；80×0.75＝60。
+v3q49|數學|2|數列密碼|match|配上每個數列的下一項。|1,4,9,16,…~3,6,12,24,…~2,5,8,11,…~1,1,2,3,5,…|14~25~48~8|1,2,0,3|依序是平方數、乘2、公差3。
+v3q51|數學|1|密碼短答|fill|密碼數列3、6、12、24，下一項？只填數字。|-|-|48|每項乘2，下一項48。
+v3q52|數學|1|音樂短答|fill|一小節4拍、共7小節，總共幾拍？只填數字。|-|-|28|4×7＝28拍。
+v3q54|自然|2|科學家成就|choice|哪位科學家曾獲諾貝爾物理獎與化學獎，研究放射性？|-|伽利略~居禮夫人~牛頓~達爾文|1|瑪麗・居禮分別於1903與1911年獲物理與化學獎。
+v3q55|自然|1|電影中的科學|choice|太空船外接近真空，爆炸聲為何不能像在空氣中傳播？|-|太空沒有光~所有聲音都變成電流~聲音太冷~聲波需要介質|3|聲音是機械波，需要介質。
+v3q56|自然|2|偵探與科學|choice|要比較兩杯飲料是否影響植物生長，最重要的是？|-|控制其他條件並設對照組~每天改植物種類~只看廣告~只挑最好看的盆栽|0|要讓飲料成為主要差異，並保留可比較的對照。
+v3q57|自然|1|演化故事|choice|《物種起源》最常與哪位科學家連結？|-|達爾文~法拉第~孟德爾~波耳|0|達爾文以自然選擇解釋演化，《物種起源》是其代表作。
+v3q58|自然|3|科學家冷知識|choice|愛因斯坦獲1921年諾貝爾物理獎，特別表彰哪項工作？|-|發現DNA雙股螺旋~相對論是唯一理由~光電效應定律~發明電話|2|授獎理由特別提到光電效應定律。
+v3q59|自然|2|科學家配對|match|將科學家與代表性研究配對。|牛頓~達爾文~孟德爾~居禮夫人|遺傳規律~運動定律~自然選擇~放射性研究|1,2,0,3|牛頓—運動定律；達爾文—自然選擇；孟德爾—遺傳規律。
+v3q60|自然|2|看電影學科學|match|配上科學概念。|真空不能傳一般聲波~杯外出現水珠~煞車身體向前~彩虹的形成|凝結~慣性~聲音需介質~折射與色散|2,0,1,3|分別對應聲音需介質、凝結與慣性。
+v3q61|自然|2|科學家短答|fill|研究豌豆、被稱為遺傳學之父的科學家姓氏？|-|-|孟德爾/孟德尔/Mendel|孟德爾透過豌豆實驗研究遺傳規律。
+v3q62|歷史|2|國王與皇帝|choice|法國「太陽王」最常指哪一位君主？|-|亨利八世~路易十四~拿破崙三世~查理一世|1|太陽王指法國路易十四。
+v3q63|歷史|2|帝國選角|choice|以滑鐵盧戰役作為結局的歷史電影，主角最可能是？|-|凱撒~查理曼~亞歷山大~拿破崙|3|拿破崙在1815年的滑鐵盧戰役失敗。
+v3q64|歷史|2|臺灣年代|choice|1895年臺灣割讓給日本，相關條約是？|-|馬關條約~凡爾賽條約~洛桑條約~南京條約|0|清日甲午戰爭後簽訂馬關條約。
+v3q65|歷史|1|臺灣旅行|choice|到臺南安平古堡，最直接連結到哪段早期歷史？|-|荷蘭東印度公司在臺活動~英國統治臺灣~羅馬帝國殖民臺灣~西班牙統治京都|0|安平古堡原址與荷蘭時期熱蘭遮城相關。
+v3q66|歷史|1|歷史劇抓錯|choice|秦始皇的歷史定位，哪個正確？|-|主持維也納會議~建立清朝~統一六國並稱皇帝~制定英國大憲章|2|秦始皇統一六國，建立秦朝。
+v3q67|歷史|3|王室與宗教|choice|英王亨利八世與羅馬教廷決裂，最密切相關的是？|-|美國南北戰爭~日本明治維新~英格蘭宗教改革~法國大革命|2|亨利八世時期王權與教廷決裂，是英格蘭宗教改革的關鍵。
+v3q68|歷史|2|時代排序|choice|下列何者最早？|-|文藝復興在義大利興起~第一次世界大戰~冷戰開始~法國大革命|0|文藝復興在其他選項之前。
+v3q69|歷史|2|臺灣人物|choice|以霧社事件為主題的電影，常提到哪位賽德克族領袖？|-|莫那・魯道~蔣渭水~林獻堂~鄭成功|0|莫那・魯道是霧社事件的重要人物。
+v3q70|歷史|2|君主配對|match|幫歷史劇安排正確角色。|路易十四~秦始皇~亨利八世~彼得大帝|英格蘭／都鐸王朝~法國／太陽王~中國／統一六國~俄羅斯／西化改革|1,2,0,3|路易十四—法國；秦始皇—秦；亨利八世—英格蘭都鐸王朝。
+v3q71|歷史|2|臺灣時光機|match|配上相應事件。|1895年~1930年~1996年~1987年|霧社事件~首次總統直接民選~馬關條約割臺~臺灣解嚴|2,0,1,3|1895割臺、1930霧社事件、1996首次總統直選。
+v3q72|歷史|2|文明配合|match|這些地標最直接連結哪個文明？|古羅馬競技場~吉薩金字塔~馬丘比丘~帕德嫩神廟|印加~古羅馬~古埃及~古希臘|1,2,0,3|競技場—羅馬；金字塔—埃及；馬丘比丘—印加。
+v3q73|歷史|2|臺灣歷史短答|fill|臺灣第一次總統直接民選是哪一年？填西元四位數。|-|-|1996|1996年舉行首次總統直接民選。
+v3q74|歷史|1|君主短答|fill|被稱為「太陽王」的法國君主是路易幾世？只填阿拉伯數字。|-|-|14|路易十四。
+v3q75|地理|2|首都盲盒|choice|澳洲的首都是？|-|坎培拉~伯斯~雪梨~墨爾本|0|澳洲首都是坎培拉，並非雪梨。
+v3q76|地理|1|地標旅行|choice|想看泰姬瑪哈陵，應飛往哪個國家？|-|土耳其~泰國~伊朗~印度|3|泰姬瑪哈陵位於印度阿格拉。
+v3q77|地理|1|日本旅行|choice|日本國會議事堂所在的首都是？|-|大阪~京都~東京~札幌|2|日本首都為東京。
+v3q78|地理|1|臺灣景點|choice|日月潭位於哪個縣？|-|嘉義縣~花蓮縣~南投縣~宜蘭縣|2|日月潭位於南投縣魚池鄉。
+v3q79|地理|1|臺灣鐵道|choice|搭小火車看森林與日出，阿里山主要位於哪個縣？|-|臺東縣~苗栗縣~嘉義縣~雲林縣|2|阿里山位於嘉義縣。
+v3q80|地理|2|歐洲美術館|choice|羅浮宮所在城市是？|-|羅馬~巴黎~馬德里~倫敦|1|羅浮宮位於法國巴黎。
+v3q81|地理|3|首都反直覺|choice|巴西的首都是？|-|里約熱內盧~聖保羅~巴西利亞~布宜諾斯艾利斯|2|巴西利亞是巴西首都。
+v3q82|地理|2|臺灣地形|choice|臺灣最高峰玉山主峰所在的山脈是？|-|玉山山脈~中央山脈~雪山山脈~海岸山脈|0|玉山主峰屬玉山山脈。
+v3q83|地理|2|首都配對|match|把旅遊明信片送往正確首都。|澳洲~加拿大~日本~巴西|東京~渥太華~坎培拉~巴西利亞|2,1,0,3|澳洲—坎培拉；加拿大—渥太華；日本—東京。
+v3q84|地理|2|地標配對|match|把地標與所在國家配對。|艾菲爾鐵塔~泰姬瑪哈陵~比薩斜塔~吳哥窟|義大利~法國~印度~柬埔寨|1,2,0,3|鐵塔—法國；泰姬瑪哈陵—印度；比薩斜塔—義大利。
+v3q85|地理|2|臺灣旅行配合|match|把景點與縣市配對。|日月潭~安平古堡~九份~太魯閣|新北市~南投縣~臺南市~花蓮縣|1,2,0,3|日月潭—南投；安平古堡—臺南；九份—新北。
+v3q86|地理|1|首都短答|fill|日本首都是哪座城市？可填中文或英文。|-|-|東京/东京/Tokyo|東京（Tokyo）。
+v3q87|地理|1|臺灣地名短答|fill|日月潭位於哪個縣？可省略「縣」。|-|-|南投/南投縣/南投县|南投縣。
+v3q88|公民|1|臺灣政治|choice|總統、副總統目前的任期是？|-|4年~5年~6年~2年|0|總統、副總統任期四年，連選得連任一次。
+v3q89|公民|2|親屬關係|choice|你的哥哥與你，在民法親屬分類中屬於？|-|直系血親~旁系血親~姻親~沒有親屬關係|1|兄弟姊妹不是彼此所從出，屬旁系血親。
+v3q90|公民|1|駕照暖身|choice|沒有另行允許的號誌時，紅燈可以直接右轉嗎？|-|只有晚上可以~確認沒車就可以~機車可以汽車不行~不可以|3|紅燈應依號誌停等，不可自行認定無車便右轉。
+v3q91|公民|1|路口實境|choice|行人正在行人穿越道通過，駕駛應？|-|停讓行人通過~只看後車有沒有催促~按喇叭要求讓路~加速搶先|0|車輛應停讓穿越中的行人。
+v3q92|公民|2|臺灣政治配角|choice|中央政府中，主要負責議決法律案的機關是？|-|考試院~監察院~中央銀行~立法院|3|立法院是我國最高立法機關。
+v3q93|公民|3|親等推理|choice|你和親兄弟姊妹的血親親等是？|-|一親等~二親等~三親等~四親等|1|經共同父或母上行一代再下行一代，共二親等。
+v3q94|公民|2|生活法律|choice|民法成年年齡自2023年起為？|-|21歲~16歲~18歲~20歲|2|民法成年年齡自2023年起調整為18歲。
+v3q95|公民|2|角色關係|choice|你和「配偶的父母」的關係，最接近？|-|姻親~彼此一定沒有親屬關係~直系血親~旁系血親|0|配偶的血親屬姻親範圍。
+v3q96|公民|2|親屬配對|match|把親屬關係分類。|父母與子女~兄弟姊妹~配偶的父母~本人與配偶|姻親~直系血親~旁系血親~配偶關係（非血親或姻親）|1,2,0,3|父母子女—直系血親；手足—旁系血親；配偶父母—姻親。
+v3q97|公民|2|憲政配合|match|配上中央機關的主要角色。|行政院~立法院~考試院~司法院|議決法律案~中央最高行政機關~國家考試相關職權~司法最高機關|1,0,2,3|行政院負責行政；立法院立法；考試院掌理考試等職權。
+v3q98|公民|2|路口配合|match|配上基本交通燈號的意義。|圓形紅燈~圓形綠燈~閃光紅燈~閃光黃燈|可依規定通行仍須注意~停等~停車再開並注意安全~減速注意並小心通行|1,0,2,3|綠燈並非可忽略行人與路況；閃紅須停車再開。
+v3q99|公民|1|政治短答|fill|總統任期幾年？只填阿拉伯數字。|-|-|4|任期四年。
+v3q100|公民|2|法律短答|fill|民法成年年齡幾歲？只填阿拉伯數字。|-|-|18|2023年起民法成年年齡為18歲。
+v3q101|物理|1|太空電影|choice|太空接近真空，無法像空氣中直接傳播的是？|-|聲音~光~電磁波~可見光|0|機械聲波需要介質。
+v3q102|物理|1|科學家|choice|運動三定律最常與誰連結？|-|拉瓦節~牛頓~達爾文~孟德爾|1|牛頓提出經典力學運動定律。
+v3q103|物理|2|遊戲螢幕|choice|120 Hz螢幕每次更新約需幾毫秒？|-|16.7~8.3~120~60|1|1000／120約8.3毫秒。
+v3q104|物理|3|音樂頻率|choice|同頻率聲波在更快的介質中傳播，波長會？|-|變短~歸零~頻率必定翻倍~變長|3|v＝fλ，頻率不變時波速變快則波長變長。
+v3q105|物理|1|鏡頭光學|choice|平面鏡中的像通常是？|-|正立虛像~倒立實像~永遠放大~一定在鏡前成實像|0|平面鏡形成正立、等大的虛像。
+v3q106|物理|1|煞車場景|choice|急煞時身體向前，最主要是？|-|空氣吸力~慣性~磁場消失~重力變成零|1|身體傾向維持原來的運動狀態。
+v3q107|物理|2|科學單位|match|將物理量與單位配對。|力~能量~頻率~電阻|赫茲~牛頓~焦耳~歐姆|1,2,0,3|力—牛頓；能量—焦耳；頻率—赫茲。
+v3q108|物理|2|公式配合|match|配上關係式。|速度~密度~電流~壓力|電量除以時間~路程除以時間~質量除以體積~力除以受力面積|1,2,0,3|v＝s／t；ρ＝m／V；I＝Q／t。
+v3q109|物理|2|光學與聲音|match|配上現象。|平面鏡~杯中吸管看似彎折~山谷回聲~天氣冷時對鏡子呵氣有霧|聲音反射~光的反射~光的折射~水蒸氣凝結|1,2,0,3|鏡像—反射；吸管—折射；回聲—聲反射。
+v3q111|物理|1|速度短答|fill|跑者10秒跑100公尺，平均速度每秒幾公尺？只填數字。|-|-|10|100／10＝10。
+v3q112|化學|2|科學家|choice|提出質量守恆、常被稱為近代化學之父的是？|-|牛頓~伽利略~達爾文~拉瓦節|3|拉瓦節對質量守恆與近代化學有重要貢獻。
+v3q113|化學|1|廚房化學|choice|食鹽主要成分NaCl由哪些元素組成？|-|鈉與氯~氮與碳~鈉與碳~鎳與氯|0|Na為鈉，Cl為氯。
+v3q114|化學|1|氣泡飲料|choice|汽水開瓶冒出的主要氣體是？|-|氦氣~氧氣~氫氣~二氧化碳|3|加壓溶解的二氧化碳在開瓶降壓後逸出。
+v3q115|化學|1|燃燒偵探|choice|蠟燭燃燒通常屬於？|-|元素憑空消失~完全沒有能量變化~只有物理變化~化學變化|3|燃燒產生新物質，並釋放能量。
+v3q116|化學|3|酸鹼判讀|choice|25°C下，pH為3與pH為5的水溶液，前者氫離子濃度約為後者？|-|10倍~100倍~一半~2倍|1|pH每差1代表氫離子濃度差10倍。
+v3q117|化學|2|分離道具|choice|想從鹽水取得鹽，最直接的基本方法？|-|蒸發水分~磁鐵吸水~靜置就變純鹽~用普通濾紙濾掉溶解鹽|0|蒸發水分可使鹽留下或結晶。
+v3q118|化學|2|元素配對|match|把符號與元素配對。|Na~Fe~O~Cu|氧~鈉~鐵~銅|1,2,0,3|Na鈉；Fe鐵；O氧。
+v3q119|化學|2|物質配合|match|把常見化學式與名稱配對。|H₂O~CO₂~NaCl~NH₃|氯化鈉~水~二氧化碳~氨|1,2,0,3|H₂O水；CO₂二氧化碳；NaCl氯化鈉。
+v3q120|化學|2|實驗器材|match|為任務配上工具。|分離不溶固體~量取液體體積~測溫度~精確測量液體酸鹼值|溫度計~濾紙漏斗~量筒~pH計|1,2,0,3|過濾用濾紙漏斗；體積用量筒；溫度用溫度計。
+v3q121|化學|2|元素短答|fill|金的元素符號？注意化學符號但大小寫皆接受。|-|-|Au|金的符號是Au。
+v3q122|化學|2|原子短答|fill|碳的原子序是幾？只填數字。|-|-|6|碳的原子序為6。
+v3q123|生物|1|遺傳學家|choice|用豌豆研究遺傳規律的科學家是？|-|法拉第~波耳~孟德爾~牛頓|2|孟德爾的豌豆實驗建立經典遺傳規律。
+v3q124|生物|1|演化電影|choice|《物種起源》的作者是？|-|愛因斯坦~居禮夫人~拉瓦節~達爾文|3|達爾文提出自然選擇等演化觀點。
+v3q125|生物|1|植物技能|choice|植物光合作用主要把光能轉為？|-|有機物中的化學能~聲能~核能~憑空消失|0|光合作用將能量儲存在有機物中。
+v3q126|生物|2|人體副本|choice|一般人體細胞產生大量ATP的胞器主要是？|-|大液泡~粒線體~細胞壁~葉綠體|1|粒線體參與有氧呼吸與ATP生成。
+v3q128|生物|2|生態關卡|choice|把外來物種隨意放入野外，主要風險是？|-|可能競爭資源、破壞生態~必定改善水質~不可能繁殖~一定幫助所有原生種|0|外來種可能造成競爭、掠食或疾病等影響。
+v3q129|生物|2|胞器配合|match|配上主要功能。|細胞核~粒線體~葉綠體~核糖體|光合作用~保存主要遺傳訊息~參與有氧呼吸~蛋白質合成|1,2,0,3|核保存主要遺傳訊息；粒線體參與呼吸；葉綠體光合作用。
+v3q130|生物|2|科學家配合|match|人物與研究配對。|孟德爾~達爾文~巴斯德~摩根|微生物與巴斯德消毒法~豌豆遺傳~自然選擇~果蠅染色體研究|1,2,0,3|孟德爾遺傳；達爾文自然選擇；巴斯德微生物研究。
+v3q131|生物|2|生態角色|match|配上生態系中的角色。|綠色植物~草食動物~分解有機物的真菌~生產者固定日光能|分解者~生產者~消費者~光能轉為化學能|1,2,0,3|依主要營養方式分為生產者、消費者與分解者。
+v3q133|生物|2|人體短答|fill|一般正常人體體細胞有幾條染色體？只填數字。|-|-|46|通常為23對，共46條。
+v3q134|常識|1|日本動漫|choice|想找魯夫的冒險，應打開哪部作品？|-|鬼滅之刃~ONE PIECE 航海王~火影忍者~名偵探柯南|1|魯夫是《ONE PIECE 航海王》的主角。
+v3q135|常識|1|日本動漫|choice|安妮亞、間諜爸爸與殺手媽媽，出自？|-|進擊的巨人~排球少年~SPY×FAMILY 間諜家家酒~灌籃高手|2|安妮亞是《SPY×FAMILY》的主要角色。
+v3q136|常識|2|動漫道具|choice|《死亡筆記本》最關鍵的超自然道具是？|-|能任意傳送的門~可以長生的仙豆~會變大的竹蜻蜓~寫上名字會造成死亡的筆記本|3|作品以死亡筆記本及其規則推動推理。
+v3q137|常識|1|臺灣小旅行|choice|被稱為「天燈故鄉」、常見放天燈活動的地區是？|-|平溪~墾丁~鹿港~安平|0|平溪位於新北市，以天燈活動聞名。
+v3q138|常識|1|動漫籃球|choice|櫻木花道與流川楓最直接聯想到？|-|頭文字D~灌籃高手~網球王子~足球小將翼|1|兩人是《灌籃高手》湘北隊角色。
+v3q139|藝術|1|藝術品尋人|choice|《蒙娜麗莎》的作者是？|-|莫內~米開朗基羅~達文西~梵谷|2|《蒙娜麗莎》由李奧納多・達文西創作。
+v3q140|藝術|1|名畫旅行|choice|《星夜》最常與哪位畫家連結？|-|畢卡索~拉斐爾~安迪沃荷~梵谷|3|《星夜》是梵谷的著名作品。
+v3q141|藝術|2|流派辨識|choice|《印象・日出》與哪個流派最直接相關？|-|印象派~立體派~超現實主義~巴洛克|0|莫內的《印象・日出》與印象派命名相關。
+v3q142|音樂|1|emoji猜歌|choice|🌾🍚🏡：哪首歌名最符合稻田與童年回憶的主題？|-|龍捲風~稻香~洋蔥~告白氣球|1|稻香以童年、稻田等意象傳達珍惜生活。
+v3q143|音樂|1|歌名謎語|choice|一種切開容易讓人流淚的蔬菜，也是一首楊宗緯演唱的歌名。|-|晴天~青花瓷~洋蔥~稻香|2|歌名是《洋蔥》。
+v4q0|時事|2|2026中職|choice|2026年中華職棒台灣大賽總冠軍是哪隊？|-|統一獅~樂天桃猿~味全龍~中信兄弟|2|2026年10月26日，味全龍以系列賽4勝2敗奪冠。查核2026-11-10；來源：中央社。
+v4q1|時事|3|2026中職|choice|2026年台灣大賽，味全龍在系列賽以幾比幾封王？|-|4比1~4比2~4比3~4比0|1|味全龍以4勝2敗擊敗中信兄弟。查核2026-11-10；中央社。
+v4q2|時事|2|2026賽事|choice|2026年台灣大賽，冠軍決定戰在何處打完？|-|臺北大巨蛋~洲際棒球場~天母棒球場~澄清湖棒球場|0|封王戰於臺北大巨蛋進行。查核2026-11-10；中央社。
+v4q3|時事|2|世界賽事|choice|2026年世界盃足球賽由哪三國共同主辦？|-|巴西阿根廷智利~美國加拿大墨西哥~美國英國加拿大~法國德國西班牙|1|2026世界盃由美國、加拿大、墨西哥合辦。FIFA。
+v4q4|時事|3|世界賽事|choice|2026年男子足球世界盃首次擴大為幾隊？|-|48~64~32~40|0|2026年起擴大為48隊。FIFA。
+v4q5|時事|2|冬季奧運|choice|2026年米蘭科爾蒂納冬奧主辦國是？|-|義大利~瑞士~奧地利~法國|0|2026冬奧在義大利舉行，主辦城市為米蘭及科爾蒂納等。
+v4q6|體育|3|雙殺推理|choice|一壘有人、無人出局，打者打出內野滾地球形成6-4-3雙殺。「6」代表哪個守位？|-|游擊手~二壘手~三壘手~中外野手|0|守位代號6為游擊手、4為二壘手、3為一壘手。
+v4q7|體育|3|棒球紀錄|choice|投手完成一場比賽，讓對手所有打者都未上壘，稱為？|-|完投敗~完全比賽~只要零失分都算無安打比賽~救援成功|1|完全比賽要求對手沒有人上壘；無安打比賽仍可能有人靠保送等上壘。
+v4q8|體育|2|計分板|choice|野手因失誤讓打者上壘，記錄通常最直接增加哪一欄？|-|HR全壘打~SO三振~H安打~E失誤|3|失誤記為E，不等於安打。
+v4q9|體育|2|棒球規則|choice|兩好球後，普通界外球（非觸擊）通常會？|-|維持兩好球~直接保送~增加一壞球~直接三振|0|兩好球後普通界外球不直接使好球數成為三；觸擊界外另有規則。
+v4q10|體育|2|打序策略|choice|指定打擊DH的主要功能是？|-|代替另一名球員打擊而不負責其守位~只能代跑~必須守中外野~可以任意多打一棒|0|DH在規則限制下代替指定球員打擊，主要不擔任守備。
+v4q11|體育|2|捕手的手套|choice|投球還沒碰到打者或地面就被捕手接住，但出棒過半沒打中，通常判？|-|觸身球~壞球~好球~一壘安打|2|打者揮棒落空通常記好球，不取決於是否在好球帶。
+v4q12|體育|2|場上站位|choice|壘包有人時，投手試圖把球傳向壘包抓回壘不及的跑者，稱為？|-|高飛犧牲打~盜壘~牽制~觸擊|2|投手向壘包傳球限制跑者離壘稱牽制。
+v4q13|體育|2|球隊企業|choice|樂天桃猿的英文隊名是？|-|CTBC Brothers~Wei Chuan Dragons~Uni-Lions~Rakuten Monkeys|3|桃猿對應Rakuten Monkeys。
+v4q14|體育|2|CPBL縮寫|choice|CPBL的P主要對應哪個英文單字？|-|Professional~Private~Player~Pacific|0|Chinese Professional Baseball League。
+v4q15|體育|2|棒球數學|choice|打者一場4打數2安打，這場打擊率是？|-|1.000~.250~.333~.500|3|安打數除以打數＝2÷4＝.500。
+v4q16|體育|2|不是打數|choice|下列何者一般不計入打數AB？|-|四壞球保送~內野安打~全壘打~被三振|0|保送不計打數，但計入打席。
+v4q17|體育|3|壘上思考|choice|一壘有人、兩人出局，打者高飛球遭接殺。跑者是否一定必須回壘才算結束半局？|-|否，打者已成第三出局，半局結束~跑者一定得分~接殺不算出局~是，沒有例外|0|接殺已造成第三出局，該半局結束。
+v4q18|體育|3|投手數據|choice|WHIP通常反映投手每局讓多少人靠哪兩種方式上壘？|-|安打與四壞保送~失誤與盜壘~觸擊與犧牲飛球~全壘打與三振|0|WHIP為（被安打＋四壞保送）除以投球局數。
+v4q19|體育|2|棒球守位|choice|記錄中的2、5、8，依序是哪三個守位？|-|捕手、二壘手、左外野手~捕手、三壘手、中外野手~投手、游擊手、右外野手~一壘手、二壘手、左外野手|1|2捕手、5三壘手、8中外野手。
+v4q20|體育|2|奪三振|choice|K通常用來記錄什麼？|-|盜壘成功~失誤~三振~全壘打|2|K為三振紀錄常用符號。
+v4q21|體育|2|規則邊界|choice|打者跑向一壘，球先到一壘手手套且守方觸壘，通常是？|-|一定安全上壘~自動二壘打~盜壘成功~封殺出局|3|打者跑者在一壘被先持球觸壘，通常出局。
+v4q22|影視|3|甄嬛傳|choice|「臣妾做不到啊」是《甄嬛傳》中哪個角色的台詞？|-|皇后宜修~華妃~甄嬛~安陵容|0|這句經典台詞由蔡少芬飾演的皇后宜修說出。
+v4q23|影視|3|甄嬛傳|choice|《甄嬛傳》中，華妃由哪位演員飾演？|-|斕曦~蔣欣~蔡少芬~孫儷|1|蔣欣飾演華妃；蔡少芬飾演皇后。
+v4q24|影視|3|甄嬛傳|choice|《甄嬛傳》中，甄嬛離宮後主要在哪座寺院修行？|-|金山寺~寒山寺~甘露寺~少林寺|2|劇情中的修行地點是甘露寺。
+v4q25|影視|3|甄嬛傳|choice|甄嬛回宮後，皇帝賜她什麼封號？|-|華妃~齊妃~端妃~熹妃|3|回宮後的甄嬛被封為熹妃。
+v4q26|影視|3|甄嬛傳|choice|《甄嬛傳》的皇帝設定最接近哪位清代君主？|-|康熙~雍正~乾隆~嘉慶|1|電視劇的皇帝設定為雍正，但劇情有大量虛構。
+v4q27|影視|3|甄嬛傳|choice|甄嬛入宮早期居住的宮苑是？|-|壽康宮~碎玉軒~翊坤宮~景仁宮|1|早期主要住在碎玉軒。
+v4q28|影視|3|甄嬛傳|choice|《甄嬛傳》中，溫實初的身分是？|-|畫師~商人~太醫~將軍|2|溫實初是太醫。
+v4q29|影視|3|甄嬛傳|choice|浣碧與甄嬛的血緣關係是？|-|表姊妹~姑姪~沒有血緣~同父異母姊妹|3|浣碧是甄嬛同父異母的妹妹。
+v4q30|影視|3|甄嬛傳|choice|《甄嬛傳》中，沈眉莊由誰飾演？|-|斕曦~陶昕然~孫儷~陳建斌|0|沈眉莊由斕曦飾演；安陵容由陶昕然飾演。
+v4q31|影視|3|甄嬛傳|choice|甄嬛身邊的姑姑崔槿汐，在劇中主要扮演什麼角色？|-|皇帝的妹妹~協助與保護甄嬛的宮中長輩~敵國公主~太醫院院使|1|槿汐是甄嬛重要的支持與協助者。
+v4q32|影視|3|琅琊榜|choice|梅長蘇在改名之前的身分是？|-|蒙摯~飛流~林殊~蕭景琰|2|梅長蘇的原名為林殊。
+v4q33|影視|3|琅琊榜|choice|劇中的靖王是誰？|-|蕭景桓~林燮~言闕~蕭景琰|3|靖王名為蕭景琰。
+v4q34|影視|2|延禧攻略|choice|《延禧攻略》的女主角是？|-|魏瓔珞~甄嬛~如懿~沈眉莊|0|女主角魏瓔珞由吳謹言飾演。
+v4q35|影視|2|想見你|choice|《想見你》中，與黃雨萱的故事核心相連的男性角色是？|-|道明寺~李子維~梅長蘇~朴世路|1|李子維與黃雨萱是故事中的核心人物。
+v4q36|影視|2|俗女養成記|choice|《俗女養成記》的女主角陳嘉玲，成年時由誰飾演？|-|陳意涵~賈靜雯~謝盈萱~林心如|2|成年陳嘉玲由謝盈萱飾演。
+v4q37|影視|2|華燈初上|choice|《華燈初上》的故事主要圍繞哪種場所？|-|醫學院~棒球隊~航空公司~日式酒店|3|故事圍繞日式酒店與人物關係展開。
+v4q38|影視|2|魷魚遊戲|choice|成奇勳在《魷魚遊戲》第一季的玩家編號是？|-|001~067~218~456|3|成奇勳的編號是456。
+v4q39|影視|2|梨泰院Class|choice|《梨泰院Class》的朴世路主要經營什麼？|-|出版社~餐飲店~航空公司~醫院|1|故事以朴世路的餐飲創業與復仇歷程為主。
+v4q40|影視|2|我的少女時代|choice|徐太宇與林真心最直接聯想到哪部臺灣電影？|-|海角七號~聽說~我的少女時代~那些年，我們一起追的女孩|2|徐太宇與林真心是《我的少女時代》的主角。
+v4q41|影視|2|海角七號|choice|《海角七號》的主要故事場景位於哪裡？|-|九份~大稻埕~鹿港~恆春|3|電影以恆春為主要舞台。
+v4q42|影視|2|無間道|choice|《無間道》的核心設定是？|-|警察與黑幫彼此派出臥底~全員失去記憶~外星人入侵~校園籃球賽|0|雙向臥底身分形成電影的懸疑與衝突。
+v4q43|影視|2|寄生上流|choice|《寄生上流》中，金家與朴家的關係最能突顯哪個主題？|-|職棒選秀~階級差距~太空移民~古代王位繼承|1|電影以兩個家庭呈現階級與空間的落差。
+v4q44|影視|2|哈利波特|choice|霍格華茲的分類帽主要負責？|-|決定魁地奇比分~讓學生直接畢業~分配學生學院~選出魔法部長|2|分類帽把新生分到各學院。
+v4q45|影視|2|魔戒|choice|《魔戒》中，佛羅多的故鄉夏爾主要住著？|-|精靈~矮人~半獸人~哈比人|3|夏爾是哈比人的故鄉。
+v4q46|影視|2|漫威電影|choice|電影中的振金與哪個虛構國家最直接相關？|-|瓦干達~亞特蘭提斯~阿斯嘉~霍格華茲|0|瓦干達以振金資源聞名。
+v4q47|動漫|3|動漫|choice|《獵人》中，酷拉皮卡出身於哪個族群？|-|阿卡曼家族~窟盧塔族~賽亞人~宇智波一族|1|酷拉皮卡是窟盧塔族倖存者。
+v4q48|動漫|3|動漫|choice|《鋼之鍊金術師》反覆強調的鍊金術原則是？|-|完全不需代價~只能交換金錢~等價交換~無限複製|2|等價交換是作品的重要概念。
+v4q49|動漫|3|動漫|choice|《排球少年!!》中，日向翔陽與影山飛雄就讀哪所高中？|-|音駒~青葉城西~白鳥澤~烏野|3|兩人是烏野高中排球隊成員。
+v4q50|動漫|3|動漫|choice|《SPY×FAMILY》中，洛伊德的間諜代號是？|-|黃昏~黎明~白夜~月光|0|洛伊德的代號是黃昏。
+v4q51|動漫|3|動漫|choice|《名偵探柯南》中，柯南原本的姓名是？|-|毛利小五郎~工藤新一~服部平次~怪盜基德|1|柯南原本是高中生偵探工藤新一。
+v4q52|動漫|3|動漫|choice|《葬送的芙莉蓮》中，曾與芙莉蓮同行的勇者是？|-|桐人~魯夫~辛美爾~里維|2|辛美爾是昔日討伐魔王隊伍中的勇者。
+v4q53|動漫|3|動漫|choice|《鏈鋸人》中，與淀治建立重要連結的鏈鋸惡魔是？|-|皮卡丘~小白~定春~波奇塔|3|波奇塔是作品中的鏈鋸惡魔。
+v4q54|動漫|3|動漫|choice|《我推的孩子》中，星野愛所屬的偶像團體名為？|-|B小町~μ’s~Aqours~放課後Tea Time|0|星野愛是B小町的成員。
+v4q55|動漫|3|動漫|choice|《鬼滅之刃》中，炭治郎最初跟隨鱗瀧學習的呼吸法是？|-|音之呼吸~水之呼吸~雷之呼吸~蟲之呼吸|1|炭治郎最初學習水之呼吸。
+v4q56|動漫|3|動漫|choice|《進擊的巨人》中，以自由之翼為代表標誌的是？|-|駐紮兵團~海賊團~調查兵團~憲兵團|2|自由之翼是調查兵團的代表標誌。
+v4q57|音樂|2|K-pop公司|choice|TWICE的團體活動所屬公司是哪一間？|-|SM Entertainment~YG Entertainment~Starship Entertainment~JYP Entertainment|3|TWICE的團體公司為JYP Entertainment。查核2026-11-10。
+v4q58|音樂|2|K-pop公司|choice|Stray Kids的團體活動所屬公司是哪一間？|-|JYP Entertainment~SM Entertainment~YG Entertainment~Starship Entertainment|0|Stray Kids的團體公司為JYP Entertainment。查核2026-11-10。
+v4q59|音樂|2|K-pop公司|choice|ITZY的團體活動所屬公司是哪一間？|-|Starship Entertainment~JYP Entertainment~SM Entertainment~YG Entertainment|1|ITZY的團體公司為JYP Entertainment。查核2026-11-10。
+v4q60|音樂|2|K-pop公司|choice|NMIXX的團體活動所屬公司是哪一間？|-|YG Entertainment~Starship Entertainment~JYP Entertainment~SM Entertainment|2|NMIXX的團體公司為JYP Entertainment。查核2026-11-10。
+v4q61|音樂|2|K-pop公司|choice|aespa的團體活動所屬公司是哪一間？|-|SM Entertainment~YG Entertainment~Starship Entertainment~JYP Entertainment|0|aespa的團體公司為SM Entertainment。查核2026-11-10。
+v4q62|音樂|2|K-pop公司|choice|NCT的團體活動所屬公司是哪一間？|-|JYP Entertainment~SM Entertainment~YG Entertainment~Starship Entertainment|1|NCT的團體公司為SM Entertainment。查核2026-11-10。
+v4q63|音樂|2|K-pop公司|choice|Red Velvet的團體活動所屬公司是哪一間？|-|Starship Entertainment~JYP Entertainment~SM Entertainment~YG Entertainment|2|Red Velvet的團體公司為SM Entertainment。查核2026-11-10。
+v4q64|音樂|2|K-pop公司|choice|BLACKPINK的團體活動所屬公司是哪一間？|-|YG Entertainment~Starship Entertainment~JYP Entertainment~SM Entertainment|0|BLACKPINK的團體公司為YG Entertainment。查核2026-11-10。
+v4q65|音樂|2|K-pop公司|choice|BABYMONSTER的團體活動所屬公司是哪一間？|-|SM Entertainment~YG Entertainment~Starship Entertainment~JYP Entertainment|1|BABYMONSTER的團體公司為YG Entertainment。查核2026-11-10。
+v4q66|音樂|2|K-pop成員|choice|TWICE的正式團體編制是幾人？|-|9~10~8~12|0|TWICE的正式編制為9人；休息或服役不等於退團。
+v4q67|音樂|2|K-pop成員|choice|BLACKPINK的正式團體編制是幾人？|-|7~4~5~3|1|BLACKPINK的正式編制為4人；休息或服役不等於退團。
+v4q68|音樂|2|K-pop成員|choice|BTS的正式團體編制是幾人？|-|6~10~7~8|2|BTS的正式編制為7人；休息或服役不等於退團。
+v4q69|音樂|2|K-pop成員|choice|SEVENTEEN的正式團體編制是幾人？|-|14~12~16~13|3|SEVENTEEN的正式編制為13人；休息或服役不等於退團。
+v4q70|音樂|2|K-pop成員|choice|Stray Kids的正式團體編制是幾人？|-|8~9~7~11|0|Stray Kids的正式編制為8人；休息或服役不等於退團。
+v4q71|音樂|2|K-pop成員|choice|aespa的正式團體編制是幾人？|-|7~4~5~3|1|aespa的正式編制為4人；休息或服役不等於退團。
+v4q72|音樂|2|K-pop應援|choice|TWICE的官方粉絲名稱是？|-|ARMY~CARAT~ONCE~BLINK|2|TWICE粉絲稱為ONCE。
+v4q73|音樂|2|K-pop應援|choice|SEVENTEEN的官方粉絲名稱是？|-|ONCE~MOA~STAY~CARAT|3|SEVENTEEN粉絲稱為CARAT。
+v4q74|音樂|2|K-pop應援|choice|Stray Kids的官方粉絲名稱是？|-|STAY~ONCE~BLINK~ELF|0|Stray Kids粉絲稱為STAY。
+v4q75|數學|2|代數密室|choice|兩數和為17、差為5，較大的數是多少？|-|12~6~10~11|3|聯立x＋y＝17、x－y＝5，可得x＝11。
+v4q76|數學|2|電影票價|choice|學生票比全票便宜40元，兩張全票加一張學生票共860元。全票多少？|-|320~340~280~300|3|3x－40＝860，所以x＝300。
+v4q77|數學|2|二次函數|choice|拋物線y＝(x－3)²＋2的最低點是？|-|(－3,2)~(2,3)~(3,－2)~(3,2)|3|頂點式直接顯示頂點為(3,2)。
+v4q78|數學|2|操場幾何|choice|直角三角形兩股長6、8，斜邊長？|-|9~10~12~14|1|√(6²＋8²)＝10。
+v4q79|數學|2|地圖比例|choice|比例尺1:25000，圖上4公分代表實際多遠？|-|10公里~100公尺~500公尺~1公里|3|4×25000公分＝100000公分＝1公里。
+v4q80|數學|2|數列解鎖|choice|等差數列首項5、公差3，第12項是多少？|-|41~44~35~38|3|5＋11×3＝38。
+v4q81|數學|3|速度推理|choice|去程時速60、回程時速40，路程相同。來回平均時速？|-|50~52~55~48|3|設單程120公里，總240公里用5小時，平均48。
+v4q82|數學|2|打折陷阱|choice|先漲價25%，再打八折，與原價比較？|-|便宜5%~貴5%~相同~便宜20%|2|1.25×0.8＝1。
+v4q83|數學|3|對數線索|choice|log₁₀1000＋log₁₀0.01等於？|-|5~－1~0~1|3|3＋(－2)＝1。
+v4q84|數學|2|三角函數|choice|sin30°＋cos60°等於？|-|1~√3~0~½|0|兩者皆為½。
+v4q85|數學|2|代數拆解|choice|x²－9分解為？|-|(x－9)(x＋1)~(x－3)²~(x＋3)²~(x－3)(x＋3)|3|平方差公式。
+v4q86|數學|3|函數合成|choice|f(x)＝2x＋1，g(x)＝x²，f(g(3))＝？|-|13~19~25~49|1|g(3)＝9，f(9)＝19。
+v4q87|數學|2|平方距離|choice|座標(1,2)到(4,6)的距離？|-|7~4~5~6|2|√(3²＋4²)＝5。
+v4q88|數學|2|集合偵探|choice|班上30人，18人看A劇、16人看B劇，至少多少人兩部都看？|-|6~8~2~4|3|18＋16－30＝4。
+v4q89|數學|2|比例調色|choice|紅藍顏料比為2:3，總共250mL，藍色多少？|-|125~150~175~100|1|250×3／5＝150。
+v4q90|數學|2|投影幾何|choice|正方形邊長為√2，對角線長？|-|1~√2~2~4|2|√2×√2＝2。
+v4q91|數學|2|不等式|choice|2x－3＞7的解為？|-|x＞10~x＞2~x＞5~x＜5|2|2x＞10，故x＞5。
+v4q92|數學|2|絕對值|choice|絕對值(x－2)＝5，所有解是？|-|－7與3~只有7~3與7~－3與7|3|x－2＝±5，得到7或－3。
+v4q93|數學|3|最大值|choice|x＋y＝10，xy最大值為？|-|20~25~30~10|1|(x－y)²≥0，所以xy≤25，x＝y＝5時達到。
+v4q94|數學|2|指數成長|choice|2ˣ＝32，則2ˣ⁺²＝？|-|64~96~128~256|2|2^(x+2)＝32×4＝128。
+v4q95|數學|2|幾何角度|choice|正六邊形的一個內角為？|-|135°~90°~108°~120°|3|內角總和720°，每角120°。
+v4q96|數學|2|資料中位數|choice|資料2、3、7、8、30的中位數是？|-|8~10~3~7|3|排序後中間的數字為7。
+v4q97|數學|2|排列位置|choice|三人排隊，甲固定在第一位，其餘兩人的不同排法有幾種？|-|2~3~6~1|0|其餘兩人交換有2種，不需要機率。
+v4q98|數學|3|餘式推理|choice|多項式P(x)除以x－2的餘式是？|-|P(0)~P(1)~P(2)~P(－2)|2|餘式定理：代入根2。
+v4q99|數學|2|圓的方程|choice|x²＋y²＝25的圓，半徑為？|-|√50~5~10~25|1|半徑平方為25，半徑5。
+v4q100|數學|2|斜率比較|choice|直線2x＋y＝6的斜率為？|-|½~2~－2~－½|2|y＝－2x＋6。
+v4q101|數學|2|等比數列|choice|首項3、公比2，前4項和為？|-|30~45~48~24|1|3＋6＋12＋24＝45。
+v4q102|數學|3|邏輯真假|choice|甲說乙有帶傘；乙說丙有帶傘；丙說乙沒帶傘。若恰兩句真話，可確定？|-|甲一定帶傘~丙有帶傘~乙一定沒帶傘~三人都沒帶傘|1|甲丙互為否定，恰一真；因此乙的話真，丙有帶傘。
+v4q103|數學|2|比例與面積|choice|圖形長寬都放大為原來1.5倍，面積變幾倍？|-|3~1.5~2~2.25|3|面積乘1.5²＝2.25。
+v4q104|數學|2|運動數據|choice|選手5場得分平均12分，第6場得18分，六場平均？|-|14~15~12~13|3|(5×12＋18)／6＝13。
+v4q105|數學|3|函數對照|match|把函數與圖形特徵配對。|y＝x²~y＝2x＋1~y＝絕對值x~y＝3|V形~通過原點的拋物線~斜率2的直線~水平直線|1,2,0,3|平方函數、一次函數與絕對值函數圖形。
+v4q106|數學|3|幾何對照|match|把圖形與面積公式配對。|三角形~圓~梯形~平行四邊形|πr²~底×高÷2~(上底＋下底)×高÷2~底×高|1,0,2,3|三角形、圓與梯形面積公式。
+v4q107|數學|3|代數因式|match|配對正確的因式分解。|x²－1~x²＋2x＋1~x²－4x＋4~x²－4|(x－2)²~(x－1)(x＋1)~(x＋1)²~(x－2)(x＋2)|1,2,0,3|平方差與完全平方公式。
+v4q108|數學|3|代數短答|fill|x²－5x＋6＝0，兩根的和是多少？只填數字。|-|-|5|兩根為2與3，和為5。
+v4q109|數學|3|對數短答|fill|log₂32＝？只填數字。|-|-|5|2的5次方等於32。
+v4q110|數學|3|幾何短答|fill|半徑3的圓，面積是幾倍π？只填數字。|-|-|9|πr²＝9π。
+v4q111|英文|3|Movie case|choice|A laundromat owner must face many versions of her life across a multiverse. Which film?|-|Jaws~Everything Everywhere All at Once~Titanic~La La Land|1|The laundromat and multiverse are central clues.
+v4q112|英文|3|Movie case|choice|A man sent to prison builds an unlikely friendship and patiently plans his escape. The prison is Shawshank.|-|Whiplash~The Social Network~The Shawshank Redemption~Gladiator|2|Shawshank is the prison in The Shawshank Redemption.
+v4q113|英文|3|Movie case|choice|A jazz pianist and an aspiring actress pursue their dreams in Los Angeles.|-|The Matrix~Up~Dune~La La Land|3|Jazz, acting and Los Angeles point to La La Land.
+v4q114|英文|3|Movie case|choice|A young drummer faces an extremely demanding teacher at a music school.|-|Whiplash~Interstellar~Avatar~Knives Out|0|Whiplash explores ambition and a harsh teacher-student relationship.
+v4q115|英文|3|Movie case|choice|A detective investigates the death of a wealthy crime novelist. The title refers to knives.|-|Frozen~Knives Out~Inside Out~Up|1|The clue points to Knives Out.
+v4q116|英文|3|Movie case|choice|The desert planet Arrakis is famous for spice, giant sandworms and political conflict.|-|Toy Story~The Truman Show~Dune~Coco|2|Arrakis is the key planet in Dune.
+v4q117|英文|3|Movie case|choice|A scientist leads the Manhattan Project, then faces questions about responsibility.|-|Jurassic Park~Braveheart~Parasite~Oppenheimer|3|The scientist is J. Robert Oppenheimer.
+v4q118|英文|3|Movie case|choice|A young assistant works for a powerful editor at a fashion magazine.|-|The Devil Wears Prada~The Green Mile~Soul~Arrival|0|The fashion magazine and demanding editor are the key clues.
+v4q119|英文|3|Movie case|choice|A man cannot form new memories and uses notes and tattoos to investigate a crime.|-|Gravity~Memento~Gladiator~Amélie|1|Memento features memory loss and an unusual narrative order.
+v4q120|英文|3|Movie case|choice|A linguist tries to communicate with aliens using circular symbols.|-|Inside Out~Encanto~Arrival~Jaws|2|Arrival focuses on language and alien communication.
+v4q127|英文|3|Film logic|choice|“Only those who finish the first task can enter.” Which is necessary?|-|arriving last~finishing the first task~buying popcorn~winning every task|1|Only A can B makes A necessary for B.
+v4q133|國文|3|作家書架|choice|《臺北人》的作者是？|-|龍應台~朱天文~余光中~白先勇|3|《臺北人》為白先勇的短篇小說集。
+v4q134|國文|3|作家書架|choice|《傾城之戀》是哪位作家的作品？|-|張愛玲~蕭紅~三毛~席慕蓉|0|作者是張愛玲。
+v4q135|國文|3|臺灣文學|choice|《目送》的作者是？|-|吳明益~龍應台~張曼娟~簡媜|1|《目送》為龍應台散文集。
+v4q136|國文|3|影視原著|choice|臺灣小說《白色巨塔》的作者是？|-|藤井樹~吳念真~侯文詠~九把刀|2|侯文詠創作臺灣小說《白色巨塔》；勿與日本同名作品混淆。
+v4q137|國文|3|文學角色|choice|《紅樓夢》中，葬花的角色最常指？|-|薛寶釵~王熙鳳~賈母~林黛玉|3|黛玉葬花是著名情節。
+v4q138|國文|3|字音辨識|choice|「壓軸」的「軸」，國語標準讀音是？|-|ㄓㄡˊ~ㄓㄡˋ~ㄓㄨˊ~ㄓㄨˋ|0|軸讀ㄓㄡˊ。
+v4q139|國文|3|字音辨識|choice|「一曝十寒」的「曝」讀？|-|ㄅㄠ~ㄆㄨˋ~ㄅㄠˋ~ㄆㄨ|1|此處曝讀ㄆㄨˋ，意為曬。
+v4q140|國文|3|字音辨識|choice|「龜裂」的「龜」讀？|-|ㄑㄧㄡ~ㄐㄩㄝˊ~ㄍㄨㄟ~ㄐㄩㄣ|3|龜裂讀ㄐㄩㄣ ㄌㄧㄝˋ。
+v4q141|國文|3|文學時代|choice|《世說新語》最常用來觀察哪一時期的名士風度？|-|晚清~戰國~明末~魏晉|3|《世說新語》記錄魏晉人物言行與軼事。
+v4q142|國文|3|閱讀推論|choice|「並非所有流行作品都缺乏深度」等於？|-|至少有流行作品具有深度~所有流行作品都有深度~流行作品一定沒深度~深度與流行必然相斥|0|否定全稱，表示至少存在例外。
+v4q143|國文|3|修辭與歌曲|choice|把「時間」寫成會追著人跑的對手，最接近？|-|頂真~轉化中的擬人~倒裝~引用|1|賦予抽象事物人的動作，是擬人。
+v4q144|國文|3|古典小說|choice|《西遊記》中，孫悟空被壓在五行山下，與哪位角色最直接相關？|-|紅孩兒~哪吒~如來佛祖~太上老君|2|五行山情節與如來佛祖鎮壓孫悟空有關。
+v4q145|物理|3|科學推理|choice|乘電梯上升但正在減速時，體重計讀值相對平常？|-|較大~必定為零~完全無法判斷方向~較小|3|加速度向下，支持力較小。
+v4q146|物理|3|科學推理|choice|兩個電阻串聯，總電阻為？|-|兩者相加~兩者相乘~小於其中任一個~一定為零|0|串聯電阻相加。
+v4q147|物理|3|科學推理|choice|相同電壓下，電阻變兩倍，電流變為？|-|不變~一半~兩倍~四倍|1|歐姆定律I＝V／R。
+v4q148|物理|3|科學推理|choice|物體作等速圓周運動時，何者仍不為零？|-|切向加速度必為最大~平均質量變化~速度方向的改變~速率的變化量|2|速度方向持續改變，所以有向心加速度。
+v4q149|物理|3|科學推理|choice|一顆球往上拋到最高點，忽略空氣阻力，當下的加速度？|-|為零~向上~水平~仍向下|3|重力加速度不會因瞬間速度為零而消失。
+v4q150|物理|3|科學推理|choice|凸透鏡把遠處太陽光聚集，光點最接近？|-|焦點~鏡面上的任一點~虛像位置~透鏡邊緣|0|平行光經凸透鏡聚於焦點附近。
+v4q151|物理|3|科學推理|choice|聲音音高主要與什麼相關？|-|聆聽距離~頻率~音量~振幅|1|音高主要對應頻率，音量與振幅／強度較相關。
+v4q152|物理|3|科學推理|choice|理想變壓器可以直接穩定變換哪種電？|-|完全沒有電流的導線~靜電紙屑~交流電~不變的直流電|2|需要隨時間變化的磁通量，通常使用交流電。
+v4q153|化學|3|科學推理|choice|把濃鹽酸加水稀釋，酸的莫耳數若無損失，會？|-|變成零~增加兩倍~等於水的質量~不變|3|稀釋改變濃度，不直接改變溶質莫耳數。
+v4q154|化學|3|科學推理|choice|同位素指同一元素的原子有不同的？|-|中子數~質子數~原子序~元素符號必定不同|0|同元素質子數相同，中子數可不同。
+v4q155|化學|3|科學推理|choice|氧化還原中，失去電子通常稱為？|-|凝結~氧化~還原~中和|1|失去電子為氧化。
+v4q156|化學|3|科學推理|choice|提高反應溫度通常加快反應，主要因？|-|所有反應都不再需碰撞~活化能必定降為零~更多粒子有足夠能量克服活化能~質量憑空增加|2|溫度提高使能量分布改變，有效碰撞增加。
+v4q157|化學|3|科學推理|choice|催化劑加快反應但不改變平衡常數，主要因？|-|增加反應物總質量~只加快正反應不影響逆反應~改變元素種類~提供較低活化能路徑|3|催化劑降低反應路徑的活化能，不改變平衡位置。
+v4q158|化學|3|科學推理|choice|同溫同壓下，相同體積的理想氣體含有？|-|相同分子數~必定相同質量~必定相同密度~必定相同原子數|0|亞佛加厥定律：同溫同壓同體積的氣體分子數相同。
+v4q159|化學|3|科學推理|choice|NaCl溶於水後主要以何種形式存在？|-|全都變成水~鈉離子與氯離子~金屬鈉塊與氯氣~中子與電子|1|離子晶體溶解後主要形成水合離子。
+v4q160|化學|3|科學推理|choice|pH從2變成4，氫離子濃度變為原來？|-|兩倍~一百倍~百分之一~一半|2|pH增加2，氫離子濃度降為1／100。
+v4q161|生物|3|科學推理|choice|DNA複製採半保留，意思是？|-|舊DNA全部消失~只有一半細胞會複製~新DNA只有原長一半~每個新DNA保留一條舊股|3|每個雙股DNA含一條舊股與一條新股。
+v4q162|生物|3|科學推理|choice|抗生素主要針對細菌，為什麼不能直接當成治療所有病毒的方法？|-|病毒不具有相同的細菌作用標的~病毒都比細菌大~病毒完全沒有遺傳物質~抗生素會變疫苗|0|許多抗生素作用於細菌特有構造或過程，病毒不同。
+v4q163|生物|3|科學推理|choice|相同基因型的植物，在不同光照下長得不同，說明？|-|遺傳沒有任何作用~表現型受到環境影響~所有基因都消失~環境一定改變所有DNA序列|1|基因與環境共同影響表現型。
+v4q164|生物|3|科學推理|choice|細胞有絲分裂與減數分裂的重要差別是？|-|減數分裂不需要DNA~兩者完全相同~減數分裂可使染色體套數減半~有絲分裂永遠只有一個子細胞|2|減數分裂形成單套生殖細胞等。
+v4q165|生物|3|科學推理|choice|胰島素最主要的生理作用方向是？|-|提高血糖到無限~增加骨頭長度~直接攜帶氧氣~降低血糖|3|胰島素促進細胞攝取與儲存葡萄糖等，降低血糖。
+v4q166|生物|3|科學推理|choice|一物種在食物網消失，可能同時影響多種生物，原因是？|-|物種間有間接與直接交互作用~所有生物都吃相同食物~能量可無限循環~食物網沒有連結|0|食物網呈現多方向的營養與生態關聯。
+v4q167|生物|3|科學推理|choice|粒線體與葉綠體具有自己的DNA，常用來支持？|-|所有病毒都有細胞~內共生學說~地心說~自然發生說|1|這些特徵是內共生學說的重要支持線索。
+v4q168|生物|3|科學推理|choice|紅血球主要藉何種分子攜帶氧氣？|-|澱粉~胰島素~血紅素~葉綠素|2|血紅素能結合氧。
+v4q169|歷史|3|清代臺灣|choice|清朝在臺灣建省，首任巡撫通常指？|-|鄭成功~沈葆楨~唐景崧~劉銘傳|3|劉銘傳是臺灣建省後首任巡撫。
+v4q170|歷史|3|臺灣文化|choice|推動臺灣新文化運動、創辦大安醫院的醫師是？|-|蔣渭水~莫那魯道~林爽文~鄭成功|0|蔣渭水是重要的臺灣社會運動人物。
+v4q171|歷史|3|世界史|choice|英國1215年的《大憲章》主要涉及？|-|發明印刷術~限制王權與保障特定權利~發動工業革命~建立聯合國|1|大憲章是王權受限制的重要歷史文件。
+v4q172|歷史|3|歷史排序|choice|下列事件最晚發生？|-|第一次世界大戰~冷戰結束~法國大革命~明治維新|1|冷戰結束在20世紀末，晚於其他事件。
+v4q173|地理|3|時區推理|choice|臺灣比英國標準時間快8小時。不考慮夏令時間，臺灣晚上8點時英國是？|-|下午4點~凌晨4點~晚上12點~中午12點|3|20－8＝12。
+v4q174|地理|3|臺灣地理|choice|臺灣冬季東北季風吹拂時，通常較容易迎風降雨的是？|-|東北部~恆春西側所有地區~臺南平原一定最濕~澎湖永遠無風|0|臺灣東北部是典型迎風降雨區域。
+v4q175|地理|3|世界城市|choice|土耳其的首都是？|-|索菲亞~伊斯坦堡~安卡拉~雅典|2|首都是安卡拉。
+v4q176|地理|3|臺灣景點|choice|赤崁樓最直接位於哪座城市？|-|花蓮~新竹~臺南~臺北|2|赤崁樓位於臺南。
+v4q177|公民|3|法律推理|choice|未經同意把同學的私人照片公開，最可能涉及哪種基本權利？|-|只有投票權~只有工作權~一定完全合法~隱私與人格權|3|照片使用須考量隱私、肖像與人格利益等。
+v4q178|公民|3|制度辨識|choice|行政院長在我國制度下主要由誰任命？|-|總統~最高法院院長~考選部長~每個縣長輪流|0|總統任命行政院長。
+v4q179|公民|3|市場判讀|choice|演唱會座位不變，想買票的人增加，其他條件不變，價格通常受到？|-|由氣溫直接決定~上升壓力~一定降至零~完全不可能變化|1|短期供給固定，需求增加會產生價格上升壓力。
+v4q180|公民|3|親屬進階|choice|你的表兄弟姊妹與你，一般屬幾親等旁系血親？|-|四~五~二~三|0|經共同祖父母往返共四代，為四親等。
+v4q181|音樂|2|歌手點名|choice|歌曲《倔強》的原唱／代表演唱者是？|-|蘇打綠~告五人~蔡依林~五月天|3|本題版本由五月天演唱。
+v4q182|音樂|2|歌手點名|choice|歌曲《聽海》的原唱／代表演唱者是？|-|張惠妹~劉德華~韋禮安~陶喆|0|本題版本由張惠妹演唱。
+v4q183|音樂|2|歌手點名|choice|歌曲《天黑黑》的原唱／代表演唱者是？|-|五月天~孫燕姿~S.H.E~梁靜茹|1|本題版本由孫燕姿演唱。
+v4q184|音樂|2|歌手點名|choice|歌曲《勇氣》的原唱／代表演唱者是？|-|李榮浩~周杰倫~梁靜茹~韋禮安|2|本題版本由梁靜茹演唱。
+v4q185|音樂|2|歌手點名|choice|歌曲《倒帶》的原唱／代表演唱者是？|-|告五人~王菲~張學友~蔡依林|3|本題版本由蔡依林演唱。
+v4q186|音樂|2|歌手點名|choice|歌曲《戀人未滿》的原唱／代表演唱者是？|-|S.H.E~張惠妹~蘇打綠~王力宏|0|本題版本由S.H.E演唱。
+v4q187|音樂|2|歌手點名|choice|歌曲《十年》的原唱／代表演唱者是？|-|田馥甄~陳奕迅~李榮浩~周興哲|1|本題版本由陳奕迅演唱。
+v4q188|音樂|2|歌手點名|choice|歌曲《江南》的原唱／代表演唱者是？|-|S.H.E~林憶蓮~林俊傑~張學友|2|本題版本由林俊傑演唱。
+v4q189|音樂|2|歌手點名|choice|歌曲《小情歌》的原唱／代表演唱者是？|-|梁靜茹~田馥甄~陳奕迅~蘇打綠|3|本題版本由蘇打綠演唱。
+v4q190|音樂|2|歌手點名|choice|歌曲《小幸運》的原唱／代表演唱者是？|-|田馥甄~劉若英~周杰倫~五月天|0|本題版本由田馥甄演唱。
+v4q191|音樂|2|歌手點名|choice|歌曲《愛人錯過》的原唱／代表演唱者是？|-|王菲~告五人~林憶蓮~楊丞琳|1|本題版本由告五人演唱。
+v4q192|音樂|2|歌手點名|choice|歌曲《浪子回頭》的原唱／代表演唱者是？|-|王菲~陳奕迅~茄子蛋~蘇打綠|2|本題版本由茄子蛋演唱。
+v4q193|音樂|2|歌手點名|choice|歌曲《以後別做朋友》的原唱／代表演唱者是？|-|S.H.E~田馥甄~楊丞琳~周興哲|3|本題版本由周興哲演唱。
+v4q194|音樂|2|歌手點名|choice|歌曲《如果可以》的原唱／代表演唱者是？|-|韋禮安~動力火車~劉德華~劉若英|0|本題版本由韋禮安演唱。
+v4q195|音樂|2|歌手點名|choice|歌曲《想見你想見你想見你》的原唱／代表演唱者是？|-|茄子蛋~八三夭~動力火車~伍佰|1|本題版本由八三夭演唱。
+v4q196|音樂|2|歌手點名|choice|歌曲《愛我別走》的原唱／代表演唱者是？|-|動力火車~蕭敬騰~張震嶽~孫燕姿|2|本題版本由張震嶽演唱。
+v4q197|音樂|2|歌手點名|choice|歌曲《普通朋友》的原唱／代表演唱者是？|-|告五人~潘瑋柏與弦子~周興哲~陶喆|3|本題版本由陶喆演唱。
+v4q198|音樂|2|歌手點名|choice|2001年發行的歌曲《唯一》，原唱是？|-|王力宏~陶喆~林俊傑~S.H.E|0|本題版本由王力宏演唱。
+v4q199|音樂|2|歌手點名|choice|歌曲《年少有為》的原唱／代表演唱者是？|-|蘇打綠~李榮浩~林俊傑~張震嶽|1|本題版本由李榮浩演唱。
+v4q200|音樂|2|歌手點名|choice|歌曲《泡沫》的原唱／代表演唱者是？|-|劉若英~周杰倫~鄧紫棋~孫燕姿|2|本題版本由鄧紫棋演唱。
+v4q201|音樂|2|歌手點名|choice|歌曲《王妃》的原唱／代表演唱者是？|-|林憶蓮~動力火車~劉若英~蕭敬騰|3|本題版本由蕭敬騰演唱。
+v4q202|音樂|2|歌手點名|choice|歌曲《曖昧》的原唱／代表演唱者是？|-|楊丞琳~王力宏~林憶蓮~田馥甄|0|本題版本由楊丞琳演唱。
+v4q203|音樂|2|歌手點名|choice|歌曲《不得不愛》的原唱／代表演唱者是？|-|田馥甄~潘瑋柏與弦子~五月天~周杰倫|1|本題版本由潘瑋柏與弦子演唱。
+v4q204|音樂|2|歌手點名|choice|歌曲《隱形的翅膀》的原唱／代表演唱者是？|-|潘瑋柏與弦子~伍佰~張韶涵~李榮浩|2|本題版本由張韶涵演唱。
+v4q205|音樂|2|歌手點名|choice|歌曲《忘情水》的原唱／代表演唱者是？|-|田馥甄~動力火車~張學友~劉德華|3|本題版本由劉德華演唱。
+v4q206|音樂|2|歌手點名|choice|歌曲《吻別》的原唱／代表演唱者是？|-|張學友~陶喆~陳奕迅~韋禮安|0|本題版本由張學友演唱。
+v4q207|音樂|2|歌手點名|choice|歌曲《紅豆》的原唱／代表演唱者是？|-|田馥甄~王菲~韋禮安~鄧紫棋|1|本題版本由王菲演唱。
+v4q208|音樂|2|歌手點名|choice|歌曲《至少還有你》的原唱／代表演唱者是？|-|八三夭~S.H.E~林憶蓮~韋禮安|2|本題版本由林憶蓮演唱。
+v4q209|音樂|2|歌手點名|choice|歌曲《當》的原唱／代表演唱者是？|-|林俊傑~田馥甄~蘇打綠~動力火車|3|本題版本由動力火車演唱。
+v4q210|音樂|2|歌手點名|choice|歌曲《挪威的森林》的原唱／代表演唱者是？|-|伍佰~王菲~張學友~張惠妹|0|本題版本由伍佰演唱。
+v4q211|音樂|2|歌手點名|choice|歌曲《稻香》的原唱／代表演唱者是？|-|八三夭~周杰倫~孫燕姿~張惠妹|1|本題版本由周杰倫演唱。
+v4q212|音樂|2|歌手點名|choice|歌曲《後來》的原唱／代表演唱者是？|-|蘇打綠~陶喆~劉若英~蕭敬騰|2|本題版本由劉若英演唱。
+v4q213|物理|3|電路配合|match|配對電路情境與結論。|電阻串聯~電阻並聯~固定電阻且電壓加倍~固定電壓且電阻加倍|電流加倍~總電阻小於任一支路~總電阻相加~電流減半|2,1,0,3|串聯相加；並聯總阻較小；歐姆定律。
+v4q214|化學|3|反應觀念|match|配對化學概念。|失去電子~得到電子~催化劑~正逆反應速率相同|提供低活化能路徑~氧化~還原~動態平衡|1,2,0,3|氧化失電子、還原得電子；催化劑改變反應路徑。
+v4q215|生物|3|遺傳觀念|match|配對遺傳相關詞。|轉錄~轉譯~DNA複製~同源染色體交換|DNA產生DNA~RNA指導蛋白質合成~DNA產生RNA~增加遺傳變異|2,1,0,3|轉錄形成RNA，轉譯合成蛋白質，複製形成DNA。
+v4q216|物理|3|歐姆定律|fill|12V電源接6Ω電阻，電流幾安培？只填數字。|-|-|2|I＝12／6＝2A。
+v4q217|化學|3|pH短答|fill|25°C下pH＝3的溶液，氫離子濃度為10的幾次方M？只填指數。|-|-|-3/－3|pH＝－log[H+]。
+v4q218|生物|3|遺傳短答|fill|一般人類精子有幾條染色體？只填數字。|-|-|23|生殖細胞通常為單套23條。
+v4q219|國文|3|文學短答|fill|小說《臺北人》的作者是誰？|-|-|白先勇|白先勇創作《臺北人》。
+v4q220|歷史|3|臺灣歷史短答|fill|臺灣建省後的首任巡撫姓名？|-|-|劉銘傳/刘铭传|劉銘傳。
+v4q221|地理|3|首都短答|fill|土耳其首都，可填中文或英文。|-|-|安卡拉/Ankara|安卡拉。
+v4q222|公民|3|親等短答|fill|你與表兄弟姊妹一般為幾親等？只填數字。|-|-|4|旁系血親親等經共同祖先計算，為四親等。
+v5q0|英文|3|Literary bookshelf|choice|Who wrote Pride and Prejudice?|-|Bram Stoker~Oscar Wilde~Emily Brontë~Jane Austen|3|答案：Jane Austen。
+v5q1|英文|3|Literary bookshelf|choice|Who wrote 1984?|-|George Orwell~Jane Austen~Lois Lowry~Umberto Eco|0|答案：George Orwell。
+v5q2|英文|3|Literary bookshelf|choice|Who wrote The Great Gatsby?|-|Franz Kafka~Ernest Hemingway~F. Scott Fitzgerald~Mary Shelley|2|答案：F. Scott Fitzgerald。
+v5q3|英文|3|Literary bookshelf|choice|Who wrote Frankenstein?|-|Suzanne Collins~Mary Shelley~Oscar Wilde~George Orwell|1|答案：Mary Shelley。
+v5q4|英文|3|Literary bookshelf|choice|Who wrote Wuthering Heights?|-|Ernest Hemingway~Emily Brontë~Lewis Carroll~Oscar Wilde|1|答案：Emily Brontë。
+v5q5|英文|3|Literary bookshelf|choice|Who wrote Jane Eyre?|-|Franz Kafka~Charlotte Brontë~Agatha Christie~George Orwell|1|答案：Charlotte Brontë。
+v5q6|英文|3|Literary bookshelf|choice|Who wrote The Catcher in the Rye?|-|J. D. Salinger~Oscar Wilde~Franz Kafka~Lewis Carroll|0|答案：J. D. Salinger。
+v5q7|英文|3|Literary bookshelf|choice|Who wrote To Kill a Mockingbird?|-|Harper Lee~Lewis Carroll~Oscar Wilde~Mary Shelley|0|答案：Harper Lee。
+v5q8|英文|3|Literary bookshelf|choice|Who wrote The Old Man and the Sea?|-|Arthur Conan Doyle~J. R. R. Tolkien~Ernest Hemingway~Lois Lowry|2|答案：Ernest Hemingway。
+v5q9|英文|3|Literary bookshelf|choice|Who wrote The Lord of the Rings?|-|Umberto Eco~Arthur Conan Doyle~George Orwell~J. R. R. Tolkien|3|答案：J. R. R. Tolkien。
+v5q10|英文|3|Literary bookshelf|choice|Who wrote The Little Prince?|-|Lois Lowry~Suzanne Collins~Mary Shelley~Antoine de Saint-Exupéry|3|答案：Antoine de Saint-Exupéry。
+v5q11|英文|3|Literary bookshelf|choice|Who wrote Alice’s Adventures in Wonderland?|-|Ernest Hemingway~Franz Kafka~Lewis Carroll~Gabriel García Márquez|2|答案：Lewis Carroll。
+v5q12|英文|3|Literary bookshelf|choice|Who wrote The Picture of Dorian Gray?|-|Oscar Wilde~Lois Lowry~Arthur Conan Doyle~Ernest Hemingway|0|答案：Oscar Wilde。
+v5q13|英文|3|Literary bookshelf|choice|Who wrote Dracula?|-|George Orwell~Suzanne Collins~Franz Kafka~Bram Stoker|3|答案：Bram Stoker。
+v5q14|英文|3|Literary bookshelf|choice|Who wrote Murder on the Orient Express?|-|J. D. Salinger~Lois Lowry~J. R. R. Tolkien~Agatha Christie|3|答案：Agatha Christie。
+v5q15|英文|3|Literary bookshelf|choice|Who wrote The Adventures of Sherlock Holmes?|-|J. R. R. Tolkien~Arthur Conan Doyle~Charlotte Brontë~Jane Austen|1|答案：Arthur Conan Doyle。
+v5q16|英文|3|Literary bookshelf|choice|Who wrote The Handmaid’s Tale?|-|Margaret Atwood~Ernest Hemingway~Oscar Wilde~Gabriel García Márquez|0|答案：Margaret Atwood。
+v5q17|英文|3|Literary bookshelf|choice|Who wrote One Hundred Years of Solitude?|-|Bram Stoker~Gabriel García Márquez~Margaret Atwood~Charlotte Brontë|1|答案：Gabriel García Márquez。
+v5q18|英文|3|Literary bookshelf|choice|Who wrote The Name of the Rose?|-|Antoine de Saint-Exupéry~Umberto Eco~Gabriel García Márquez~Franz Kafka|1|答案：Umberto Eco。
+v5q19|英文|3|Literary bookshelf|choice|Who wrote The Trial?|-|Franz Kafka~Suzanne Collins~Agatha Christie~Ernest Hemingway|0|答案：Franz Kafka。
+v5q20|英文|3|Literary bookshelf|choice|Who wrote The Metamorphosis?|-|Antoine de Saint-Exupéry~Lewis Carroll~Suzanne Collins~Franz Kafka|3|答案：Franz Kafka。
+v5q21|英文|3|Literary bookshelf|choice|Who wrote The Hunger Games?|-|Agatha Christie~Mary Shelley~Arthur Conan Doyle~Suzanne Collins|3|答案：Suzanne Collins。
+v5q22|英文|3|Literary bookshelf|choice|Who wrote The Giver?|-|J. D. Salinger~Lois Lowry~Oscar Wilde~Suzanne Collins|1|答案：Lois Lowry。
+v5q23|英文|3|Literary bookshelf|choice|Who wrote Little Women?|-|Margaret Atwood~Lois Lowry~F. Scott Fitzgerald~Louisa May Alcott|3|答案：Louisa May Alcott。
+v5q24|英文|3|Authors and works|match|Match the literary works to their authors.|Pride and Prejudice~1984~The Great Gatsby~Frankenstein|F. Scott Fitzgerald~Mary Shelley~George Orwell~Jane Austen|3,2,0,1|逐一核對人物、作品與相關資料。
+v5q25|英文|3|Authors and works|match|Match the literary works to their authors.|Wuthering Heights~Jane Eyre~The Catcher in the Rye~To Kill a Mockingbird|Charlotte Brontë~Emily Brontë~Harper Lee~J. D. Salinger|1,0,3,2|逐一核對人物、作品與相關資料。
+v5q26|英文|3|Authors and works|match|Match the literary works to their authors.|The Old Man and the Sea~The Lord of the Rings~The Little Prince~Alice’s Adventures in Wonderland|Lewis Carroll~J. R. R. Tolkien~Antoine de Saint-Exupéry~Ernest Hemingway|3,1,2,0|逐一核對人物、作品與相關資料。
+v5q27|英文|3|Authors and works|match|Match the literary works to their authors.|The Picture of Dorian Gray~Dracula~Murder on the Orient Express~The Adventures of Sherlock Holmes|Bram Stoker~Arthur Conan Doyle~Agatha Christie~Oscar Wilde|3,0,2,1|逐一核對人物、作品與相關資料。
+v5q28|英文|3|Authors and works|match|Match the literary works to their authors.|The Handmaid’s Tale~One Hundred Years of Solitude~The Name of the Rose~The Trial|Franz Kafka~Gabriel García Márquez~Margaret Atwood~Umberto Eco|2,1,3,0|逐一核對人物、作品與相關資料。
+v5q29|英文|3|Music playlist|choice|Which artist is associated with Rolling in the Deep?|-|Ed Sheeran~Bruno Mars~Adele~Sia|2|答案：Adele。
+v5q30|英文|3|Music playlist|choice|Which artist is associated with Bad Romance?|-|Miley Cyrus~Rihanna~BTS~Lady Gaga|3|答案：Lady Gaga。
+v5q31|英文|3|Music playlist|choice|Which artist is associated with Anti-Hero?|-|Taylor Swift~Queen~Ed Sheeran~Adele|0|答案：Taylor Swift。
+v5q32|英文|3|Music playlist|choice|Which artist is associated with Billie Jean?|-|Michael Jackson~Taylor Swift~Lady Gaga~Rihanna|0|答案：Michael Jackson。
+v5q33|英文|3|Music playlist|choice|Which artist is associated with Bohemian Rhapsody?|-|Michael Jackson~Katy Perry~Eagles~Queen|3|答案：Queen。
+v5q34|英文|3|Music playlist|choice|Which artist is associated with Viva la Vida?|-|Miley Cyrus~Coldplay~Michael Jackson~Billie Eilish|1|答案：Coldplay。
+v5q35|英文|3|Music playlist|choice|Which artist is associated with Shape of You?|-|Miley Cyrus~Michael Jackson~The Weeknd~Ed Sheeran|3|答案：Ed Sheeran。
+v5q36|英文|3|Music playlist|choice|Which artist is associated with Flowers?|-|Sia~Miley Cyrus~Billie Eilish~Ed Sheeran|1|答案：Miley Cyrus。
+v5q37|英文|3|Music playlist|choice|Which artist is associated with bad guy?|-|Sia~Sabrina Carpenter~Billie Eilish~Katy Perry|2|答案：Billie Eilish。
+v5q38|英文|3|Music playlist|choice|Which artist is associated with Blinding Lights?|-|Lady Gaga~Sabrina Carpenter~Sia~The Weeknd|3|答案：The Weeknd。
+v5q39|英文|3|Music playlist|choice|Which artist is associated with Hotel California?|-|Sia~Taylor Swift~Eagles~Coldplay|2|答案：Eagles。
+v5q40|英文|3|Music playlist|choice|Which artist is associated with Someone Like You?|-|Billie Eilish~Adele~Ed Sheeran~The Weeknd|1|答案：Adele。
+v5q41|英文|3|Music playlist|choice|Which artist is associated with Dynamite?|-|Sia~BTS~ABBA~Eagles|1|答案：BTS。
+v5q42|英文|3|Music playlist|choice|Which artist is associated with Dancing Queen?|-|ABBA~Billie Eilish~Eagles~Katy Perry|0|答案：ABBA。
+v5q43|英文|3|Music playlist|choice|Which artist is associated with Umbrella?|-|Eagles~Rihanna~Coldplay~Billie Eilish|1|答案：Rihanna。
+v5q44|英文|3|Music playlist|choice|Which artist is associated with Firework?|-|Eagles~Lady Gaga~Billie Eilish~Katy Perry|3|答案：Katy Perry。
+v5q45|英文|3|Music playlist|choice|Which artist is associated with Chandelier?|-|The Weeknd~Queen~Adele~Sia|3|答案：Sia。
+v5q46|英文|3|Music playlist|choice|Which artist is associated with Uptown Funk (featured singer)?|-|Bruno Mars~Adele~Miley Cyrus~Lady Gaga|0|答案：Bruno Mars。
+v5q47|英文|3|Music playlist|choice|Which artist is associated with APT. (female lead singer)?|-|Michael Jackson~ROSÉ~Billie Eilish~Katy Perry|1|答案：ROSÉ。
+v5q48|英文|3|Music playlist|choice|Which artist is associated with Espresso?|-|Katy Perry~Sia~Sabrina Carpenter~Michael Jackson|2|答案：Sabrina Carpenter。
+v5q49|英文|3|Music playlist|match|Match the song to its singer or band.|Rolling in the Deep~Bad Romance~Anti-Hero~Billie Jean|Adele~Taylor Swift~Lady Gaga~Michael Jackson|0,2,1,3|逐一核對人物、作品與相關資料。
+v5q50|英文|3|Music playlist|match|Match the song to its singer or band.|Bohemian Rhapsody~Viva la Vida~Shape of You~Flowers|Coldplay~Miley Cyrus~Ed Sheeran~Queen|3,0,2,1|逐一核對人物、作品與相關資料。
+v5q51|英文|3|Music playlist|match|Match the song to its singer or band.|bad guy~Blinding Lights~Hotel California~Someone Like You|Adele~Eagles~Billie Eilish~The Weeknd|2,3,1,0|逐一核對人物、作品與相關資料。
+v5q52|英文|3|Music playlist|match|Match the song to its singer or band.|Dynamite~Dancing Queen~Umbrella~Firework|BTS~Katy Perry~ABBA~Rihanna|0,2,3,1|逐一核對人物、作品與相關資料。
+v5q53|英文|3|Music playlist|match|Match the song to its singer or band.|Chandelier~Uptown Funk (featured singer)~APT. (female lead singer)~Espresso|ROSÉ~Sia~Bruno Mars~Sabrina Carpenter|1,2,0,3|逐一核對人物、作品與相關資料。
+v5q54|數學|3|數學史與解謎|choice|用柯尼斯堡七橋問題開啟圖論研究的數學家是？|-|牛頓~費馬~歐拉~高斯|2|答案：歐拉。
+v5q55|數學|3|數學史與解謎|choice|《幾何原本》最常與哪位古希臘數學家連結？|-|阿基米德~歐幾里得~帕斯卡~笛卡兒|1|答案：歐幾里得。
+v5q56|數學|3|數學史與解謎|choice|以機械裝置構想「分析機」，被視為電腦先驅的是？|-|康托爾~巴貝奇~黎曼~傅立葉|1|答案：巴貝奇。
+v5q57|數學|3|數學史與解謎|choice|為分析機撰寫伯努利數演算法筆記的女性先驅是？|-|愛達・勒芙蕾絲~艾美・諾特~瑪麗・居禮~佛羅倫斯・南丁格爾|0|答案：愛達・勒芙蕾絲。
+v5q58|數學|3|數學史與解謎|choice|與萊布尼茲各自發展微積分的英國科學家是？|-|費波那契~歐拉~笛卡兒~牛頓|3|答案：牛頓。
+v5q59|數學|3|數學史與解謎|choice|把座標與代數結合，「笛卡兒座標」所指的人是？|-|勒內・笛卡兒~大衛・希爾伯特~伯恩哈德・黎曼~布萊茲・帕斯卡|0|答案：勒內・笛卡兒。
+v5q60|數學|3|數學史與解謎|choice|以兔子繁殖故事推廣後來同名數列的《算盤書》作者是？|-|拉普拉斯~泰勒~費波那契~高斯|2|答案：費波那契。
+v5q61|數學|3|數學史與解謎|choice|1990年代證明費馬最後定理的數學家是？|-|納許~安德魯・懷爾斯~陶哲軒~佩雷爾曼|1|答案：安德魯・懷爾斯。
+v5q62|數學|3|數學史與解謎|choice|「不是每個無窮都一樣大」與集合論發展最相關的是？|-|拉格朗日~畢達哥拉斯~康托爾~阿基米德|2|答案：康托爾。
+v5q63|數學|3|數學史與解謎|choice|對抽象代數有重大貢獻，並連結對稱性與守恆律的女性數學家是？|-|艾美・諾特~葛麗絲・霍普~愛達・勒芙蕾絲~瑪麗・居禮|0|答案：艾美・諾特。
+v5q64|數學|3|數學史與解謎|choice|「雞兔同籠」屬於哪部中國古代數學典籍的著名題型？|-|天工開物~孫子算經~本草綱目~夢溪筆談|1|答案：孫子算經。
+v5q65|數學|3|數學史與解謎|choice|中國古代用割圓術計算圓周率的重要數學家是？|-|張衡~沈括~李時珍~劉徽|3|答案：劉徽。
+v5q66|數學|3|數學史與解謎|choice|密碼學裡，以研究「機器能計算什麼」聞名且參與破譯的先驅是？|-|阿基米德~歐幾里得~畢達哥拉斯~艾倫・圖靈|3|答案：艾倫・圖靈。
+v5q67|數學|3|數學史與解謎|choice|「我思故我在」和解析幾何都常連結到誰？|-|笛卡兒~高斯~歐拉~伯努利|0|答案：笛卡兒。
+v5q68|數學|3|數學史與解謎|choice|若棋盤挖去兩個同色對角格，為何無法用每片蓋兩相鄰格的骨牌鋪滿？|-|每片骨牌只蓋黑格~剩下的黑白格數不同~棋盤一定太小~總格數是奇數|1|答案：剩下的黑白格數不同。
+v5q69|數學|3|數學史與解謎|choice|三個開關控制隔壁三盞傳統白熾燈，只進房一次，可多利用哪項線索？|-|燈泡溫度~開關字體~電線長度必相等~門的顏色|0|答案：燈泡溫度。
+v5q70|數學|3|數學史與解謎|choice|甲比乙高、丙比甲高、丁比乙矮，最高的是？|-|丁~乙~丙~甲|2|答案：丙。
+v5q71|數學|3|數學史與解謎|choice|一張紙連續對折後剪一個孔，展開時孔數增加主要利用哪種概念？|-|虛數~期望值~對數~對稱|3|答案：對稱。
+v5q72|數學|3|數學史與解謎|choice|密碼表A→D、B→E。依此規則，MATH會變成？|-|PDVI~NBUG~PDWK~OCVJ|2|答案：PDWK。
+v5q73|數學|3|數學史與解謎|choice|電影三部曲排在書架，第一集不能放中間，共有幾種順序？|-|4~3~2~6|0|答案：4。
+v5q74|數學|3|數學史與解謎|choice|只用直尺畫一條線通過圓心，能把圓分成幾個半圓？|-|2~3~4~1|0|答案：2。
+v5q75|數學|3|數學史|match|配對數學家與代表線索。|歐拉~笛卡兒~康托爾~諾特|七橋與圖論~集合與無窮~抽象代數與對稱~解析幾何|0,3,1,2|逐一核對人物、作品與相關資料。
+v5q76|數學|3|典籍考古|match|配對典籍或問題與人物。|幾何原本~割圓術~費馬最後定理證明~算盤書|費波那契~懷爾斯~歐幾里得~劉徽|2,3,1,0|逐一核對人物、作品與相關資料。
+v5q77|影視|3|追劇細節|choice|《怪奇物語》第四季，Hellfire Club的領袖是？|-|Jonathan Byers~Steve Harrington~Billy Hargrove~Eddie Munson|3|答案：Eddie Munson。
+v5q78|影視|3|追劇細節|choice|《怪奇物語》第四季，Max常用來抵抗Vecna的歌是？|-|Never Gonna Give You Up~Bohemian Rhapsody~Take On Me~Running Up That Hill|3|答案：Running Up That Hill。
+v5q79|影視|3|追劇細節|choice|《怪奇物語》第一季，Joyce用什麼與失蹤的Will溝通？|-|摩斯電報機~收據上的密碼~魔法羽毛筆~聖誕燈與字母牆|3|答案：聖誕燈與字母牆。
+v5q80|影視|3|追劇細節|choice|《怪奇物語》的Hawkins小鎮位於哪個美國州？|-|Indiana~California~Texas~Florida|0|答案：Indiana。
+v5q81|影視|3|追劇細節|choice|《怪奇物語》中，Dustin養過並取名Dart的生物最終屬於？|-|吸血鬼~Demodog~狼人~龍|1|答案：Demodog。
+v5q82|影視|3|追劇細節|choice|《哈利波特》原著，石內卜的護法形態是？|-|牡鹿~鳳凰~母鹿~水獺|2|答案：母鹿。
+v5q83|影視|3|追劇細節|choice|《哈利波特》原著，妙麗的父母職業是？|-|牙醫~律師~教授~花商|0|答案：牙醫。
+v5q84|影視|3|追劇細節|choice|《哈利波特》原著，第六集「混血王子」是誰？|-|路平~馬份~佛地魔~石內卜|3|答案：石內卜。
+v5q85|影視|3|追劇細節|choice|《哈利波特》原著，雷文克勞的失落遺物是？|-|冠冕~金盃~寶劍~掛墜盒|0|答案：冠冕。
+v5q86|影視|3|追劇細節|choice|《哈利波特》原著，真正將哈利的名字投入火盃的是？|-|小巴堤・柯羅奇~魯休思・馬份~天狼星・布萊克~阿拉特・穆敵|0|答案：小巴堤・柯羅奇。
+v5q87|影視|3|追劇細節|choice|《哈利波特》原著，佛地魔原名Tom Marvolo Riddle，中間名來自？|-|父親~教父~鄧不利多~外祖父|3|答案：外祖父。
+v5q88|影視|3|追劇細節|choice|《紙房子》團隊用哪位藝術家的臉作面具？|-|畢卡索~梵谷~米羅~薩爾瓦多・達利|3|答案：薩爾瓦多・達利。
+v5q89|影視|3|追劇細節|choice|《紙房子》教授與柏林的關係是？|-|師生~沒有親屬關係~父子~兄弟|3|答案：兄弟。
+v5q90|影視|3|追劇細節|choice|《絕命毒師》Walter White原本教什麼？|-|數學~物理~化學~生物|2|答案：化學。
+v5q91|影視|3|追劇細節|choice|《絕命毒師》Walter使用的化名是？|-|Heisenberg~Newton~Faraday~Schrödinger|0|答案：Heisenberg。
+v5q92|影視|3|追劇細節|choice|《六人行》Ross與Monica的關係是？|-|兄妹~夫妻~同學~表姊弟|0|答案：兄妹。
+v5q93|影視|3|追劇細節|choice|《六人行》Joey的職業主要是？|-|作曲家~演員~廚師~古生物學家|1|答案：演員。
+v5q94|影視|3|追劇細節|choice|《后翼棄兵》主角Beth最擅長的是？|-|西洋棋~圍棋~橋牌~將棋|0|答案：西洋棋。
+v5q95|影視|3|追劇細節|choice|《魷魚遊戲》第一季，成奇勳的玩家編號是？|-|218~456~001~067|1|答案：456。
+v5q96|影視|3|追劇細節|choice|《想見你》中連結時空的重要隨身聽物件歌曲是？|-|挪威的森林~浪子回頭~後來~Last Dance|3|答案：Last Dance。
+v5q97|影視|3|追劇細節|choice|《俗女養成記》成年陳嘉玲由誰演出？|-|林心如~謝盈萱~謝欣穎~柯佳嬿|1|答案：謝盈萱。
+v5q98|影視|3|追劇細節|choice|《琅琊榜》梅長蘇的原名是？|-|蕭景睿~言豫津~蕭景琰~林殊|3|答案：林殊。
+v5q99|影視|3|追劇細節|choice|《我們與惡的距離》主要飾演宋喬安的是？|-|林心如~曾沛慈~賈靜雯~謝盈萱|2|答案：賈靜雯。
+v5q100|影視|3|追劇細節|choice|《孤獨的美食家》主角井之頭五郎主要從事？|-|刑警工作~料理評論~餐廳經營~進口雜貨貿易|3|答案：進口雜貨貿易。
+v5q101|影視|3|追劇細節|choice|《進擊的巨人》中，里維最主要隸屬？|-|調查兵團~駐紮兵團~憲兵團~海軍本部|0|答案：調查兵團。
+v5q102|影視|3|追劇細節|choice|《SPY×FAMILY》中，約兒作為殺手的代號是？|-|荊棘公主~夜帷~黃昏~鋼鐵淑女|0|約兒的殺手代號為荊棘公主（いばら姫）。
+v5q103|影視|3|追劇細節|choice|《葬送的芙莉蓮》費倫主要使用的戰鬥方式是？|-|魔法~雙手斧~弓箭~近身摔技|0|答案：魔法。
+v5q104|影視|3|追劇細節|choice|《排球少年!!》日向翔陽就讀哪間高中？|-|白鳥澤~音駒~烏野~青葉城西|2|答案：烏野。
+v5q105|動漫|3|柯南進階|choice|《名偵探柯南》安室透的本名是？|-|赤井秀一~松田陣平~諸伏景光~降谷零|3|答案：降谷零。
+v5q106|動漫|3|柯南進階|choice|《名偵探柯南》赤井秀一隸屬哪個美國單位？|-|FBI~CIA~DEA~NSA|0|答案：FBI。
+v5q107|動漫|3|柯南進階|choice|《名偵探柯南》水無怜奈的真實情報員身分屬於？|-|ICPO~CIA~FBI~日本公安|1|答案：CIA。
+v5q108|動漫|3|柯南進階|choice|《名偵探柯南》灰原哀的本名是？|-|世良真純~宮野志保~宮野明美~遠山和葉|1|答案：宮野志保。
+v5q109|動漫|3|柯南進階|choice|《名偵探柯南》怪盜基德第二代主要身分是？|-|白馬探~服部平次~黑羽快斗~工藤新一|2|答案：黑羽快斗。
+v5q110|動漫|3|柯南進階|choice|《名偵探柯南》波本是誰的組織代號？|-|水無怜奈~赤井秀一~琴酒~安室透|3|答案：安室透。
+v5q111|動漫|3|柯南進階|choice|《名偵探柯南》萊伊曾是誰的組織代號？|-|宮野志保~赤井秀一~安室透~諸伏景光|1|答案：赤井秀一。
+v5q112|動漫|3|柯南進階|choice|《名偵探柯南》劇場版《貝克街的亡靈》主要虛擬舞臺是？|-|東京~巴黎~紐約~倫敦|3|答案：倫敦。
+v5q113|動漫|3|柯南進階|choice|《名偵探柯南》劇場版《迷宮的十字路》主要舞臺是？|-|大阪~神戶~橫濱~京都|3|答案：京都。
+v5q114|動漫|3|柯南進階|choice|《名偵探柯南》下列哪部劇場版最早上映？|-|迷宮的十字路~瞳孔中的暗殺者~世紀末的魔術師~貝克街的亡靈|2|答案：世紀末的魔術師。
+v5q115|動漫|3|柯南進階|choice|《名偵探柯南》下列哪部上映晚於《純黑的惡夢》？|-|異次元的狙擊手~絕海的偵探~業火的向日葵~零的執行人|3|答案：零的執行人。
+v5q116|動漫|3|柯南進階|choice|《名偵探柯南》世良真純與赤井秀一的關係是？|-|表兄妹~兄妹~無親屬關係~父女|1|答案：兄妹。
+v5q117|體育|3|球場與運動|choice|棒球投手同一局三個打席各投三顆好球，共九球三振三人，常稱？|-|完全比賽~三殺打~再見三振~完美一局（Immaculate inning）|3|答案：完美一局（Immaculate inning）。
+v5q118|體育|3|球場與運動|choice|棒球打者擊出滾地球後守備連續製造三個出局，稱？|-|犧牲打~三殺守備~三壘打~三振出局|1|答案：三殺守備。
+v5q119|體育|3|球場與運動|choice|棒球「完全比賽」除了無安打，也不能讓對方？|-|選擇揮棒~任何打者上壘~擊出界外球~打到外野|1|答案：任何打者上壘。
+v5q120|體育|3|球場與運動|choice|棒球打者一場集齊一壘安打、二壘安打、三壘安打與全壘打，稱？|-|猛打賞~滿貫打擊~雙響砲~完全打擊|3|答案：完全打擊。
+v5q121|體育|3|球場與運動|choice|棒球通常所稱「猛打賞」是單場至少幾支安打？|-|3~2~4~5|0|答案：3。
+v5q122|體育|3|球場與運動|choice|國際籃球FIBA賽制，球隊一節累積第幾次團隊犯規起通常進入加罰？|-|第6次~第4次~第5次~第3次|2|答案：第5次。
+v5q123|體育|3|球場與運動|choice|NBA正式比賽單節幾分鐘？|-|10~12~8~15|1|答案：12。
+v5q124|體育|3|球場與運動|choice|網球比分40:40稱deuce，通常需要？|-|直接打搶七~重新發球整局~再贏一分就拿下~連贏兩分才拿下該局|3|答案：連贏兩分才拿下該局。
+v5q125|體育|3|球場與運動|choice|羽球一般三局兩勝，每局通常先到幾分？|-|21~11~15~25|0|答案：21。
+v5q126|體育|3|球場與運動|choice|足球同一球員單場攻入三球，常稱？|-|帽子戲法~大三元~梅開二度~黃金入球|0|答案：帽子戲法。
+v5q127|體育|3|球場與運動|choice|排球一方在不計攔網觸球時，最多幾次觸球須將球送回？|-|4~5~2~3|3|答案：3。
+v5q128|體育|3|球場與運動|choice|田徑標準馬拉松距離是？|-|42.195公里~21.0975公里~40公里~42公里|0|答案：42.195公里。
+v5q129|體育|3|球場與運動|choice|撞球九號球開球後，通常須先碰到檯面上哪顆球？|-|9號~離袋口最近的球~號碼最小的球~自己選的球|2|答案：號碼最小的球。
+v5q130|體育|3|球場與運動|choice|桌球一般一局打到11分，但10:10後須？|-|領先兩分~直接猜拳~改成發五球~先到12分即可|0|答案：領先兩分。
+v5q131|體育|3|球場與運動|choice|棒球滿壘時，打者獲四壞球保送，三壘跑者？|-|直接出局~必須盜壘才可得分~原地不動~被迫進本壘得分|3|答案：被迫進本壘得分。
+v5q132|體育|3|球場與運動|choice|棒球兩出局、滿壘時，內野高飛必死球規則？|-|打者可自行決定~一定宣告~改判全壘打~不適用|3|答案：不適用。
+v5q133|常識|3|臺灣麻將|choice|依一般臺灣16張麻將基本牌型，胡牌通常共幾張（不計花、槓額外張）？|-|17~16~14~18|0|答案：17。
+v5q134|常識|3|臺灣麻將|choice|依一般臺灣16張麻將基本牌型，一副胡牌通常是？|-|七個對子~六組面子~五組面子加一對將~四組面子加一對將|2|答案：五組面子加一對將。
+v5q135|常識|3|臺灣麻將|choice|手中有三、四萬，能吃上家哪張組成順子？|-|二萬或五萬~只能四萬~只能三萬~一萬或六萬|0|答案：二萬或五萬。
+v5q136|常識|3|臺灣麻將|choice|手上兩張紅中，別人打紅中，通常可以？|-|補花~直接宣告自摸~吃~碰|3|答案：碰。
+v5q137|常識|3|臺灣麻將|choice|三張相同牌形成的面子叫？|-|順子~刻子~將眼~花牌|1|答案：刻子。
+v5q138|常識|3|臺灣麻將|choice|二、三、四筒連續三張形成的面子叫？|-|槓子~刻子~順子~將眼|2|答案：順子。
+v5q139|常識|3|臺灣麻將|choice|四張相同牌宣告成組，通常稱？|-|海底~吃~碰~槓|3|答案：槓。
+v5q140|常識|3|臺灣麻將|choice|一般臺灣麻將中，吃牌原則上只能吃誰打出的牌？|-|任何一家~對家~下家~上家|3|答案：上家。
+v5q141|常識|3|臺灣麻將|choice|一般臺灣麻將中，哪類牌不能組成數字順子？|-|筒子~萬子~東南西北中發白~索子|2|答案：東南西北中發白。
+v5q142|常識|3|臺灣麻將|choice|一般麻將「清一色」主要是？|-|只用同一種數牌花色組成~任何牌都沒有對子~只有字牌~三種數牌都有|0|答案：只用同一種數牌花色組成。
+v5q143|常識|3|臺灣麻將|choice|手牌已差一張就能成胡牌型，通常稱？|-|起手~流局~詐胡~聽牌|3|答案：聽牌。
+v5q144|常識|3|臺灣麻將|choice|花牌摸到後依一般臺灣規則通常要？|-|直接丟棄當安全牌~當作兩張牌~亮出後補牌~保留當萬用牌|2|答案：亮出後補牌。
+v5q145|常識|3|臺灣麻將|choice|七、八、九萬可組成順子，但八、九、一萬？|-|只能當將~也算順子~可算兩副面子~不能循環相接|3|答案：不能循環相接。
+v5q146|常識|3|臺灣麻將|choice|同時有人要碰牌和吃牌，依一般規則優先的是？|-|距離較遠者~碰牌~莊家固定優先~吃牌|1|答案：碰牌。
+v5q147|常識|3|臺灣麻將|choice|下列哪一組可當將眼？|-|一二三索~三張二萬~兩張九筒~東南西|2|答案：兩張九筒。
+v5q148|常識|3|臺灣麻將|choice|為避免地方規則差異，開局前最適合先確認？|-|誰的手機較新~桌布顏色~底台、特殊牌型與優先規則~骰子的品牌|2|答案：底台、特殊牌型與優先規則。
+v5q149|常識|3|麻將牌桌|match|依一般臺灣麻將，配對牌型名稱。|三張相同牌~三張連續同色數牌~兩張相同牌~四張相同牌宣告成組|槓子~刻子~順子~將眼|1,2,3,0|逐一核對人物、作品與相關資料。
+v5q150|音樂|3|歌詞猜歌名|choice|歌詞片段「逆風的方向」出自哪首歌？|-|天黑黑~小幸運~倔強~唯一|2|五月天《倔強》的短片段。
+v5q151|音樂|3|歌詞選字|choice|填入歌詞片段的空格：「逆風的方＿」。|-|海~向~你~路|1|五月天《倔強》。
+v5q152|音樂|3|歌詞猜歌名|choice|歌詞片段「寫信告訴我今天」出自哪首歌？|-|泡沫~聽海~曖昧~小幸運|1|張惠妹《聽海》的短片段。
+v5q153|音樂|3|歌詞選字|choice|填入歌詞片段的空格：「寫信告訴我今＿」。|-|路~心~天~說|2|張惠妹《聽海》。
+v5q154|音樂|3|歌詞猜歌名|choice|歌詞片段「我的小時候」出自哪首歌？|-|稻香~十年~普通朋友~天黑黑|3|孫燕姿《天黑黑》的短片段。
+v5q155|音樂|3|歌詞選字|choice|填入歌詞片段的空格：「我的小時＿」。|-|飛~走~雨~候|3|孫燕姿《天黑黑》。
+v5q156|音樂|3|歌詞猜歌名|choice|歌詞片段「終於做了這個決定」出自哪首歌？|-|隱形的翅膀~年少有為~勇氣~泡沫|2|梁靜茹《勇氣》的短片段。
+v5q157|音樂|3|歌詞選字|choice|填入歌詞片段的空格：「終於做了這個決＿」。|-|走~月~定~星|2|梁靜茹《勇氣》。
+v5q158|音樂|3|歌詞猜歌名|choice|歌詞片段「我受夠了等待」出自哪首歌？|-|泡沫~至少還有你~倒帶~忘情水|2|蔡依林《倒帶》的短片段。
+v5q159|音樂|3|歌詞選字|choice|填入歌詞片段的空格：「我受夠了等＿」。|-|你~雨~飛~待|3|蔡依林《倒帶》。
+v5q160|音樂|3|歌詞猜歌名|choice|歌詞片段「再靠近一點點」出自哪首歌？|-|勇氣~小情歌~戀人未滿~十年|2|S.H.E《戀人未滿》的短片段。
+v5q161|音樂|3|歌詞選字|choice|填入歌詞片段的空格：「再靠近一點＿」。|-|路~走~點~愛|2|S.H.E《戀人未滿》。
+v5q162|音樂|3|歌詞猜歌名|choice|歌詞片段「如果那兩個字」出自哪首歌？|-|戀人未滿~十年~小幸運~想見你想見你想見你|1|陳奕迅《十年》的短片段。
+v5q163|音樂|3|歌詞選字|choice|填入歌詞片段的空格：「如果那兩個＿」。|-|飛~字~花~夢|1|陳奕迅《十年》。
+v5q164|音樂|3|歌詞猜歌名|choice|歌詞片段「風到這裡就是黏」出自哪首歌？|-|江南~至少還有你~紅豆~忘情水|0|林俊傑《江南》的短片段。
+v5q165|音樂|3|歌詞選字|choice|填入歌詞片段的空格：「風到這裡就是＿」。|-|飛~夜~黏~天|2|林俊傑《江南》。
+v5q166|音樂|3|歌詞猜歌名|choice|歌詞片段「這是一首簡單的」出自哪首歌？|-|忘情水~小情歌~倔強~挪威的森林|1|蘇打綠《小情歌》的短片段。
+v5q167|音樂|3|歌詞選字|choice|填入歌詞片段的空格：「這是一首簡單＿」。|-|的~飛~海~心|0|蘇打綠《小情歌》。
+v5q168|音樂|3|歌詞猜歌名|choice|歌詞片段「我聽見雨滴落在」出自哪首歌？|-|隱形的翅膀~小幸運~至少還有你~後來|1|田馥甄《小幸運》的短片段。
+v5q169|音樂|3|歌詞選字|choice|填入歌詞片段的空格：「我聽見雨滴落＿」。|-|夢~在~愛~飛|1|田馥甄《小幸運》。
+v5q170|音樂|3|歌詞猜歌名|choice|歌詞片段「我肯定在幾百年前」出自哪首歌？|-|紅豆~愛人錯過~小幸運~想見你想見你想見你|1|告五人《愛人錯過》的短片段。
+v5q171|音樂|3|歌詞選字|choice|填入歌詞片段的空格：「我肯定在幾百年＿」。|-|走~前~心~你|1|告五人《愛人錯過》。
+v5q172|音樂|3|歌詞猜歌名|choice|歌詞片段「菸一支一支一支的點」出自哪首歌？|-|戀人未滿~後來~浪子回頭~倔強|2|茄子蛋《浪子回頭》的短片段。
+v5q173|音樂|3|歌詞選字|choice|填入歌詞片段的空格：「菸一支一支一支的＿」。|-|心~風~點~天|2|茄子蛋《浪子回頭》。
+v5q174|音樂|3|歌詞猜歌名|choice|歌詞片段「習慣聽你分享」出自哪首歌？|-|以後別做朋友~不得不愛~如果可以~稻香|0|周興哲《以後別做朋友》的短片段。
+v5q175|音樂|3|歌詞選字|choice|填入歌詞片段的空格：「習慣聽你分＿」。|-|光~享~月~愛|1|周興哲《以後別做朋友》。
+v5q176|音樂|3|歌詞猜歌名|choice|歌詞片段「你的聲音」出自哪首歌？|-|如果可以~天黑黑~愛我別走~小幸運|0|韋禮安《如果可以》的短片段。
+v5q177|音樂|3|歌詞選字|choice|填入歌詞片段的空格：「你的聲＿」。|-|音~心~光~海|0|韋禮安《如果可以》。
+v5q178|音樂|3|歌詞猜歌名|choice|歌詞片段「當愛情遺忘成遺跡」出自哪首歌？|-|想見你想見你想見你~天黑黑~當~倒帶|0|八三夭《想見你想見你想見你》的短片段。
+v5q179|音樂|3|歌詞選字|choice|填入歌詞片段的空格：「當愛情遺忘成遺＿」。|-|愛~海~跡~星|2|八三夭《想見你想見你想見你》。
+v5q180|音樂|3|歌詞猜歌名|choice|歌詞片段「我到了這個時候」出自哪首歌？|-|愛我別走~吻別~小幸運~倒帶|0|張震嶽《愛我別走》的短片段。
+v5q181|音樂|3|歌詞選字|choice|填入歌詞片段的空格：「我到了這個時＿」。|-|候~天~星~等|0|張震嶽《愛我別走》。
+v5q182|音樂|3|歌詞猜歌名|choice|歌詞片段「我隨時隨地在等待」出自哪首歌？|-|不得不愛~普通朋友~曖昧~愛我別走|1|陶喆《普通朋友》的短片段。
+v5q183|音樂|3|歌詞猜歌名|choice|歌詞片段「我的天空多麼的清晰」出自哪首歌？|-|十年~曖昧~唯一~泡沫|2|王力宏《唯一》的短片段。
+v5q184|音樂|3|歌詞猜歌名|choice|歌詞片段「電視一直閃」出自哪首歌？|-|不得不愛~聽海~年少有為~十年|2|李榮浩《年少有為》的短片段。
+v5q185|音樂|3|歌詞猜歌名|choice|歌詞片段「陽光下的泡沫」出自哪首歌？|-|泡沫~普通朋友~稻香~唯一|0|鄧紫棋《泡沫》的短片段。
+v5q186|音樂|3|歌詞猜歌名|choice|歌詞片段「搖晃的紅酒杯」出自哪首歌？|-|王妃~倔強~戀人未滿~不得不愛|0|蕭敬騰《王妃》的短片段。
+v5q187|音樂|3|歌詞猜歌名|choice|歌詞片段「曖昧讓人受盡委屈」出自哪首歌？|-|愛我別走~曖昧~聽海~挪威的森林|1|楊丞琳《曖昧》的短片段。
+v5q188|音樂|3|歌詞猜歌名|choice|歌詞片段「天天都需要你愛」出自哪首歌？|-|當~不得不愛~吻別~曖昧|1|潘瑋柏與弦子《不得不愛》的短片段。
+v5q189|音樂|3|歌詞猜歌名|choice|歌詞片段「都在徘徊孤單中堅強」出自哪首歌？|-|隱形的翅膀~小幸運~曖昧~戀人未滿|0|張韶涵《隱形的翅膀》的短片段。
+v5q190|音樂|3|歌詞猜歌名|choice|歌詞片段「曾經年少愛追夢」出自哪首歌？|-|紅豆~普通朋友~倔強~忘情水|3|劉德華《忘情水》的短片段。
+v5q191|音樂|3|歌詞猜歌名|choice|歌詞片段「前塵往事成雲煙」出自哪首歌？|-|忘情水~紅豆~如果可以~吻別|3|張學友《吻別》的短片段。
+v5q192|音樂|3|歌詞猜歌名|choice|歌詞片段「還沒好好的感受」出自哪首歌？|-|忘情水~戀人未滿~聽海~紅豆|3|王菲《紅豆》的短片段。
+v5q193|音樂|3|歌詞猜歌名|choice|歌詞片段「我怕來不及」出自哪首歌？|-|紅豆~曖昧~至少還有你~天黑黑|2|林憶蓮《至少還有你》的短片段。
+v5q194|音樂|3|歌詞猜歌名|choice|歌詞片段「當山峰沒有稜角」出自哪首歌？|-|想見你想見你想見你~當~如果可以~聽海|1|動力火車《當》的短片段。
+v5q195|音樂|3|歌詞猜歌名|choice|歌詞片段「讓我將你心兒摘下」出自哪首歌？|-|普通朋友~吻別~聽海~挪威的森林|3|伍佰《挪威的森林》的短片段。
+v5q196|音樂|3|歌詞猜歌名|choice|歌詞片段「家是唯一的城堡」出自哪首歌？|-|天黑黑~稻香~倒帶~吻別|1|周杰倫《稻香》的短片段。
+v5q197|音樂|3|歌詞猜歌名|choice|歌詞片段「後來我總算學會了」出自哪首歌？|-|泡沫~後來~想見你想見你想見你~天黑黑|1|劉若英《後來》的短片段。
+v6q0|英文|2|Movie clues|choice|A young wizard studies at Hogwarts. Which series is this?|-|Frozen~Star Wars~Harry Potter~Jurassic Park|2|答案：Harry Potter。
+v6q1|英文|2|Movie clues|choice|A girl named Elsa can control ice and snow. Which film?|-|Frozen~Coco~Finding Nemo~Toy Story|0|答案：Frozen。
+v6q2|英文|2|Movie clues|choice|A clownfish father searches the ocean for his son. Which film?|-|Cars~Finding Nemo~Moana~Jaws|1|答案：Finding Nemo。
+v6q3|英文|2|Movie clues|choice|Woody and Buzz are toys that come alive. Which film series?|-|Shrek~Coco~Toy Story~Up|2|答案：Toy Story。
+v6q4|英文|2|Movie clues|choice|A boy named Miguel visits the Land of the Dead. Which film?|-|Cars~Inside Out~Frozen~Coco|3|答案：Coco。
+v6q5|英文|2|Movie clues|choice|A theme park brings dinosaurs back to life. Which film?|-|Avatar~The Matrix~Jurassic Park~Titanic|2|答案：Jurassic Park。
+v6q6|英文|2|Movie clues|choice|People in Hawkins face creatures from the Upside Down. Which series?|-|Stranger Things~Friends~Sherlock~Wednesday|0|答案：Stranger Things。
+v6q7|英文|2|Movie clues|choice|Six friends often meet at Central Perk in New York. Which series?|-|Stranger Things~The Crown~Friends~Sherlock|2|答案：Friends。
+v6q8|英文|2|Movie clues|choice|A detective lives at 221B Baker Street. Who is he?|-|James Bond~Sherlock Holmes~Peter Parker~Harry Potter|1|答案：Sherlock Holmes。
+v6q9|英文|2|Movie clues|choice|A panda learns kung fu. Which animated film?|-|Shrek~Kung Fu Panda~Frozen~Coco|1|答案：Kung Fu Panda。
+v6q10|英文|2|Movie clues|choice|A green ogre befriends a talking donkey. Which film?|-|Up~Coco~Shrek~Cars|2|答案：Shrek。
+v6q11|英文|2|Movie clues|choice|A house flies away with thousands of balloons. Which film?|-|Dune~Up~Frozen~Avatar|1|答案：Up。
+v6q12|英文|2|Movie clues|choice|A ship hits an iceberg during a love story. Which film?|-|Titanic~The Matrix~Jaws~La La Land|0|答案：Titanic。
+v6q13|英文|2|Movie clues|choice|A rat secretly helps cook in a Paris restaurant. Which film?|-|Zootopia~Cars~Ratatouille~Coco|2|答案：Ratatouille。
+v6q14|英文|2|Movie clues|choice|A girl explores a spirit world and works in a bathhouse. Which film?|-|My Neighbor Totoro~Spirited Away~Your Name~Ponyo|1|答案：Spirited Away。
+v6q15|英文|2|Grammar practice|choice|She ___ to school by bus every day.|-|going~gone~goes~go|2|答案：goes。
+v6q16|英文|2|Grammar practice|choice|We ___ a movie last night.|-|watched~watch~watches~watching|0|答案：watched。
+v6q17|英文|2|Grammar practice|choice|Look! The students ___ basketball.|-|played~plays~are playing~is playing|2|答案：are playing。
+v6q18|英文|2|Grammar practice|choice|There ___ two tickets on the desk.|-|be~was~are~is|2|答案：are。
+v6q19|英文|2|Grammar practice|choice|I have lived here ___ 2020.|-|at~since~during~for|1|答案：since。
+v6q20|英文|2|Grammar practice|choice|This book is ___ than that one.|-|interest~interesting~more interesting~most interesting|2|答案：more interesting。
+v6q21|英文|2|Grammar practice|choice|You ___ wear a seat belt in a car.|-|must~would rather~used to~may not|0|答案：must。
+v6q22|英文|2|Grammar practice|choice|Neither Tom nor his sisters ___ at home.|-|are~was~is~be|0|答案：are。
+v6q23|英文|2|Grammar practice|choice|If it rains tomorrow, we ___ home.|-|will stay~have stayed~stayed~staying|0|答案：will stay。
+v6q24|英文|2|Grammar practice|choice|The song ___ by millions of fans yesterday.|-|is hearing~was heard~heard~hears|1|答案：was heard。
+v6q25|英文|2|Grammar practice|choice|I enjoy ___ music after class.|-|listen~listening to~listen to~to listening|1|答案：listening to。
+v6q26|英文|2|Grammar practice|choice|Could you tell me where the station ___?|-|is~do~has~does|0|答案：is。
+v6q27|英文|2|Grammar practice|choice|He is the student ___ won the singing contest.|-|where~who~when~whose|1|答案：who。
+v6q28|英文|2|Grammar practice|choice|I am interested ___ learning guitar.|-|in~at~on~for|0|答案：in。
+v6q29|英文|2|Grammar practice|choice|We have already ___ our homework.|-|finished~finish~finishing~finishes|0|答案：finished。
+v6q30|英文|2|Grammar practice|choice|How ___ water do you need?|-|many~few~often~much|3|答案：much。
+v6q31|英文|2|Screen matching|match|Match the clues to the screen story.|Elsa~Woody~Harry~Miguel|Toy Story~Coco~Harry Potter~Frozen|3,0,2,1|依題幹線索逐一配對。
+v6q32|英文|2|Screen matching|match|Match the clues to the screen story.|Hogwarts~Central Perk~Hawkins~221B Baker Street|Stranger Things~Friends~Sherlock~Harry Potter|3,1,0,2|依題幹線索逐一配對。
+v6q33|英文|2|Screen matching|match|Match the clues to the screen story.|a flying house~a cooking rat~a green ogre~a kung fu panda|Ratatouille~Shrek~Kung Fu Panda~Up|3,0,1,2|依題幹線索逐一配對。
+v6q34|英文|2|Grammar matching|match|Match each word to its correct form.|go~see~sing~write|wrote~went~sang~saw|1,3,2,0|依題幹線索逐一配對。
+v6q35|英文|2|Grammar matching|match|Match each word to its correct form.|child~person~tooth~mouse|children~teeth~people~mice|0,2,1,3|依題幹線索逐一配對。
+v6q36|數學|1|數學家點名|choice|「牛頓」除了物理研究，也與哪個數學領域的發展密切相關？|-|微積分~植物分類~地層命名~考古學|0|答案：微積分。
+v6q37|數學|1|數學家點名|choice|數學符號π通常表示？|-|直角大小~任意正整數~圓周長與直徑的比值~三角形邊長總和|2|答案：圓周長與直徑的比值。
+v6q38|數學|1|數學家點名|choice|直角三角形a²＋b²＝c²，常稱為哪位數學家的定理？|-|高斯~帕斯卡~畢達哥拉斯~歐拉|2|答案：畢達哥拉斯。
+v6q39|數學|1|數學家點名|choice|笛卡兒的名字最常出現在下列哪項數學工具？|-|溫度計~摩斯電碼~平面直角座標~化學元素表|2|答案：平面直角座標。
+v6q40|數學|1|數學家點名|choice|以圓周率精密計算成果聞名的中國古代數學家是？|-|祖沖之~鄭和~李時珍~王羲之|0|答案：祖沖之。
+v6q41|數學|1|數學家點名|choice|數學家高斯來自哪個國家？|-|日本~義大利~德國~美國|2|答案：德國。
+v6q42|數學|1|數學家點名|choice|《幾何原本》常與哪位數學家連結？|-|歐幾里得~達爾文~愛因斯坦~牛頓|0|答案：歐幾里得。
+v6q43|數學|1|數學家點名|choice|哪位人物既是數學家，也提出著名的三條運動定律？|-|牛頓~巴斯德~達爾文~孟德爾|0|答案：牛頓。
+v6q44|數學|1|數學家配對|match|配對熟悉的數學人物與常見線索。|笛卡兒~畢達哥拉斯~牛頓~祖沖之|圓周率計算~座標系統~微積分與運動定律~直角三角形定理|1,3,2,0|依題幹線索逐一配對。
+v6q45|數學|1|算數配對|match|把校園小計算配上結果。|120元打八折~3x＝21的x~邊長5的正方形面積~10、20、30的平均|20~7~96~25|2,1,3,0|依題幹線索逐一配對。
+v6q46|國文|3|文言小紙條|choice|「學而時習之，不亦說乎」的「說」意思是？|-|責罵~喜悅~說話~說服|1|答案：喜悅。
+v6q47|國文|3|文言小紙條|choice|「三人行，必有我師焉」最接近哪種意思？|-|三人中必有正式教師~一定只能三人同行~老師不會犯錯~身邊的人都有值得學習之處|3|答案：身邊的人都有值得學習之處。
+v6q48|國文|3|文言小紙條|choice|「己所不欲，勿施於人」最接近？|-|自己不願承受的事也別強加他人~凡事都不必行動~別人的感受不重要~只要自己喜歡就能強迫別人|0|答案：自己不願承受的事也別強加他人。
+v6q49|國文|3|文言小紙條|choice|「溫故而知新」的「故」是？|-|所以~故意~已學過的知識~事故|2|答案：已學過的知識。
+v6q50|國文|3|文言小紙條|choice|「知之為知之，不知為不知」強調？|-|一定要假裝懂~不用學習~誠實面對自己懂與不懂的事~只相信傳聞|2|答案：誠實面對自己懂與不懂的事。
+v6q51|國文|3|文言小紙條|choice|「先天下之憂而憂」出自哪篇文章？|-|出師表~醉翁亭記~桃花源記~岳陽樓記|3|答案：岳陽樓記。
+v6q52|國文|3|文言小紙條|choice|「醉翁之意不在酒」中的醉翁指誰？|-|韓愈~歐陽脩~王安石~蘇軾|1|答案：歐陽脩。
+v6q53|國文|3|文言小紙條|choice|「不以物喜，不以己悲」較接近？|-|凡事只看利益~完全沒有任何情緒~不因外物或自身得失輕易動搖~拒絕了解別人|2|答案：不因外物或自身得失輕易動搖。
+v6q54|國文|3|文言小紙條|choice|《桃花源記》中「阡陌交通」的「交通」指？|-|田間道路交錯相通~買賣往來~車流壅塞~搭公車|0|答案：田間道路交錯相通。
+v6q55|國文|3|文言小紙條|choice|《桃花源記》「妻子邑人」的「妻子」指？|-|只有妻子~同事~父母~妻子與子女|3|答案：妻子與子女。
+v6q56|國文|3|文言小紙條|choice|「肉食者鄙」的「鄙」在文中主要是？|-|衣著簡樸~住在鄉下~見識淺陋~說話小聲|2|答案：見識淺陋。
+v6q57|國文|3|文言小紙條|choice|「苟全性命於亂世」的「苟」是？|-|小狗~姑且~如果一定~始終|1|答案：姑且。
+v6q58|國文|3|文言小紙條|choice|「予獨愛蓮之出淤泥而不染」出自？|-|記承天寺夜遊~愛蓮說~陋室銘~師說|1|答案：愛蓮說。
+v6q59|國文|3|文言小紙條|choice|「斯是陋室，惟吾德馨」主要強調？|-|品德使簡陋居所也有價值~只要豪宅才有尊嚴~禁止別人來訪~房價必定上升|0|答案：品德使簡陋居所也有價值。
+v6q60|國文|3|文言小紙條|choice|「但少閒人如吾兩人者耳」的「耳」相當於？|-|聽說~而且~耳朵~罷了|3|答案：罷了。
+v6q61|國文|3|文言小紙條|choice|「學不可以已」的「已」是？|-|停止~以後~自己~已經|0|答案：停止。
+v6q62|國文|3|文言小紙條|match|把文言詞義配回現代說法。|說（不亦說乎）~已（學不可以已）~故（溫故知新）~耳（如吾兩人者耳）|喜悅~舊知識~罷了~停止|0,3,1,2|依題幹線索逐一配對。
+v6q63|影視|3|台詞放映室|choice|「Friends don’t lie.」最常讓人想到哪部影集？|-|紙房子~后翼棄兵~六人行~怪奇物語|3|答案：怪奇物語。
+v6q64|影視|3|台詞放映室|choice|「May the Force be with you.」是哪個電影系列的經典台詞？|-|侏羅紀公園~星際大戰~魔戒~哈利波特|1|答案：星際大戰。
+v6q65|影視|3|台詞放映室|choice|「I’ll be back.」是以下哪部電影的經典台詞？|-|玩具總動員~沙丘~魔鬼終結者~鐵達尼號|2|答案：魔鬼終結者。
+v6q66|影視|3|台詞放映室|choice|「To infinity and beyond!」最常連結哪部動畫電影？|-|腦筋急轉彎~冰雪奇緣~玩具總動員~功夫熊貓|2|答案：玩具總動員。
+v6q67|影視|3|台詞放映室|choice|「Why so serious?」是哪部蝙蝠俠電影的知名台詞？|-|蝙蝠俠：開戰時刻~蝙蝠俠大顯神威~黑暗騎士~黑暗騎士：黎明昇起|2|答案：黑暗騎士。
+v6q68|影視|3|台詞放映室|choice|「臣妾做不到啊」是哪部影集的經典台詞？|-|延禧攻略~步步驚心~甄嬛傳~琅琊榜|2|答案：甄嬛傳。
+v6q69|影視|3|台詞放映室|choice|《哈利波特》回應「After all this time?」的「Always.」由誰說出？|-|佛地魔~海格~石內卜~馬份|2|答案：石內卜。
+v6q70|地理|3|臺灣走走|choice|觀光「四極點燈塔」中的極北燈塔是？|-|三貂角燈塔~鵝鑾鼻燈塔~國聖港燈塔~富貴角燈塔|3|此題依觀光四極點燈塔路線，不把離島地理極點混入。
+v6q71|地理|3|臺灣走走|choice|觀光「四極點燈塔」中的極東燈塔是？|-|國聖港燈塔~富貴角燈塔~鵝鑾鼻燈塔~三貂角燈塔|3|答案：三貂角燈塔。
+v6q72|地理|3|臺灣走走|choice|觀光「四極點燈塔」中的極南燈塔是？|-|國聖港燈塔~鵝鑾鼻燈塔~富貴角燈塔~三貂角燈塔|1|答案：鵝鑾鼻燈塔。
+v6q73|地理|3|臺灣走走|choice|觀光「四極點燈塔」中的極西燈塔是？|-|國聖港燈塔~三貂角燈塔~白沙岬燈塔~富貴角燈塔|0|極西燈塔位於臺南七股；本題依觀光路線的燈塔定義。
+v6q74|地理|3|臺灣走走|choice|臺灣現行縣市中，面積最大的是？|-|臺南市~花蓮縣~臺北市~新竹縣|1|依縣市行政區面積比較，不是人口數。
+v6q75|地理|3|臺灣走走|choice|依主計總處2026年1月1日常住人口統計，人口最多的縣市是？|-|高雄市~臺北市~新北市~臺中市|2|資料基準2026年1月1日（常住人口），主計總處公布；查核2026-11-10。
+v6q76|地理|3|臺灣走走|choice|臺灣唯一不靠海的縣市是？|-|苗栗縣~宜蘭縣~南投縣~嘉義縣|2|答案：南投縣。
+v6q77|地理|3|臺灣走走|choice|日月潭位於哪個縣？|-|臺東縣~南投縣~嘉義縣~花蓮縣|1|答案：南投縣。
+v6q78|地理|3|臺灣走走|choice|澎湖著名的玄武岩地景，主要源於哪種作用？|-|珊瑚全變成石頭~火山熔岩冷卻~冰河刨蝕~風把沙子吹成柱子|1|答案：火山熔岩冷卻。
+v6q79|地理|3|臺灣走走|choice|「雨都」通常是哪座臺灣城市的別稱？|-|基隆市~臺中市~嘉義市~臺南市|0|答案：基隆市。
+v6q80|地理|3|臺灣走走|choice|俗稱「風城」的城市是？|-|花蓮市~臺東市~新竹市~高雄市|2|答案：新竹市。
+v6q81|地理|3|臺灣走走|choice|「府城」通常指臺灣哪座城市？|-|基隆市~新竹市~臺南市~臺北市|2|答案：臺南市。
+v6q82|地理|3|臺灣走走|choice|臺灣最高峰是？|-|雪山主峰~玉山主峰~合歡主峰~阿里山|1|答案：玉山主峰。
+v6q83|地理|3|臺灣走走|choice|龜山島位於哪個縣市外海？|-|屏東縣~澎湖縣~宜蘭縣~嘉義縣|2|答案：宜蘭縣。
+v6q84|地理|3|臺灣走走|choice|臺北捷運與高雄捷運目前主要分布在哪個區域？|-|臺灣東部~中央山脈山頂~只有離島~臺灣西部|3|答案：臺灣西部。
+v6q85|地理|3|臺灣走走|choice|金門著名的民俗鎮風辟邪石像是？|-|風獅爺~摩艾像~兵馬俑~水鬼|0|答案：風獅爺。
+v6q86|地理|3|臺灣走走|choice|蘭嶼與哪個原住民族的傳統文化關聯最密切？|-|賽夏族~鄒族~達悟族~邵族|2|答案：達悟族。
+v6q87|地理|3|臺灣走走|choice|阿里山森林鐵路最直接與哪個縣市關聯？|-|臺東~嘉義~新竹~彰化|1|答案：嘉義。
+v6q88|地理|3|臺灣走走|choice|國聖港燈塔位於哪個城市？|-|新北市~雲林縣~高雄市~臺南市|3|答案：臺南市。
+v6q89|地理|3|臺灣走走|choice|富貴角與三貂角燈塔都位於哪個城市？|-|桃園市~臺北市~基隆市~新北市|3|兩個地標分別位於新北石門與貢寮。
+v6q90|地理|3|臺灣走走|match|依觀光四極點燈塔路線配對方位。|極北~極東~極南~極西|鵝鑾鼻~富貴角~三貂角~國聖港|1,2,0,3|依題幹線索逐一配對。
+share-song-0|音樂|3|歌名找歌手|choice|歌曲《倔強》的原唱／代表演唱者是？|-|五月天~告五人~蘇打綠~動力火車|0|五月天演唱此版本。
+share-song-1|音樂|3|歌名找歌手|choice|歌曲《聽海》的原唱／代表演唱者是？|-|張惠妹~田馥甄~楊丞琳~張韶涵|0|張惠妹演唱此版本。
+share-song-2|音樂|3|歌名找歌手|choice|歌曲《天黑黑》的原唱／代表演唱者是？|-|王菲~田馥甄~林憶蓮~孫燕姿|3|孫燕姿演唱此版本。
+share-song-3|音樂|3|歌名找歌手|choice|歌曲《勇氣》的原唱／代表演唱者是？|-|梁靜茹~劉若英~楊丞琳~蔡依林|0|梁靜茹演唱此版本。
+share-song-4|音樂|3|歌名找歌手|choice|歌曲《倒帶》的原唱／代表演唱者是？|-|蔡依林~林憶蓮~鄧紫棋~梁靜茹|0|蔡依林演唱此版本。
+share-song-5|音樂|3|歌名找歌手|choice|歌曲《戀人未滿》的原唱／代表演唱者是？|-|五月天~張惠妹~S.H.E~孫燕姿|2|S.H.E演唱此版本。
+share-song-6|音樂|3|歌名找歌手|choice|歌曲《十年》的原唱／代表演唱者是？|-|李榮浩~林俊傑~周杰倫~陳奕迅|3|陳奕迅演唱此版本。
+share-song-7|音樂|3|歌名找歌手|choice|歌曲《江南》的原唱／代表演唱者是？|-|蕭敬騰~林俊傑~劉德華~張學友|1|林俊傑演唱此版本。
+share-song-8|音樂|3|歌名找歌手|choice|歌曲《小情歌》的原唱／代表演唱者是？|-|蘇打綠~告五人~八三夭~五月天|0|蘇打綠演唱此版本。
+share-song-9|音樂|3|歌名找歌手|choice|歌曲《小幸運》的原唱／代表演唱者是？|-|田馥甄~張韶涵~劉若英~蔡依林|0|田馥甄演唱此版本。
+share-song-10|音樂|3|歌名找歌手|choice|歌曲《愛人錯過》的原唱／代表演唱者是？|-|動力火車~八三夭~蘇打綠~告五人|3|告五人演唱此版本。
+share-song-11|音樂|3|歌名找歌手|choice|歌曲《浪子回頭》的原唱／代表演唱者是？|-|伍佰~動力火車~告五人~茄子蛋|3|茄子蛋演唱此版本。
+share-song-12|音樂|3|歌名找歌手|choice|歌曲《以後別做朋友》的原唱／代表演唱者是？|-|周興哲~張震嶽~林俊傑~蕭敬騰|0|周興哲演唱此版本。
+share-song-13|音樂|3|歌名找歌手|choice|歌曲《如果可以》的原唱／代表演唱者是？|-|蕭敬騰~韋禮安~林俊傑~張學友|1|韋禮安演唱此版本。
+share-song-14|音樂|3|歌名找歌手|choice|歌曲《想見你想見你想見你》的原唱／代表演唱者是？|-|八三夭~茄子蛋~蘇打綠~告五人|0|八三夭演唱此版本。
+share-song-15|音樂|3|歌名找歌手|choice|歌曲《愛我別走》的原唱／代表演唱者是？|-|張震嶽~韋禮安~周興哲~王力宏|0|張震嶽演唱此版本。
+share-song-16|音樂|3|歌名找歌手|choice|歌曲《普通朋友》的原唱／代表演唱者是？|-|陶喆~劉德華~張震嶽~周杰倫|0|陶喆演唱此版本。
+share-song-17|音樂|3|歌名找歌手|choice|歌曲《唯一》（2001年版本）的原唱／代表演唱者是？|-|林俊傑~韋禮安~王力宏~周興哲|2|王力宏演唱此版本。
+share-song-18|音樂|3|歌名找歌手|choice|歌曲《年少有為》的原唱／代表演唱者是？|-|李榮浩~張學友~周杰倫~王力宏|0|李榮浩演唱此版本。
+share-song-19|音樂|3|歌名找歌手|choice|歌曲《泡沫》的原唱／代表演唱者是？|-|鄧紫棋~田馥甄~林憶蓮~楊丞琳|0|鄧紫棋演唱此版本。
+share-song-20|音樂|3|歌名找歌手|choice|歌曲《王妃》的原唱／代表演唱者是？|-|陳奕迅~蕭敬騰~張震嶽~陶喆|1|蕭敬騰演唱此版本。
+share-song-21|音樂|3|歌名找歌手|choice|歌曲《曖昧》的原唱／代表演唱者是？|-|劉若英~楊丞琳~王菲~張韶涵|1|楊丞琳演唱此版本。
+share-song-22|音樂|3|歌名找歌手|choice|歌曲《不得不愛》的原唱／代表演唱者是？|-|張惠妹~孫燕姿~五月天~潘瑋柏與弦子|3|潘瑋柏與弦子演唱此版本。
+share-song-23|音樂|3|歌名找歌手|choice|歌曲《隱形的翅膀》的原唱／代表演唱者是？|-|張韶涵~田馥甄~鄧紫棋~孫燕姿|0|張韶涵演唱此版本。
+share-song-24|音樂|3|歌名找歌手|choice|歌曲《忘情水》的原唱／代表演唱者是？|-|李榮浩~張學友~劉德華~王力宏|2|劉德華演唱此版本。
+share-song-25|音樂|3|歌名找歌手|choice|歌曲《吻別》的原唱／代表演唱者是？|-|張學友~周興哲~劉德華~李榮浩|0|張學友演唱此版本。
+share-song-26|音樂|3|歌名找歌手|choice|歌曲《紅豆》的原唱／代表演唱者是？|-|蔡依林~梁靜茹~王菲~楊丞琳|2|王菲演唱此版本。
+share-song-27|音樂|3|歌名找歌手|choice|歌曲《至少還有你》的原唱／代表演唱者是？|-|張韶涵~鄧紫棋~王菲~林憶蓮|3|林憶蓮演唱此版本。
+share-song-28|音樂|3|歌名找歌手|choice|歌曲《當》的原唱／代表演唱者是？|-|伍佰~動力火車~五月天~茄子蛋|1|動力火車演唱此版本。
+share-song-29|音樂|3|歌名找歌手|choice|歌曲《挪威的森林》的原唱／代表演唱者是？|-|動力火車~蘇打綠~茄子蛋~伍佰|3|伍佰演唱此版本。
+share-song-30|音樂|3|歌名找歌手|choice|歌曲《稻香》的原唱／代表演唱者是？|-|周杰倫~蕭敬騰~林俊傑~王力宏|0|周杰倫演唱此版本。
+share-song-31|音樂|3|歌名找歌手|choice|歌曲《後來》的原唱／代表演唱者是？|-|田馥甄~劉若英~張韶涵~張惠妹|1|劉若英演唱此版本。

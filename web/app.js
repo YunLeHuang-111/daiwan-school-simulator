@@ -1,419 +1,177 @@
 'use strict';
-
-const $ = (s) => document.querySelector(s);
-const app = $('#app');
-const KEY = 'daiwan-next-chapter-v1';
-const ATTR = ['人文社會', '數理科學', '語言能力', '體育', '藝術', '音樂', '人緣', '自信', '運氣'];
-const SUBJECTS = ['國文', '英文', '數學A', '數學B', '自然', '社會'];
-const clamp = (n, lo = 0, hi = 100) => Math.max(lo, Math.min(hi, n));
-const escapeHTML = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
-const fmt = (n) => Number(n).toFixed(1).replace(/\.0$/, '');
-let state = null;
-let busy = false;
-let welcome = true;
-let filter = {search: '', type: '全部', area: '全部'};
-let storageAvailable = true;
-try {
-  const raw = localStorage.getItem(KEY);
-  if (raw) {
-    const parsed = JSON.parse(raw);
-    const stages = ['quiz', 'essay', 'cap', 'highschools', 'schoolResult', 'round', 'roundResult', 'gsatSelect', 'gsatResult', 'routes', 'universities', 'admissionResult', 'divisionSelect', 'divisionResult', 'ending'];
-    if (parsed.version === 1 && stages.includes(parsed.stage) && typeof parsed.name === 'string' && Array.isArray(parsed.questions) && parsed.questions.length === 18) state = parsed;
-  }
-} catch { storageAvailable = false; }
-
-const HIGH_SCHOOLS = [
-  ['建華高中','公立','北部','普通高中',33.5,'學術研究',1],
-  ['北景女中','公立','北部','普通高中',32.5,'人文探索',0],
-  ['師苑附中','公立','北部','普通高中',31,'多元社團',4],
-  ['中城一中','公立','中部','普通高中',30,'科學探究',1],
-  ['南府一中','公立','南部','普通高中',29,'自主學習',1],
-  ['港灣高中','公立','南部','普通高中',26,'海洋與環境',0],
-  ['花嶼高中','公立','東部','普通高中',22,'山海探索',3],
-  ['青田高中','公立','中部','普通高中',18,'社區行動',0],
-  ['晨光高中','私立','北部','普通高中',24,'雙語表達',2],
-  ['明禾高中','私立','中部','普通高中',20,'專題實作',1],
-  ['育林高中','私立','南部','普通高中',13,'探索與支持',6],
-  ['松川高工・資訊科','公立','北部','技術高中',25,'程式與電路',1],
-  ['中原高工・機械科','公立','中部','技術高中',22,'工程實作',1],
-  ['港都高商・商業科','公立','南部','技術高中',20,'商業與溝通',0],
-  ['海風家商・設計科','公立','東部','技術高中',16,'設計與創作',4],
-  ['星禾藝校・表演科','私立','北部','藝術高中',15,'舞台與音樂',5],
-  ['向陽高職・餐旅科','私立','南部','技術高中',9,'餐旅與服務',6],
-  ['田野高中','公立','中部','普通高中',5,'適性探索',3]
-].map((s, i) => ({id: 'h'+i, name:s[0], type:s[1], area:s[2], track:s[3], threshold:s[4], feature:s[5], boost:s[6]}));
-
-const DEPTS = [
-  {name:'資訊工程學系', field:1, subjects:['英文','數學A','自然'], split:['數學甲','物理','化學']},
-  {name:'機械工程學系', field:1, subjects:['數學A','自然'], split:['數學甲','物理']},
-  {name:'外國語文學系', field:2, subjects:['國文','英文'], split:['歷史','地理']},
-  {name:'法律學系', field:0, subjects:['國文','英文','社會'], split:['歷史','公民與社會']},
-  {name:'企業管理學系', field:0, subjects:['英文','數學B','社會'], split:['數學乙','公民與社會']},
-  {name:'視覺設計學系', field:4, subjects:['國文','英文'], split:['歷史','地理']},
-  {name:'音樂學系', field:5, subjects:['國文','英文'], split:['歷史','地理']},
-  {name:'運動科學學系', field:3, subjects:['國文','自然'], split:['生物','化學']}
+const $=s=>document.querySelector(s), app=$('#app');
+const KEY='daiwan-campus-v5', ACH_KEY='daiwan-achievements-v4', SEEN_KEY='daiwan-seen-v4', MINI_KEY='daiwan-mini-seen-v4';
+const ATTR=['數理','語文','社會','藝術','音樂'];
+const TERMS=['高一上','高一下','高二上','高二下','高三上','高三下'];
+const GSAT=['國文','英文','數學A','數學B','自然','社會'];
+const SPLIT=['數學甲','數學乙','物理','化學','生物','歷史','地理','公民與社會'];
+const MODE={term:'學期挑戰',gsat:'學科能力測驗',split:'分科測驗'};
+const clamp=(n,min=0,max=100)=>Math.max(min,Math.min(max,n));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>Number(n).toFixed(1).replace(/\.0$/,'');
+let state=null,welcome=true,busy=false,catalog=null,programs=[],miniBank=[],songs=[],events=[];
+let storageOK=true,legacy=false,photoBusy=false;
+let achievements={},seen=[],miniSeen=[],openSelect=null;
+let filter={search:'',area:'全部',type:'全部',group:'全部',university:'全部',sort:'chance-desc'};
+const ACHIEVEMENTS=[
+ ['first','開學到畢業','第一次取得大學錄取','🎓'],['star','星光不負','經繁星推薦錄取','🌟'],['apply','作品會說話','經個人申請錄取','📒'],['split','夏日逆轉','經分科分發錄取','☀️'],
+ ['medicine','白袍新章','進入醫學或牙醫類組','🩺'],['artist','創作的方向','進入藝術、音樂或舞蹈類組','🎨'],['national','公立新座位','進入公立大學','🏫'],['private','自己的選擇','進入私立大學','🌷'],
+ ['retake','再出發也很勇敢','選擇重考結局','🌱'],['quizmaster','課堂全勤王','六學期問答全對','✏️'],['playmaster','下課才是主場','六個小遊戲皆達80分','🎮'],['explorer','平行青春','完成三種不同種子的旅程','🪐'],
+ ['elite','翻過高牆','錄取台清交成政或其他高門檻科系','🏔️'],['ntu','椰林新章','錄取呆丸大學','🌴'],['nccu','指南山上的風','錄取正治大學','🧭'],['language','世界的另一種說法','錄取外國語文學院','🌍'],['business','商院新同學','錄取商學院','📈'],['media','故事的製造者','錄取傳播學院','🎥'],
+ ['science','數理主場','數理達80','🧪'],['words','文字的重量','語文達80','📚'],['society','看懂世界','社會達80','🗺️'],['visual','讓色彩發聲','藝術達80','🖌️'],['melody','耳機裡的宇宙','音樂達80','🎼'],['maxed','登峰的一刻','任一能力達100','💯'],['balanced','五邊形同學','五項能力皆達60','⬟'],
+ ['gsatfull','滿級分的一天','學測至少四科且全15級分','🏅'],['splitfull','夏日滿貫','分科至少三科且全60級分','🏆'],['rare','稀有的入學信','從五星高中完成旅程','💌'],['comeback','被扣分也能逆轉','問答或小遊戲扣點後仍錄取','🔁'],['conan','真相只有一個','柯南小遊戲滿分','🕵️'],['flags','世界色票','國旗配對滿分','🚩'],['colorist','色差偵探','找不同三題全對','👁️'],['publichs','公立青春','從公立高中完成旅程','🎒'],['privatehs','私校日記','從私立高中完成旅程','📔'],
+ ['nthu','清花小徑','錄取清花大學','🌸'],['nycu','交會的下一站','錄取楊明蕉通大學','🚦'],['ncku','南方的城門','錄取城公大學','🏛️'],['ncu','中央新軌道','錄取盅央大學','🪐'],['nchu','興大的日常','錄取盅興大學','🌿'],['nsysu','西子灣的風','錄取盅山大學','🌊'],['ccu','鳳凰木下','錄取盅正大學','🌳'],['ntnu','師大的鐘聲','錄取獅範大學','🔔'],['tmu','城市裡的白袍','錄取苔北醫學大學','🏥'],['tnua','山上的藝術家','錄取苔北藝術大學','🎭'],
+ ['all70','六十分後的進階','五項能力都達70','⭐'],['three80','三個拿手領域','至少三項能力達80','🔺'],['firstchoice','心中的第一站','第一志願錄取','🥇'],['top10','前排的名字','在校排名前10%','📋'],['english15','英文好球帶','學測英文15級分','🔤'],['math15','數學的節奏','學測數學A或B達15級分','🔢'],['term90','九十分的午后','任一學期綜合成績達90','🌤️'],['lastperfect','最後一張滿分紙','高三下問答兩題全對','📝'],['consistent','每次都抓住一題','六學期問答每次至少答對一題','📌'],['fivealloc','把可能性都點亮','曾用骰子分配全部五項能力','🎲'],['fivegames','放學後的萬事通','五種不同小遊戲過關','🧩'],['lyricwin','聽見聲音的主人','歌詞猜歌手小遊戲滿分','🎤'],['mahjongwin','牌桌上的冷靜','麻將牌型小遊戲滿分','🀄'],['memorywin','記得每個位置','翻牌記憶小遊戲滿分','🧠'],['dance','讓腳步說故事','錄取舞蹈類組','🩰'],['pharmacy','藥草與試管','錄取藥學或中藥相關學系','🌱']
 ];
-const UNIVERSITIES = [
-  ['臺華大學','公立','北部',84],['清嵐大學','公立','北部',82],['陽明交岳大學','公立','北部',81],
-  ['成岳大學','公立','南部',79],['政和大學','公立','北部',78],['中原山大學','公立','中部',74],
-  ['中海大學','公立','南部',71],['東嶼大學','公立','東部',62],
-  ['師苑大學','公立','北部',75],['北川大學','公立','北部',70],
-  ['輔禾大學','私立','北部',64],['東麓大學','私立','中部',60],
-  ['淡川大學','私立','北部',56],['逢原大學','私立','中部',54],
-  ['南星大學','私立','南部',44],['海田大學','私立','東部',32]
-];
-// 每校五個示範系組：刻意採虛構組合，不代表真實校系設置。
-const PROGRAMS = UNIVERSITIES.flatMap((u, i) => Array.from({length:5}, (_, j) => {
-  const d = DEPTS[(i + j) % DEPTS.length];
-  return {...d, id:`u${i}-${j}`, university:u[0], type:u[1], area:u[2], threshold:clamp(u[3] + (d.field === 1 ? 2 : -2)), maxRank:u[3] >= 78 ? 20 : u[3] >= 65 ? 30 : 50};
-}));
-const SPLITS = ['數學甲','數學乙','物理','化學','生物','歷史','地理','公民與社會'];
-const EVENTS = [
-  {title:'社團舞台，少了一個人', text:'校慶快到了，朋友想邀請你一起演出。段考也在下週，你會怎麼安排？', choices:[['加入演出，練習站上舞台', {5:3,7:2},12,0,5],['協助海報與幕後工作',{4:3,6:2},5,0,4],['保留讀書時間，幫忙找替補',{2:1},-5,0,1]]},
-  {title:'科展的最後一塊拼圖',text:'同學正在找人分析實驗數據。你願意加入這場腦力接力嗎？',choices:[['負責分析與驗證',{1:3,7:1},8,0,6],['負責簡報與說明',{2:2,6:2},5,0,5],['先完成課內作業',{0:1,1:1},-4,0,1]]},
-  {title:'群組裡的那句話',text:'同學在群組裡被開了過頭的玩笑。氣氛有點尷尬，你決定……',choices:[['私下關心，陪他尋求協助',{6:3,7:1},-2,0,3],['溫和提醒大家停止轉傳',{6:2,0:2},3,0,3],['先退出爭論，向導師反映',{0:1,7:1},-3,0,1]]},
-  {title:'一個沒有行程的下午',text:'難得的空檔，校門口的風很舒服。今天你想留一點時間給自己。',choices:[['去球場運動',{3:3,7:1},-12,10,1],['聽歌、散步，整理心情',{5:2},-16,14,0],['畫下最近的校園生活',{4:3},-10,8,3]]},
-  {title:'看起來太完美的消息',text:'有人轉傳「考前必看，百分之百命中」的付費筆記。你打算怎麼做？',choices:[['查證來源並提醒朋友',{0:2,6:2},-3,0,2],['整理自己的筆記',{1:2,2:1},4,0,4],['請教老師如何抓重點',{7:2,2:1},-6,0,2]]},
-  {title:'和交換生一起吃午餐',text:'學校來了一位交換生，你們坐在同一桌。對方正好對臺灣生活很好奇。',choices:[['試著用英文介紹附近小吃',{2:3,7:2},3,0,3],['邀大家一起聊各地文化',{0:2,6:3},0,0,3],['用圖畫和照片分享故事',{4:2,2:1},-2,0,2]]},
-  {title:'第一次模擬面試',text:'老師安排了一次練習面試。輪到你時，心跳突然快了起來。',choices:[['坦誠說明自己的學習經驗',{7:3,2:1},4,0,5],['用作品展示自己的專長',{4:2,7:2},3,0,6],['請同學陪自己再練一次',{6:2,7:2},-4,0,3]]},
-  {title:'報告沒存到！',text:'電腦突然當機，報告只剩昨天的版本。距離繳交還有一天。',choices:[['列出重點，重新分工完成',{1:2,6:2},8,-3,5],['向老師說明並討論補救方案',{7:2,0:1},-4,0,2],['從備份重建，建立版本習慣',{1:3},2,0,4]]},
-  {title:'社區的小小邀請',text:'附近圖書館需要週末志工。你可以選一項自己擅長的工作。',choices:[['陪孩子閱讀',{0:3,6:2},0,-3,5],['設計活動海報',{4:3,7:1},2,-3,5],['協助音樂故事時間',{5:3,2:1},0,-3,5]]},
-  {title:'成績單上的紅字',text:'這次表現不如預期，但你還有時間調整。你想先從哪裡開始？',choices:[['整理錯題，找到卡住的觀念',{1:3,7:1},3,0,3],['與朋友組成讀書小組',{6:3,2:1},-4,0,3],['先睡飽，再訂小目標',{7:2},-15,15,1]]},
-  {title:'校際競賽報名中',text:'不同領域的競賽同時開放報名。這次你想挑戰哪個方向？',choices:[['科學與邏輯挑戰',{1:4},10,-4,6],['演說與議題辯論',{0:2,2:2},8,-4,6],['運動團體賽',{3:3,6:2},5,-6,5]]},
-  {title:'路邊的小幸運',text:'你在圖書館找到一本一直想讀的書，裡面剛好有這次專題需要的資料。',choices:[['做成筆記分享給同學',{0:2,6:2,8:1},-4,0,4],['延伸做一份自主學習作品',{1:2,4:1,8:1},5,0,6],['享受閱讀的時間',{2:2,8:1},-10,8,1]]},
-  {title:'城市裡的展覽',text:'學校提供一場免費展覽的參觀機會。這趟小旅行，你想怎麼記錄？',choices:[['畫成速寫與視覺筆記',{4:4},-6,0,5],['寫成觀察報告',{0:3,2:1},-3,0,5],['錄成聲音與音樂日記',{5:3,2:1},-8,0,5]]},
-  {title:'一起做一個小工具',text:'同學想做一個幫班上記錄作業的小工具，來找你一起試試。',choices:[['負責邏輯與功能',{1:4},6,-3,7],['負責畫面與易用性',{4:3,2:1},4,-2,6],['訪問同學需要什麼',{6:3,0:1},0,0,5]]},
-  {title:'操場邊的加油聲',text:'班際比賽在即，你可以選擇用自己的方式參與。',choices:[['上場練習與比賽',{3:4,7:1},3,-8,4],['編排加油表演',{5:2,4:2,6:1},1,-4,4],['幫忙記錄與照顧隊友',{6:3,0:1},-3,0,3]]},
-  {title:'給未來的自己',text:'老師請大家寫一封給三年後自己的信。你最想留住什麼？',choices:[['記下想研究的問題',{1:2,7:2},-5,0,4],['記下重要的人與回憶',{0:2,6:2},-10,4,3],['寫下還沒完成的創作',{4:2,5:2},-6,0,4]]},
-  {title:'同學需要一位小老師',text:'朋友被一道題目困住了。試著教別人，也可能讓自己重新理解。',choices:[['畫圖解釋解題過程',{1:2,4:1,6:1},3,0,4],['用生活例子說明',{0:2,2:1,6:1},1,0,4],['找可靠資料一起討論',{2:2,6:2},0,0,3]]},
-  {title:'一場關於未來的對話',text:'導師問你：「除了分數，你希望別人怎麼記得你？」你想了想。',choices:[['一個願意解決問題的人',{1:2,7:3},-7,4,4],['一個願意照顧夥伴的人',{6:3,0:2},-7,4,4],['一個持續創作的人',{4:2,5:2,7:1},-7,4,4]]}
-];
-
-function random() {
-  let x = state.seed | 0;
-  x ^= x << 13; x ^= x >>> 17; x ^= x << 5;
-  state.seed = x >>> 0;
-  return state.seed / 4294967296;
+function readStore(key,fallback){try{return JSON.parse(localStorage.getItem(key)||'null')??fallback;}catch{return fallback;}}
+function saveStore(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true;}catch{return false;}}
+function save(){storageOK=saveStore(KEY,state);$('#save-status').textContent=storageOK?'● 已存檔':'⚠ 本機儲存空間不足';}
+function go(stage){state.stage=stage;save();render();window.scrollTo({top:0,behavior:'instant'});}
+function rng(){let x=state.seed|0;x^=x<<13;x^=x>>>17;x^=x<<5;state.seed=x>>>0;return state.seed/4294967296;}
+function shuffle(list){const a=[...list];for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function hashSeed(text){let h=2166136261;for(let i=0;i<text.length;i++){h^=text.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+function freshSample(list,n,id){const fresh=list.filter(x=>!miniSeen.includes(id(x)));const pool=[...shuffle(fresh),...shuffle(list.filter(x=>miniSeen.includes(id(x))))];const chosen=pool.slice(0,n);miniSeen=[...new Set([...miniSeen,...chosen.map(id)])].slice(-1800);saveStore(MINI_KEY,miniSeen);return chosen;}
+function toast(t){$('#toast').textContent=t;$('#toast').classList.add('visible');setTimeout(()=>$('#toast').classList.remove('visible'),2600);}
+function button(t,a,style='primary',extra=''){return `<button class="${style}" data-action="${a}" ${extra}>${t}</button>`;}
+function heading(k,h,p=''){return `<div class="heading"><span class="eyebrow">${k}</span><h1>${h}</h1>${p?`<p>${p}</p>`:''}</div>`;}
+function confirmAction(title,text,fn){$('#confirm-title').textContent=title;$('#confirm-text').textContent=text;$('#confirm-ok').onclick=()=>{$('#confirm-dialog').close();fn();};$('#confirm-dialog').showModal();}
+async function api(path,data){if(document.documentElement.dataset.runtime==='browser')return DaiwanRuntime.request(path,data);const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),15000);try{const r=await fetch('/api/'+path,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(data),signal:controller.signal});const d=await r.json();if(!r.ok)throw new Error(d.error||'連線失敗');return d;}finally{clearTimeout(timer);}}
+function termName(){return TERMS[state.round];}
+function attrBars(){return state.attrs.map((v,i)=>`<div class="attribute"><span>${ATTR[i]}</span><div class="meter"><i style="width:${v}%"></i></div><b>${v}</b></div>`).join('');}
+function routeName(route){return{star:'繁星推薦',apply:'個人申請',distribution:'分科分發'}[route];}
+function university(id){return catalog.universities.find(u=>u.id===id);}
+function crest(u,cls='crest'){return `<img class="${cls}" src="${u.crest}" alt="${esc(u.name)}原創校徽" width="80" height="80">`;}
+function traitScore(){return Math.round(state.attrs.reduce((n,v,i)=>n+v*.65+state.aptitude[i]*.35,0)/5);}
+function customSelect(key,value,items,label=''){const options=items.map(x=>typeof x==='string'?{value:x,label:x}:x);const selected=options.find(x=>String(x.value)===String(value));return `<div class="custom-select ${openSelect===key?'is-open':''}" data-select-wrap="${key}"><button type="button" class="select-trigger" role="combobox" aria-label="${esc(label||key)}" aria-expanded="${openSelect===key}" aria-controls="list-${key}" data-action="toggle-select" data-key="${key}"><span>${esc(selected?.label||label||'請選擇')}</span><i>⌄</i></button>${openSelect===key?`<div class="select-menu" id="list-${key}" role="listbox" aria-label="${esc(label)}">${options.map(o=>`<button type="button" role="option" aria-selected="${String(o.value)===String(value)}" data-action="select-option" data-key="${key}" data-value="${esc(o.value)}"><span>${esc(o.label)}</span>${String(o.value)===String(value)?'✓':''}</button>`).join('')}</div>`:''}</div>`;}
+function chooseSelect(key,value){openSelect=null;if(key.startsWith('match-')){const row=Number(key.slice(6)),a=state.paper.answers[state.paper.index],v=value===''?null:Number(value);if(v!==null){const old=a.indexOf(v);if(old!==-1&&old!==row)a[old]=null;}a[row]=v;save();}else filter[key]=value;render();app.querySelector(`[data-select-wrap="${key}"] .select-trigger`)?.focus({preventScroll:true});}
+function sortSelect(){return customSelect('sort',filter.sort,[{value:'chance-desc',label:'錄取率：高 → 低'},{value:'chance-asc',label:'錄取率：低 → 高'},{value:'original',label:'原始順序'}],'錄取率排序');}
+function sortedOptions(list,rate){const rated=list.map((value,index)=>({value,index,rate:rate(value)}));if(filter.sort!=='original')rated.sort((a,b)=>(filter.sort==='chance-asc'?a.rate-b.rate:b.rate-a.rate)||a.index-b.index);return rated.map(x=>x.value);}
+function filters(){const groups=[...new Set(programs.map(p=>String(p.group)))].sort();return `<div class="filters"><label class="search-field"><span>⌕</span><input id="catalog-search" placeholder="搜尋大學、科系…" value="${esc(filter.search)}" aria-label="搜尋大學科系"></label>${customSelect('type',filter.type,['全部','公立','私立'],'學校性質')}${customSelect('area',filter.area,['全部','北部','中部','南部','東部'],'地區')}${customSelect('group',filter.group,[{value:'全部',label:'全部類組'},...groups.map(g=>({value:g,label:catalog.groups[g]}))],'科系類組')}${sortSelect()}</div>`;}
+function filtered(list){return sortedOptions(list.filter(p=>(filter.type==='全部'||p.type===filter.type)&&(filter.area==='全部'||p.area===filter.area)&&(filter.group==='全部'||String(p.group)===filter.group)&&(p.name+p.universityName+p.abbr).toLowerCase().includes(filter.search.trim().toLowerCase())),admissionEstimate);}
+function resetRound(){state.dice=[];state.dieIndex=0;state.assignments=[];state.game=null;state.event=null;}
+async function startRun(name,seedText,gender,schoolType){const previous=state;const text=seedText.trim()||crypto.getRandomValues(new Uint32Array(1))[0].toString(36).toUpperCase();const originSeed=hashSeed(text);try{const d=await api('enroll',{seed:originSeed,gender,schoolType});state={version:5,name,gender,schoolType,stage:'enrolled',seedText:text,originSeed,seed:originSeed||1234567,school:d.school,attrs:d.attrs,initialAttrs:[...d.attrs],aptitude:d.aptitude,portfolio:0,round:0,history:[],used:[],rank:null};state.eventOrder=shuffle(events.map(e=>e.id));state.gameOrder=shuffle(miniBank.map(g=>g.id));const base=66;state.peers=Array.from({length:99},()=>clamp(base+(rng()+rng()+rng()-1.5)*28,25,96));resetRound();welcome=false;go('enrolled');}catch(e){state=previous;throw e;}}
+async function startPaper(mode,subjects=[]){const data=await api('paper',{mode,subjects:subjects.join(','),attrs:state.attrs.join(','),round:state.round,seed:state.originSeed,previousRoute:state.lastAdmissionRoute||'',used:[...new Set([...seen,...state.used])].join(',')});state.paper={mode,subjects,questions:data.questions,index:0,answers:data.questions.map(q=>q.type==='match'?Array(q.left.length).fill(null):q.type==='fill'?'':null)};const ids=data.questions.map(q=>q.id);state.used=[...new Set([...state.used,...ids])];seen=[...new Set([...seen,...ids])].slice(-1500);saveStore(SEEN_KEY,seen);go('quiz');}
+function answerReady(q,a){return q.type==='match'?Array.isArray(a)&&a.every(v=>v!==null):q.type==='fill'?typeof a==='string'&&a.trim().length>0:a!==null;}
+async function submitPaper(){const p=state.paper;if(!p.answers.every((a,i)=>answerReady(p.questions[i],a)))return;const data={mode:p.mode,subjects:p.subjects.join(','),round:state.round,ids:p.questions.map(q=>q.id).join(',')};p.questions.forEach((q,i)=>{data['label'+i]=q.examSubject;data['a'+i]=Array.isArray(p.answers[i])?p.answers[i].join(','):p.answers[i];});const result=await api('grade',data);result.penalties=applyQuizPenalty(p,result);if(p.mode==='term'){const avg=state.attrs.slice(0,3).reduce((a,b)=>a+b,0)/3,daily=Math.round(clamp(46+avg*.45+state.portfolio*.1)),quiz=Math.round(clamp(32+avg*.6)),total=Math.round(daily*.2+quiz*.2+result.exam*.6);state.lastRound={...result,daily,quiz,total,term:termName(),game:'',gameScore:0,event:''};state.history.push({...state.lastRound});if(state.round===4){const average=state.history.reduce((n,r)=>n+r.total,0)/5;state.rank=1+state.peers.filter(v=>v>average).length;}state.event=structuredClone(events.find(e=>e.id===state.eventOrder[state.round]));state.event.done=false;go('event');}else if(p.mode==='gsat'){state.gsat=result.scores;state.gsatRecord={paper:structuredClone(p),result};go('gsatResult');}else{state.division=result.scores;state.splitRecord={paper:structuredClone(p),result};go('splitResult');}}
+function resolveEvent(i){const e=state.event;if(e.done||!e.choices[i])return;const c=e.choices[i],changes=[];c.delta.forEach((d,j)=>{const before=state.attrs[j];state.attrs[j]=clamp(before+d);const actual=state.attrs[j]-before;if(actual)changes.push(ATTR[j]+(actual>0?'＋':'')+actual);});e.done=true;e.choice=i;state.history.at(-1).event=e.title;state.history.at(-1).eventChoice=c.text;roll();toast(changes.join(' · '));}
+function roll(){if(!state.event?.done)return;if(!state.dice.length){state.dice=Array.from({length:1+Math.floor(rng()*6)},()=>1+Math.floor(rng()*6));state.dieIndex=0;state.assignments=[];}go('dice');}
+function assign(i){if(!Number.isInteger(i)||i<0||i>4||state.attrs[i]>=100||state.dieIndex>=state.dice.length)return;const n=Math.min(state.dice[state.dieIndex],100-state.attrs[i]);state.attrs[i]+=n;state.assignments.push({attr:i,added:n});state.allocatedAttrs=[...new Set([...(state.allocatedAttrs||[]),i])];state.dieIndex++;save();render();}
+function defaultPortrait(){return state.gender==='female'?'/assets/avatar-female.svg':'/assets/avatar-male.svg';}
+function questionAttr(q){if(q.subject==='音樂')return 4;if(q.subject==='藝術')return 3;if(['國文','英文'].includes(q.subject))return 1;if(['數學','自然','物理','化學','生物','體育'].includes(q.subject))return 0;return 2;}
+function applyQuizPenalty(p,result){const penalties=[0,0,0,0,0];p.questions.forEach((q,i)=>{if(result.review[i].fraction<1){const j=questionAttr(q),loss=Math.min(state.attrs[j],Math.ceil((1-result.review[i].fraction)*3));state.attrs[j]-=loss;penalties[j]+=loss;}});result.rewards=[0,0,0,0,0];if(p.mode==='term')p.questions.forEach((q,i)=>{if(result.review[i].fraction===1){const j=questionAttr(q),gain=Math.min(2,100-state.attrs[j]);state.attrs[j]+=gain;result.rewards[j]+=gain;}});return penalties;}
+function rewardNotice(rewards){return rewards?.some(n=>n)?`<div class="reward-notice" role="status">答對獎勵：${rewards.map((n,i)=>n?ATTR[i]+' ＋'+n:'').filter(Boolean).join(' · ')}</div>`:'';}
+function penaltyNotice(penalties){return penalties?.some(n=>n)?`<div class="penalty-notice" role="status">這次答錯／未全對：${penalties.map((n,i)=>n?ATTR[i]+' −'+n:'').filter(Boolean).join(' · ')}</div>`:'';}
+function mistakeBadge(g){return `<div class="mistake-badge ${g.mistakes?'danger':''}" role="status" aria-label="失誤 ${g.mistakes} / 2"><span>${g.mistakes?'⚠':'♥'} 失誤</span><strong>${g.mistakes}<small> / 2</small></strong><b>${g.mistakes>=2?'挑戰結束':g.mistakes===1?'最後一次機會':'兩次失誤即結束'}</b></div>`;}
+function setSpot(g){const base=shuffle([[79,144,191],[173,111,158],[93,162,136],[174,139,91]])[0],delta=[24,17,11][g.index];g.odd=Math.floor(rng()*25);g.colors=[`rgb(${base.join(',')})`,`rgb(${base.map(v=>v+delta).join(',')})`];}
+function startGame(){if(state.dieIndex<state.dice.length)return;if(!state.game){const source=miniBank.find(g=>g.id===state.gameOrder[state.round%miniBank.length]);const g={id:source.id,name:source.name,type:source.type,attr:source.attr,image:source.image,done:false,mistakes:0,selected:null,matched:[],index:0,hits:0,feedback:''};if(source.type==='match'){g.pairs=freshSample(source.pairs,4,p=>source.id+':'+p[0]);g.right=shuffle(g.pairs.map(p=>p[1]));}else if(source.type==='swatch'){const p=freshSample(source.pairs,4,x=>'brand:'+x[0]);g.pairs=p.map(([name,colors])=>[name,name,colors]);g.right=shuffle(p.map(x=>x[0]));}else if(['lyrics','singer','lyric-singer'].includes(source.type)){const chosen=freshSample(songs,3,s=>source.id+':'+s.id);g.items=chosen.map(s=>{const sameMood=songs.filter(x=>x.id!==s.id&&x.group===s.group),pool=[...shuffle(sameMood),...shuffle(songs.filter(x=>x.id!==s.id&&x.group!==s.group))];let prompt,key,others;if(source.type==='lyrics'){prompt='「'+s.excerpt+'」';key=s.title;others=pool.slice(0,3).map(x=>x.title);}else{prompt=source.type==='singer'?'《'+s.title+'》'+(s.year?'・'+s.year+'年版本':''):'「'+s.excerpt+'」';key=s.artist;others=[...new Set(pool.map(x=>x.artist))].filter(x=>x!==key).slice(0,3);}return{prompt,key,note:s.artist+'《'+s.title+'》',options:shuffle([key,...others])};});}else if(source.type==='memory'){const symbols=freshSample(source.symbols,4,s=>'memory:'+s);g.cards=shuffle(symbols.flatMap(s=>[s,s]));g.faceUp=[];g.found=[];g.preview=true;}else if(source.type==='order'){g.items=freshSample(source.items,4,x=>'timeline:'+x[0]);g.tiles=shuffle(g.items);g.ordered=[];}else if(source.type==='spot'){g.hits=0;setSpot(g);}else{g.items=freshSample(source.items,3,x=>source.id+':'+x[0]).map(([prompt,key,others,note])=>({prompt,key,note,options:shuffle([key,...others])}));}state.game=g;}go('game');}
+function finishGame(score,failed=false){
+ const g=state.game;if(g.done)return;g.done=true;g.failed=failed||score<60;g.score=Math.round(clamp(score));
+ const before=state.attrs[g.attr];g.bonus=g.failed?-Math.min(4,before):Math.min(g.score>=80?5:2,100-before);state.attrs[g.attr]=clamp(before+g.bonus);
+ g.portfolioBonus=g.failed?0:Math.min(10+Math.round(g.score/10),100-state.portfolio);state.portfolio+=g.portfolioBonus;
+ const h=state.history.at(-1);h.game=g.name;h.gameId=g.id;h.gameScore=g.score;h.gameFailed=g.failed;h.gameDelta=g.bonus;h.dice=state.assignments.map(d=>ATTR[d.attr]+'＋'+d.added).join('、');save();render();
 }
-function save() {
-  try { localStorage.setItem(KEY, JSON.stringify(state)); storageAvailable = true; }
-  catch { storageAvailable = false; }
-  $('#save-status').textContent = storageAvailable ? '● 進度已自動儲存' : '⚠ 瀏覽器無法存檔，請勿關閉';
+function miniAction(a,id){
+ const g=state.game;if(!g||g.done)return;
+ const miss=()=>{g.mistakes++;toast(g.mistakes===1?'失誤一次，剩最後一次機會！':'兩次失誤，這次挑戰結束。');};
+ const endOrRender=(complete,score)=>{if(g.mistakes>=2)finishGame(score,true);else if(complete)finishGame(score);else{save();render();}};
+ if(a==='pair-left'){if(id>=0&&id<g.pairs.length&&!g.matched.includes(id)){g.selected=id;save();render();}}
+ else if(a==='pair-right'){if(g.selected===null){toast('先選左邊，再點右邊。');return;}if(g.pairs[g.selected][1]===g.right[id]){g.matched.push(g.selected);g.selected=null;}else miss();endOrRender(g.matched.length===g.pairs.length,g.matched.length/g.pairs.length*100-g.mistakes*15);}
+ else if(a==='mini-answer'){const q=g.items[g.index],hit=q.options[id]===q.key;if(hit)g.hits++;else miss();g.feedback=(hit?'✓ ':'答案：'+q.key+' · ')+q.note;g.index++;endOrRender(g.index===g.items.length,g.hits/g.items.length*100);}
+ else if(a==='memory-card'){if(g.preview||g.found.includes(id)||g.faceUp.includes(id)||g.faceUp.length===2)return;g.faceUp.push(id);if(g.faceUp.length===2){const [x,y]=g.faceUp;if(g.cards[x]===g.cards[y]){g.found.push(x,y);g.faceUp=[];}else miss();}endOrRender(g.found.length===g.cards.length,g.found.length/g.cards.length*100-g.mistakes*15);}
+ else if(a==='memory-ready'){if(g.preview){g.preview=false;save();render();}}
+ else if(a==='memory-again'){g.faceUp=[];save();render();}
+ else if(a==='order-tile'){const item=g.tiles[id];if(!item||g.ordered.includes(item[0]))return;const next=g.items.filter(x=>!g.ordered.includes(x[0])).sort((x,y)=>x[1]-y[1])[0];if(item[0]===next[0])g.ordered.push(item[0]);else miss();endOrRender(g.ordered.length===g.items.length,g.ordered.length/g.items.length*100-g.mistakes*15);}
+ else if(a==='spot-tile'){if(id===g.odd){g.hits++;g.index++;if(g.index<3)setSpot(g);}else miss();endOrRender(g.index===3,g.hits/3*100-g.mistakes*15);}
 }
-function go(stage) { state.stage = stage; save(); render(); window.scrollTo({top:0, behavior:'smooth'}); }
-function toast(message) { $('#toast').textContent = message; $('#toast').classList.add('visible'); setTimeout(() => $('#toast').classList.remove('visible'), 3500); }
-async function api(path, data) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 15000);
-  try {
-    const response = await fetch('/api/' + path, data ? {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:new URLSearchParams(data), signal:controller.signal} : {signal:controller.signal});
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.error || '請求失敗');
-    return result;
-  } finally { clearTimeout(timer); }
+function required(p){return state.route==='distribution'?p.split:p.subjects;}
+function eligibility(p){const scores=state.route==='distribution'?state.division:state.gsat;return required(p).every(s=>Object.hasOwn(scores,s))&&(state.route!=='star'||state.rank<=p.maxRank);}
+function programScore(p){const split=state.route==='distribution',names=required(p),scores=split?state.division:state.gsat;return names.reduce((n,s,i)=>n+(scores[s]||0)*(i?1:2),0)/(names.length+1)/(split?60:15)*100;}
+function aptitudeScore(p){return p.weights.reduce((n,w,i)=>n+w*(state.attrs[i]*.65+state.aptitude[i]*.35),0);}
+function admissionEstimate(p){if(!eligibility(p))return 0;const exam=programScore(p),talent=aptitudeScore(p);if(exam<p.examFloor||talent<p.talentFloor)return 0;const score=state.route==='star'?exam*.5+(100-state.rank)*.25+talent*.25:state.route==='apply'?exam*.5+talent*.35+state.portfolio*.15:exam*.7+talent*.3;return Math.round(clamp(100/(1+Math.exp((p.threshold-score)/5)),.5,p.selectivity==='medical'?30:p.selectivity==='elite'?55:98)*10)/10;}
+function resetFilters(){filter={search:'',area:'全部',type:'全部',group:'全部',university:'全部',sort:'chance-desc'};openSelect=null;}
+function setRoute(route){state.route=route;state.preferences=[];state.starSchool=null;state.starGroup=null;resetFilters();go('universities');}
+function prepareSplit(){if(state.stage!=='admissionResult'||!['star','apply'].includes(state.lastAdmissionRoute)){toast('先完成繁星或個申放榜，再決定是否考分科。');return;}const start=()=>{state.admission=null;state.splitSubjects=['數學乙','歷史','地理','公民與社會'];go('splitSelect');};if(state.stage==='admissionResult'&&state.admission.accepted)confirmAction('放棄這次錄取？','原錄取不保留，將以分科成績重新選填。',start);else start();}
+async function submitUniversities(){if(!state.preferences.length)return;const max=state.route==='distribution'?10:3;if(state.preferences.length>max)throw new Error('志願數超過上限。');const choices=state.preferences.map(id=>programs.find(p=>p.id===id));if(state.route==='star'&&(new Set(choices.map(p=>p.university)).size!==1||new Set(choices.map(p=>p.group)).size!==1))throw new Error('繁星限一校、一類組。');const results=[];let admitted=null;for(let i=0;i<choices.length;i++){const p=choices[i];if(!eligibility(p))throw new Error('校系資格不符。');const data={route:state.route,program:p.id,preferences:state.preferences.join(','),attrs:state.attrs.join(','),aptitude:state.aptitude.join(','),portfolio:state.portfolio,rank:state.rank,seed:state.originSeed};Object.entries(state.route==='distribution'?state.division:state.gsat).forEach(([k,v])=>data['s.'+k]=v);const r=await api('admission',data);results.push({...r,id:p.id});if(r.accepted){admitted={...r,program:p.id,preference:i+1};break;}}state.lastAdmissionRoute=state.route;state.admission={accepted:!!admitted,...admitted,results};if(state.route==='star')state.starUsed=true;go('admissionResult');}
+function admittedProgram(){return state.ending==='admitted'?programs.find(p=>p.id===state.admission.program):null;}
+function finishEnding(kind){state.ending=kind;state.studentId||='DW'+String(state.originSeed%100000000).padStart(8,'0');unlockAchievements();go('ending');}
+function unlockAchievements(){if(state.endLogged&&state.achievementVersion===6)return;const p=admittedProgram(),ids=[];if(p){ids.push('first',state.route==='distribution'?'split':state.route,p.type==='公立'?'national':'private');if(p.group===8)ids.push('medicine');if([4,5,6].includes(p.group))ids.push('artist');}else ids.push('retake');if(p){if(p.selectivity!=='regular')ids.push('elite');if(['ntu','nccu'].includes(p.university))ids.push(p.university);if(p.college==='外國語文學院')ids.push('language');if(p.college==='商學院')ids.push('business');if(p.college==='傳播學院')ids.push('media');if(state.history.some(h=>h.gameFailed||h.penalties?.some(n=>n)))ids.push('comeback');}['science','words','society','visual','melody'].forEach((id,i)=>{if(state.attrs[i]>=80)ids.push(id);});if(state.attrs.some(n=>n===100))ids.push('maxed');if(state.attrs.every(n=>n>=60))ids.push('balanced');if(state.school.tier===5)ids.push('rare');ids.push(state.school.type==='公立'?'publichs':'privatehs');if(state.gsat&&Object.values(state.gsat).length>=4&&Object.values(state.gsat).every(n=>n===15))ids.push('gsatfull');if(state.division&&Object.values(state.division).length>=3&&Object.values(state.division).every(n=>n===60))ids.push('splitfull');for(const [game,id] of [['conan-unit','conan'],['conan-order','conan'],['flags','flags'],['colors','colorist']])if(state.history.some(h=>h.gameId===game&&h.gameScore===100))ids.push(id);if(state.history.length===6&&state.history.every(h=>h.correct===2))ids.push('quizmaster');if(state.history.length===6&&state.history.every(h=>h.gameScore>=80))ids.push('playmaster');if(p){if(['nthu','nycu','ncku','ncu','nchu','nsysu','ccu','ntnu','tmu','tnua'].includes(p.university))ids.push(p.university);if(state.admission.preference===1)ids.push('firstchoice');if(p.group===6)ids.push('dance');if(p.name.includes('藥'))ids.push('pharmacy');}if(state.attrs.every(n=>n>=70))ids.push('all70');if(state.attrs.filter(n=>n>=80).length>=3)ids.push('three80');if(state.rank<=10)ids.push('top10');if(state.gsat?.英文===15)ids.push('english15');if(state.gsat?.數學A===15||state.gsat?.數學B===15)ids.push('math15');if(state.history.some(h=>h.total>=90))ids.push('term90');if(state.history.find(h=>h.term==='高三下')?.correct===2)ids.push('lastperfect');if(state.history.length===6&&state.history.every(h=>h.correct>=1))ids.push('consistent');if((state.allocatedAttrs||[]).length===5)ids.push('fivealloc');if(new Set(state.history.filter(h=>!h.gameFailed&&h.gameScore>=60).map(h=>h.gameId)).size>=5)ids.push('fivegames');for(const [game,id] of [['lyric-artist','lyricwin'],['lyric-fill','lyricwin'],['mahjong','mahjongwin'],['memory','memorywin']])if(state.history.some(h=>h.gameId===game&&h.gameScore===100))ids.push(id);achievements._seeds=[...new Set([...(achievements._seeds||[]),state.originSeed])];if(achievements._seeds.length>=3)ids.push('explorer');state.newAchievements=[];for(const id of ids){if(!achievements[id]){achievements[id]={date:new Intl.DateTimeFormat('zh-TW',{timeZone:'Asia/Taipei'}).format(new Date())};state.newAchievements.push(id);}}state.endLogged=true;state.achievementVersion=6;saveStore(ACH_KEY,achievements);}
+function showAchievements(){const count=ACHIEVEMENTS.filter(([id])=>achievements[id]).length;$('#achievement-content').innerHTML=`<span class="eyebrow">平行青春的收藏</span><h2>隱藏成就 <small>${count} / ${ACHIEVEMENTS.length}</small></h2><div class="achievement-grid">${ACHIEVEMENTS.map(([id,name,note,icon])=>`<article class="achievement ${achievements[id]?'unlocked':'locked'}"><span>${achievements[id]?icon:'🔒'}</span><b>${achievements[id]?name:'尚未發現'}</b><small>${achievements[id]?note:'試試不同的選擇與結局。'}</small></article>`).join('')}</div>`;$('#achievement-dialog').showModal();}
+function evaluation(){const p=admittedProgram(),delta=state.attrs.map((v,i)=>v-state.initialAttrs[i]),best=delta.indexOf(Math.max(...delta));return `${state.name}，從${state.school.name}出發，六個學期裡，你的${ATTR[best]}累積成長${delta[best]}點。${p?'你透過'+routeName(state.route)+'錄取'+p.universityName+p.name+'。這張學生證，收下了每一次嘗試。':'這次選擇重新準備。帶著已累積的經驗，下一次可以走出另一條路。'}`;}
+function download(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+async function imageLoad(src){return new Promise((resolve,reject)=>{const i=new Image();i.onload=()=>resolve(i);i.onerror=()=>reject(new Error('圖片讀取失敗'));i.src=src;});}
+async function downloadCard(){await document.fonts.ready;const p=admittedProgram(),u=university(p.university),[portrait,badge]=await Promise.all([imageLoad(state.photo||defaultPortrait()),imageLoad(u.crest)]);const canvas=document.createElement('canvas');canvas.width=1520;canvas.height=960;const c=canvas.getContext('2d');c.fillStyle='#fff9ed';c.fillRect(0,0,1520,960);c.fillStyle=u.color;c.fillRect(0,0,1520,240);c.drawImage(badge,60,35,170,170);c.fillStyle='#ffffff';c.font='bold 62px sans-serif';c.fillText(p.universityName,260,115,1150);c.fillStyle=u.accent;c.font='23px sans-serif';c.fillText('學生證 / STUDENT ID',265,172);c.save();c.beginPath();c.roundRect(85,310,320,405,18);c.clip();const scale=Math.max(320/portrait.width,405/portrait.height);c.drawImage(portrait,85+(320-portrait.width*scale)/2,310+(405-portrait.height*scale)/2,portrait.width*scale,portrait.height*scale);c.restore();c.fillStyle='#8c9a9a';c.font='22px sans-serif';c.fillText('學生姓名 / NAME',475,340);c.fillStyle='#243f51';c.font='bold 62px sans-serif';c.fillText(state.name,475,425,940);c.fillStyle='#8c9a9a';c.font='22px sans-serif';c.fillText('錄取學系 / DEPARTMENT',475,495);c.fillStyle='#243f51';c.font='bold 45px sans-serif';c.fillText(p.name,475,565,940);c.fillStyle='#8c9a9a';c.font='22px sans-serif';c.fillText('學號 / STUDENT NO.',475,645);c.fillStyle=u.color;c.font='38px monospace';c.fillText(state.studentId,475,705);c.strokeStyle='#d5dfdb';c.beginPath();c.moveTo(85,810);c.lineTo(1435,810);c.stroke();c.font='25px sans-serif';c.fillStyle=u.color;c.fillText('準大學生 · '+routeName(state.route),85,865);c.font='20px sans-serif';c.fillStyle='#98a29f';c.textAlign='right';c.fillText('LeleHuang / 呆丸升學模擬・遊戲紀念卡',1435,865);const blob=await new Promise(r=>canvas.toBlob(r,'image/png'));if(!blob)throw new Error('圖片生成失敗');download(blob,'呆丸升學學生證.png');}
+async function uploadPhoto(file){if(!file)return;if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>10*1024*1024)throw new Error('請選擇10MB以內的JPG、PNG或WebP照片。');const url=URL.createObjectURL(file);try{const im=await imageLoad(url),c=document.createElement('canvas');c.width=320;c.height=400;const x=c.getContext('2d');x.fillStyle='#e3eced';x.fillRect(0,0,320,400);const scale=Math.max(320/im.width,400/im.height);x.drawImage(im,(320-im.width*scale)/2,(400-im.height*scale)/2,im.width*scale,im.height*scale);state.photo=c.toDataURL('image/jpeg',.85);save();render();}finally{URL.revokeObjectURL(url);}}
+function shell(body,step=1){return `<div class="workspace"><aside class="sidebar"><div class="student-file"><span class="eyebrow">STUDENT FILE</span><h3>${esc(state.name)}</h3><small>${state.school.name}</small><span class="seed-badge">種子 ${esc(state.seedText)}</span></div><nav class="steps" aria-label="遊程進度">${['高中入學','六個學期','學測成績','大學志願','畢業紀念'].map((s,i)=>`<div class="${step===i?'active':step>i?'done':''}"><b>${step>i?'✓':i+1}</b><span>${s}</span></div>`).join('')}</nav><div class="attribute-board"><span class="eyebrow">我的五項能力</span>${attrBars()}</div><div class="semester-dots">${TERMS.map((t,i)=>`<span class="${state.round===i?'current':state.round>i?'complete':''}" title="${t}">${i+1}</span>`).join('')}</div></aside><section class="main-content">${body}</section></div>`;}
+function welcomeView(){return `<div class="campus-landing"><section class="campus-hero"><img src="/assets/campus-summer-v4.png" alt="陽光下的臺灣校園與學生" fetchpriority="high"><div class="hero-shade"></div><div class="hero-copy"><span class="hero-tag">校園生活 × 升學冒險</span><h1>你的青春，<br><em>下一站。</em></h1><p>一張入學通知，六個學期，<br>和一段只有你知道的故事。</p><span class="author-credit">Created by <b>LeleHuang</b></span></div><div class="hero-sticker">SUMMER<br><b>START HERE ↗</b></div></section><section class="entry-paper"><div class="paper-top"><span>新生報到</span><span>No. 001</span></div><h2>同學，你的座位留好了。</h2><form id="start-form"><label for="player-name">姓名／暱稱</label><input id="player-name" required maxlength="16" autocomplete="nickname" placeholder="想被怎麼稱呼？" value="${state?esc(state.name):''}"><fieldset class="enroll-options"><legend>角色性別</legend><label><input type="radio" name="gender" value="male" required checked><span>👦 男生</span></label><label><input type="radio" name="gender" value="female"><span>👧 女生</span></label></fieldset><fieldset class="enroll-options"><legend>高中偏好</legend><label><input type="radio" name="schoolType" value="公立" required checked><span>🏫 公立</span></label><label><input type="radio" name="schoolType" value="私立"><span>🏡 私立</span></label></fieldset><label for="seed-input">旅程種子 <small>選填</small></label><input id="seed-input" maxlength="40" placeholder="留白隨機，例如 LELE2026"><small class="seed-help">相同種子與選擇，會遇見同一所高中。</small><button type="submit" class="primary wide">收下入學通知 →</button></form>${state?`<div class="resume"><span>${esc(state.name)}，故事還在這裡。</span>${button('繼續我的旅程 →','resume','secondary wide')}</div>`:''}${legacy&&!state?'<p class="tiny-note">新版旅程獨立存檔，舊紀錄仍保留。</p>':''}<div class="entry-icons"><span>🎒 六個學期</span><span>🎮 課間放風</span><span>🎓 我的學生證</span></div></section></div><section class="landing-cards"><article><img src="/assets/scenes/rooftop.svg" alt="校園屋頂"><div><h3>意外，也是青春的一部分</h3><p>每個選擇，留下不同的自己。</p></div></article><article><img src="/assets/scenes/stage.svg" alt="社團舞臺"><div><h3>下課，換你的主場</h3><p>追劇、歌單、動漫與一點小挑戰。</p></div></article><article><img src="/assets/scenes/library.svg" alt="圖書館"><div><h3>把理想放進下一站</h3><p>你的名字，值得一張新的學生證。</p></div></article></section><div class="university-strip">${catalog.universities.slice(0,10).map(u=>`<div>${crest(u)}<span>${u.abbr}</span></div>`).join('')}</div>`;}
+function enrolledView(){return shell(`${heading('新生入學通知','新的教室，從這裡開始。')}<article class="enrollment-card"><div class="enrollment-cover"><img src="/assets/campus-summer-v4.png" alt="新學期校園"><span>${state.school.type} · ${state.school.area} · ${"★".repeat(state.school.tier)}</span></div><div class="enrollment-body"><span class="eyebrow">WELCOME, ${esc(state.name)}</span><h2>${state.school.name}</h2><p>${state.school.feature}</p><div class="initial-stats">${state.attrs.map((v,i)=>`<div><span>${ATTR[i]}</span><b>${v}</b></div>`).join('')}</div>${button('走進第一間教室 →','enter-school')}</div></article>`,0);}
+function semesterStrip(step){return `<div class="round-label"><b>${termName()}</b><span>${state.round+1} / 6 學期</span></div><div class="play-steps">${['學期問答','突發事件','成長骰子','課間放風'].map((x,i)=>`<span class="${i===step?'active':i<step?'done':''}"><b>${i<step?'✓':i+1}</b>${x}</span>`).join('')}</div>`;}
+function roundView(){return shell(`${heading(termName()+' / 新學期','這學期，會遇見什麼？')}${semesterStrip(0)}<div class="semester-intro"><img src="/assets/scenes/${['rooftop','baseball','library','stage','lab','rain'][state.round]}.svg" alt="學期校園場景"><div><span class="eyebrow">CHAPTER 0${state.round+1}</span><h2>${['第一天，先認識自己。','慢慢找到自己的節奏。','把喜歡的事，做深一點。','別忘了抬頭看看窗外。','準備好，往目標靠近。','最後一學期，留下回憶。'][state.round]}</h2>${button('開始這學期 →','start-term')}</div></div>`,1);}
+function paperView(){const p=state.paper,q=p.questions[p.index],a=p.answers[p.index],n=p.questions.length;let body='';if(q.type==='choice')body=`<div class="answers">${q.options.map((s,i)=>`<button class="answer ${a===i?'selected':''}" data-action="answer" data-id="${i}" aria-pressed="${a===i}"><b>${'ABCD'[i]}</b><span>${esc(s)}</span><i>${a===i?'✓':'○'}</i></button>`).join('')}</div>`;else if(q.type==='fill')body=`<div class="fill-task"><label for="short-answer">你的答案</label><input id="short-answer" maxlength="80" autocomplete="off" spellcheck="false" value="${esc(a||'')}" placeholder="填入一個詞、人名或數字…"></div>`;else body=`<div class="matching-paper">${q.left.map((s,i)=>`<div class="match-row"><span><b>${i+1}</b>${esc(s)}</span>${customSelect('match-'+i,a[i]===null?'':String(a[i]),[{value:'',label:'選擇搭檔'},...q.options.map((r,j)=>({value:String(j),label:r}))],'配對：'+s)}</div>`).join('')}</div>`;return shell(`${heading(MODE[p.mode]+' / '+(p.index+1)+'・'+n,p.mode==='term'?'這題，你有印象嗎？':'把累積，寫進這張考卷。')}<article class="exam-paper"><div class="paper-top"><span>${p.mode==='term'?termName():'姓名：'+esc(state.name)}</span><span>${p.index+1} / ${n}</span></div><div class="tags"><span>${q.examSubject}</span><span>${q.theme}</span><span>${{choice:'選擇',match:'配對',fill:'填答'}[q.type]}</span><span class="difficulty">${'★'.repeat(q.difficulty)}</span></div><h2>${esc(q.text)}</h2>${body}</article><div class="question-nav">${button('← 上一題','previous','text-button',p.index===0?'disabled':'')}<span class="muted">${p.answers.filter((x,i)=>answerReady(p.questions[i],x)).length} / ${n}</span>${button(p.index===n-1?'交卷 →':'下一題 →','next','primary',answerReady(q,a)?'':'disabled')}</div>`,p.mode==='term'?1:2);}
+function solution(q,key){if(q.type==='choice')return q.options[Number(key)];if(q.type==='fill')return key.split('/')[0];return key.split(',').map((v,i)=>q.left[i]+' → '+q.options[Number(v)]).join('；');}
+function reviewView(paper,result){return `<details class="panel review"><summary>看看答案與解析</summary>${paper.questions.map((q,i)=>`<div class="review-item"><span class="${result.review[i].correct?'good':'bad'}">${result.review[i].correct?'✓ 正確':result.review[i].fraction>0?'◐ 部分答對':'↗ 記住這一次'} · ${q.examSubject}</span><h3>${esc(q.text)}</h3><p>${esc(solution(q,result.review[i].answer))}</p><small>${esc(result.review[i].explanation)}</small></div>`).join('')}</details>`;}
+function eventView(){const e=state.event;return shell(`${heading('學期小插曲','計畫之外，也有新的可能。')}${semesterStrip(1)}<section class="event-card"><img src="${e.image}" alt="校園事件插畫"><div class="event-content"><span class="event-tag">突發狀況</span><h2>${e.title}</h2><div class="event-choices">${e.choices.map((c,i)=>`<button data-action="event-choice" data-id="${i}"><b>${c.text}</b><span>${c.delta.map((v,j)=>v?`<small class="${v>0?'good':'bad'}">${ATTR[j]} ${v>0?'＋':''}${v}</small>`:'').join('')}</span><i>↗</i></button>`).join('')}</div></div></section><div class="semester-score"><span>本學期問答 <b>${state.lastRound.correct} / 2</b></span><span>綜合成績 <b>${state.lastRound.total}</b></span></div>${rewardNotice(state.lastRound.rewards)}${penaltyNotice(state.lastRound.penalties)}${reviewView(state.paper,state.lastRound)}`,1);}
+function die(v){const dots={1:[5],2:[1,9],3:[1,5,9],4:[1,3,7,9],5:[1,3,5,7,9],6:[1,3,4,6,7,9]};return `<div class="die" role="img" aria-label="${v}點">${Array.from({length:9},(_,i)=>`<i class="${dots[v].includes(i+1)?'pip':''}"></i>`).join('')}</div>`;}
+function diceView(){const done=state.dieIndex>=state.dice.length,v=state.dice[state.dieIndex];return shell(`${heading('成長時間',done?'這些成長，都是你的。':`第 ${state.dieIndex+1} 顆：${v}點加在哪裡？`)}${semesterStrip(2)}<div class="dice-tray">${state.dice.map((n,i)=>`<div class="die-slot ${i<state.dieIndex?'spent':i===state.dieIndex?'active':''}">${die(n)}<small>${i<state.dieIndex?ATTR[state.assignments[i].attr]+'＋'+state.assignments[i].added:i===state.dieIndex?'現在分配':'第'+(i+1)+'顆'}</small></div>`).join('')}</div>${done?`<div class="button-row end">${button('下課，去玩一下 →','start-game')}</div>`:`<div class="allocate-grid">${ATTR.map((a,i)=>`<button class="allocate-card" data-action="assign" data-id="${i}" ${state.attrs[i]===100?'disabled':''}><span>${['🧪','📖','🌏','🎨','🎵'][i]} ${a}</span><div><b>${state.attrs[i]}</b><strong>＋${Math.min(v,100-state.attrs[i])}</strong></div><div class="meter"><i style="width:${state.attrs[i]}%"></i></div><small>${state.attrs[i]===100?'已滿級':state.attrs[i]+v>100?'加至100':'點一下分配'}</small></button>`).join('')}</div>${state.attrs.every(n=>n===100)?button('全滿級，繼續 →','full-dice','secondary'):''}`}`,1);}
+function gameView(){const g=state.game;let content='';if(g.done)content=`<div class="game-result"><span>BREAK TIME / COMPLETE</span><strong>${g.score}<small> / 100</small></strong><h2>${g.failed?'挑戰結束，下次再來。':g.score>=80?'有料喔，同學！':'成功過關，記住這次的線索。'}</h2><p>${ATTR[g.attr]} ${g.bonus>=0?'＋':'−'}${Math.abs(g.bonus)} · 學習歷程 ＋${g.portfolioBonus}</p>${button(state.round===4?'前往學測 →':state.round===5?'看看我的升學檔案 →':'下一學期 →','next-round')}</div>`;else if(['match','swatch'].includes(g.type))content=`<p class="game-instruction">先選左邊，再找到右邊的搭檔。</p><div class="game-status"><span>${g.matched.length} / ${g.pairs.length} 完成</span></div><div class="pair-board"><div>${g.pairs.map((p,i)=>`<button class="pair-card ${g.selected===i?'selected':''} ${g.matched.includes(i)?'matched':''}" data-action="pair-left" data-id="${i}" ${g.matched.includes(i)?'disabled':''}>${g.type==='swatch'?`<span class="brand-palette" role="img" aria-label="第${i+1}組${g.id==='flags'?'國旗':'品牌'}色塊">${p[2].map(c=>`<i style="background:${c}"></i>`).join('')}</span>`:`<b>${i+1}</b><span>${esc(p[0])}</span>`}${g.matched.includes(i)?'✓':''}</button>`).join('')}</div><span class="pair-arrows">↔</span><div>${g.right.map((s,i)=>{const hit=g.pairs.some((p,j)=>p[1]===s&&g.matched.includes(j));return `<button class="pair-card ${hit?'matched':''}" data-action="pair-right" data-id="${i}" ${hit?'disabled':''}>${esc(s)}${hit?' ✓':''}</button>`;}).join('')}</div></div>`;else if(g.type==='memory')content=`<div class="game-status"><span>${g.found.length/2} / ${g.cards.length/2} 組</span></div><div class="memory-grid">${g.cards.map((s,i)=>`<button class="memory-card ${g.preview||g.faceUp.includes(i)||g.found.includes(i)?'flipped':''} ${g.found.includes(i)?'found':''}" data-action="memory-card" data-id="${i}" aria-label="第${i+1}張牌${g.preview||g.faceUp.includes(i)||g.found.includes(i)?' '+s:''}" ${g.found.includes(i)||g.faceUp.includes(i)?'disabled':''}>${g.preview||g.faceUp.includes(i)||g.found.includes(i)?s:'✦'}</button>`).join('')}</div>${g.preview?button('記好了，開始翻牌 →','memory-ready','primary'):''}${g.faceUp.length===2?button('再翻兩張 →','memory-again','secondary'):''}`;else if(g.type==='order')content=`<p class="game-instruction">從最早到最晚，把事件排好。</p><div class="game-status"><span>${g.ordered.length} / ${g.items.length}</span></div><div class="timeline-tiles">${g.tiles.map((x,i)=>button((g.ordered.includes(x[0])?'✓ ':'')+esc(x[0]),'order-tile','secondary',`data-id="${i}" ${g.ordered.includes(x[0])?'disabled':''}`)).join('')}</div>`;else if(g.type==='spot')content=`<p class="game-instruction">連過三題，找出和其他格不一樣的顏色。</p><div class="spot-grid">${Array.from({length:25},(_,i)=>`<button data-action="spot-tile" data-id="${i}" style="background:${g.colors[i===g.odd?1:0]}" aria-label="第${i+1}個色塊"></button>`).join('')}</div><p class="spot-progress">第 ${g.index+1} / 3 題 · 越後面越接近</p>`;else{const q=g.items[g.index];content=`<div class="game-status"><span>第 ${g.index+1} / ${g.items.length} 題</span><span>答對 ${g.hits}</span></div>${['lyrics','lyric-singer'].includes(g.type)?`<span class="lyric-label">♫ ${g.type==='lyrics'?'看這句，想到哪首歌？':'這句歌詞，原唱是誰？'}</span>`:''}<div class="emoji-prompt ${['lyrics','lyric-singer'].includes(g.type)?'lyric-quote':''}">${esc(q.prompt)}</div><div class="game-options">${q.options.map((o,i)=>button(esc(o),'mini-answer','secondary',`data-id="${i}"`)).join('')}</div>${g.feedback?`<p class="mini-feedback">${esc(g.feedback)}</p>`:''}`;}return shell(`${heading('下課時間',esc(g.name))}${semesterStrip(3)}<section class="game-panel">${mistakeBadge(g)}${content}</section>${g.done?'':`<div class="button-row end">${button('跳過本次（能力 −4）','skip-game','text-button')}</div>`}`,1);}
+function examSelectView(split=false){const names=split?SPLIT:GSAT,selected=split?state.splitSubjects:state.gsatSubjects;return shell(`${heading(split?'分科測驗':'學科能力測驗','選好科目，準備出發。')}<div class="exam-count"><b>${selected.length*3}</b><span>題考卷 <small>每考科3題</small></span></div><section class="exam-paper"><div class="subject-checks">${names.map(s=>`<label class="${selected.includes(s)?'selected':''}"><input name="exam-subject" type="checkbox" value="${s}" ${selected.includes(s)?'checked':''}><b>${s}</b><small>最高 ${split?60:15} 級分</small></label>`).join('')}</div><details class="rules"><summary>科系採計參考</summary><div class="requirement-list">${Array.from(new Map(programs.map(p=>[p.subjects.join(',')+'|'+p.split.join(','),p])).values()).map(p=>`<div><span>${split?p.split.join('、'):p.subjects.join('、')}</span><small>例如 ${p.universityName} ${p.name}</small></div>`).join('')}</div></details></section><div class="button-row end">${button('領取考卷 →',split?'start-split':'start-gsat','primary',selected.length?'':'disabled')}</div>`,2);}
+function scoreTiles(scores,max=15){return `<div class="subject-grid major-scores">${Object.entries(scores).map(([s,v])=>`<div><span>${s}</span><b>${v}</b><small>／${max}級分</small></div>`).join('')}</div>`;}
+function reportStats(){const avg=state.history.length?state.history.slice(0,5).reduce((n,h)=>n+h.total,0)/Math.min(5,state.history.length):0;return `<section class="report-summary"><div class="report-highlight"><span>在校排名</span><strong>前 ${state.rank}<small>%</small></strong><div class="rank-line"><i style="width:${100-state.rank}%"></i></div></div><div><span>在校平均</span><b>${fmt(avg)}</b><small>高一至高三上</small></div><div><span>目前資質</span><b>${traitScore()}</b><small>能力與起始資質綜合</small></div><div><span>學習歷程</span><b>${state.portfolio}</b><small>／100</small></div></section>`;}
+function examResultView(split=false){const scores=split?state.division:state.gsat,record=split?state.splitRecord:state.gsatRecord;return shell(`${heading(MODE[split?'split':'gsat']+' / 成績單','這次，是你答出來的成績。')}${scoreTiles(scores,split?60:15)}${reportStats()}${penaltyNotice(record.result.penalties)}${reviewView(record.paper,record.result)}<div class="button-row end">${button(split?'選填分發志願 →':'繼續最後一學期 →',split?'open-distribution':'continue-senior')}</div>`,2);}
+function routesView(){return shell(`${heading('我的升學檔案','先看看自己，再決定方向。')}${reportStats()}<div class="section-title"><h2>學測成績</h2><span>${Object.keys(state.gsat).length} 科</span></div>${scoreTiles(state.gsat)}<div class="section-title"><h2>選擇升學管道</h2></div><div class="route-grid">${[['star','繁星推薦','同一所大學、同一類組，最多三個科系。','🌟'],['apply','個人申請','依照興趣與專長，最多三個科系。','📒']].map(([r,t,desc,icon],i)=>`<article class="route-card"><span class="route-icon">${icon}</span><h2>${t}</h2><p>${desc}</p>${button('選擇這條路 →',r==='distribution'?'prepare-split':'choose-route',i===1?'primary':'secondary',`data-route="${r}" ${r==='star'&&(state.rank>50||state.starUsed)?'disabled':''}`)}</article>`).join('')}</div>`,3);}
+function preferences(max){return `<aside class="preferences"><div class="preference-heading"><h3>我的志願序</h3><b>${state.preferences.length} / ${max}</b></div><ol>${state.preferences.map((id,i)=>{const p=programs.find(x=>x.id===id);return `<li><b>${i+1}</b><div><strong>${p.universityName}</strong><small>${p.name}</small><div class="preference-controls"><button data-action="move" data-id="${id}" data-dir="-1" aria-label="志願上移" ${i?'':'disabled'}>↑</button><button data-action="move" data-id="${id}" data-dir="1" aria-label="志願下移" ${i===state.preferences.length-1?'disabled':''}>↓</button><button data-action="remove" data-id="${id}">移除</button></div></div></li>`;}).join('')}</ol>${state.preferences.length?'':'<div class="empty-note">＋<br>把想去的地方排進來。</div>'}${button('送出志願 →','submit-universities','primary wide',state.preferences.length?'':'disabled')}<small class="tiny-note">機會也會受到科系資質影響。</small></aside>`;}
+function starSchoolView(){const list=sortedOptions(catalog.universities.filter(u=>(u.name+u.realName+u.abbr).toLowerCase().includes(filter.search.toLowerCase())),u=>Math.max(...programs.filter(p=>p.university===u.id).map(admissionEstimate)));return `${heading('繁星推薦 / 先選大學','把星光，投向一個方向。')}<div class="star-process"><span class="current">1 選大學</span><span>2 選類組</span><span>3 排三系</span></div><label class="search-field school-search"><span>⌕</span><input id="catalog-search" placeholder="搜尋大學或縮寫…" value="${esc(filter.search)}" aria-label="搜尋大學"></label><div class="sort-toolbar">${sortSelect()}</div><div class="university-grid">${list.map(u=>`<button class="university-choice" data-action="star-school" data-id="${u.id}">${crest(u)}<h3>${u.name}</h3><span>${u.abbr} · ${u.type}</span><small class="school-chance">最高預估 ${fmt(Math.max(...programs.filter(p=>p.university===u.id).map(admissionEstimate)))}%</small></button>`).join('')}</div>`;}
+function universitiesView(){const star=state.route==='star',max=state.route==='distribution'?10:3;if(star&&!state.starSchool)return shell(starSchoolView()+`<div class="button-row">${button('← 回升學檔案','back-routes','text-button')}</div>`,3);let candidates=programs,starHeader='';if(star){const u=university(state.starSchool),groups=[...new Set(programs.filter(p=>p.university===u.id).map(p=>p.group))].sort();starHeader=`<div class="star-school-heading">${crest(u)}<div><h2>${u.name}</h2><span>${u.abbr}</span></div>${button('更換大學','change-star-school','text-button')}</div><div class="group-chips">${groups.map(g=>`<button class="${state.starGroup===g?'selected':''}" data-action="star-group" data-id="${g}">${catalog.groups[g]}</button>`).join('')}</div>`;if(!state.starGroup)return shell(`${heading('繁星推薦 / 選擇類組','在這所學校，想走哪條路？')}${starHeader}`,3);candidates=programs.filter(p=>p.university===u.id&&p.group===state.starGroup);}const list=filtered(candidates);return shell(`${heading(routeName(state.route)+' / 志願選填',star?'在同一個類組，排出你的前三系。':'把興趣與實力，排進志願。')}${starHeader}${star?`<div class="sort-toolbar">${sortSelect()}</div>`:filters()}<div class="catalog-layout"><div class="school-list">${list.map(p=>{const u=university(p.university),chance=admissionEstimate(p),ok=eligibility(p),added=state.preferences.includes(p.id);return `<article class="school-card"><div class="program-school">${crest(u)}<div><span class="dept-group">${catalog.groups[p.group]}${p.college?' · '+p.college:''}</span><h3>${p.universityName}</h3><b class="dept-name">${p.name}</b><p>採計 ${required(p).join('、')}</p><small class="admission-gate">${p.selectivity==='medical'?'醫牙挑戰':p.selectivity==='elite'?'高門檻':'一般檢定'} · 考試折算≥${p.examFloor} / 資質≥${p.talentFloor}</small></div></div><div class="program-fit"><span>預估錄取率</span><b class="${chance>=65?'good':chance<25?'bad':'medium'}">${fmt(chance)}<small>%</small></b><small>資質 ${fmt(aptitudeScore(p))}</small>${button(added?'已加入 ✓':'＋ 加入','add','secondary',`data-id="${p.id}" ${!ok||added||state.preferences.length>=max?'disabled':''}`)}</div>${!ok?'<span class="eligibility-note">缺少採計科目或排名未達門檻</span>':''}<details class="source-detail"><summary>校系資料</summary><span>${p.realName} · ${p.name}</span><a href="${esc(p.source)}" target="_blank" rel="noopener noreferrer">官方設系來源 ↗</a></details></article>`;}).join('')||'<div class="panel empty-note">沒有符合條件的科系，試著調整篩選。</div>'}</div>${preferences(max)}</div><details class="rules"><summary>錄取率怎麼算？</summary><p>考試、科系對應能力與起始資質共同影響機會；繁星另計在校排名、個申另計歷程。這是遊戲模型，非真實招生落點。每個種子與校系的抽選固定，重新整理不會重抽。</p></details><div class="button-row">${button(state.route==='distribution'?'選擇重考':'← 回升學檔案',state.route==='distribution'?'retake':'back-routes','text-button')}</div>`,3);}
+function admissionView(){const a=state.admission,p=a.accepted?programs.find(p=>p.id===a.program):null,u=p?university(p.university):null;return shell(`${heading('放榜日',p?'下一站，有你的名字。':'這次沒錄取，還有另一條路。')}${p?`<article class="letter admission-color" style="--school-color:${u.color}">${crest(u,'letter-crest')}<span class="accept-label">ADMITTED</span><h2>${p.universityName}</h2><h3>${p.name}</h3><p>${esc(state.name)} 同學，恭喜！</p><small>第 ${a.preference} 志願 · ${routeName(state.route)}</small>${button('接受錄取，領取學生證 →','accept')}</article>`:''}<details class="panel review" ${p?'':'open'}><summary>本次志願結果</summary>${a.results.map(r=>{const p=programs.find(p=>p.id===r.id);return `<div class="review-item"><h3>${p.universityName} · ${p.name}</h3><p>${r.reason} · 預估機會 ${fmt(r.chance)}%</p></div>`;}).join('')}</details><div class="button-row">${state.route==='star'&&!a.accepted?button('改走個人申請 →','failed-star-apply','secondary'):''}${['apply','distribution'].includes(state.route)&&!a.accepted?button('調整志願','revise','secondary'):''}${state.route!=='distribution'?button(p?'放棄錄取，改考分科':'挑戰分科測驗 →','prepare-split','secondary'):''}${button('選擇重考','retake','text-button')}</div>`,3);}
+function studentCard(){const p=admittedProgram(),u=university(p.university);return `<div class="student-card" id="student-card" style="--school-color:${u.color};--school-accent:${u.accent}"><div class="card-school">${crest(u,'card-crest')}<div><h2>${p.universityName}</h2><small>學生證 / STUDENT ID</small></div><span class="card-chip">▤</span></div><div class="card-content"><img class="card-portrait" id="card-portrait" src="${state.photo||defaultPortrait()}" alt="${esc(state.name)}的學生證頭貼"><div class="card-info"><span>學生姓名 / NAME</span><h3>${esc(state.name)}</h3><span>錄取學系 / DEPARTMENT</span><strong>${p.name}</strong><span>學號 / STUDENT NO.</span><b class="student-number">${state.studentId}</b></div></div><div class="card-bottom"><span>準大學生 · ${routeName(state.route)}</span><span>LeleHuang / 遊戲紀念卡</span></div></div>`;}
+function endingView(){const p=admittedProgram(),title=!p?'每次再出發，都不會白走。':p.group===8?'白袍新章，從今天開始。':[4,5,6].includes(p.group)?'下一站，讓創作繼續。':state.route==='distribution'?'夏日逆轉，寫下新的一頁。':'你的青春，有了新的下一站。';return shell(`${heading('畢業紀念 / YOUR NEXT CHAPTER',title)}${p?studentCard():`<div class="retake-illustration"><img src="/assets/scenes/rooftop.svg" alt="等待下一次出發的校園"><h2>重考生 · 再準備一次</h2></div>`}${p?`<div class="photo-actions">${button('上傳自己的照片','upload-photo','secondary')}${state.photo?button('恢復預設頭貼','reset-photo','text-button'):''}<small>照片只存於此瀏覽器</small></div>`:''}${state.newAchievements?.length?`<section class="unlocked-banner"><span>✦ 解鎖新成就</span><div>${state.newAchievements.map(id=>{const a=ACHIEVEMENTS.find(x=>x[0]===id);return `<b>${a[3]} ${a[1]}</b>`;}).join('')}</div></section>`:''}<article class="panel evaluation"><span class="eyebrow">寫給你的畢業評語</span><p>${esc(evaluation())}</p></article><section class="panel"><h3>這趟旅程的成長</h3>${attrBars()}</section><div class="button-row end">${p?button('下載學生證 PNG ↓','download-card'):''}${button('下載旅程紀錄','download-story','secondary')}${button('再寫一個故事','restart','text-button')}</div>`,4);}
+function render(){if(!catalog)return;openSelect=openSelect||null;$('#restart-button').hidden=!state;$('#achievement-button').textContent='成就 '+ACHIEVEMENTS.filter(([id])=>achievements[id]).length+'/'+ACHIEVEMENTS.length;if(welcome||!state)app.innerHTML=welcomeView();else{const views={enrolled:enrolledView,round:roundView,quiz:paperView,event:eventView,dice:diceView,game:gameView,gsatSelect:()=>examSelectView(),splitSelect:()=>examSelectView(true),gsatResult:()=>examResultView(),splitResult:()=>examResultView(true),routes:routesView,universities:universitiesView,admissionResult:admissionView,ending:endingView};if(!views[state.stage]){welcome=true;app.innerHTML=welcomeView();return;}app.innerHTML=views[state.stage]();}}
+async function action(a,b){
+ if(a==='resume'){welcome=false;openSelect=null;render();return;}
+ if(a==='restart'){confirmAction('開始另一段青春？','目前旅程將由新故事取代，已解鎖的成就會保留。',()=>{state=null;welcome=true;saveStore(KEY,null);openSelect=null;render();});return;}
+ if(a==='toggle-select'){openSelect=openSelect===b.dataset.key?null:b.dataset.key;render();return;}
+ if(a==='select-option'){chooseSelect(b.dataset.key,b.dataset.value);return;}
+ if(a==='answer'){state.paper.answers[state.paper.index]=Number(b.dataset.id);save();render();}
+ else if(a==='previous'){openSelect=null;state.paper.index=Math.max(0,state.paper.index-1);save();render();}
+ else if(a==='next'){const p=state.paper;if(!answerReady(p.questions[p.index],p.answers[p.index]))return;openSelect=null;if(p.index===p.questions.length-1)await submitPaper();else{p.index++;save();render();window.scrollTo({top:0,behavior:'instant'});}}
+ else if(a==='enter-school')go('round');
+ else if(a==='start-term')await startPaper('term');
+ else if(a==='event-choice')resolveEvent(Number(b.dataset.id));
+ else if(a==='assign')assign(Number(b.dataset.id));
+ else if(a==='full-dice'){if(state.attrs.every(n=>n===100)){while(state.dieIndex<state.dice.length){state.assignments.push({attr:0,added:0});state.dieIndex++;}save();render();}}
+ else if(a==='start-game')startGame();
+ else if(a==='skip-game')finishGame(0,true);
+ else if(['pair-left','pair-right','mini-answer','memory-card','memory-ready','memory-again','order-tile','spot-tile'].includes(a))miniAction(a,Number(b.dataset.id));
+ else if(a==='next-round'){if(!state.game?.done)return;if(state.round===4){state.gsatSubjects=['國文','英文','數學B','社會'];go('gsatSelect');}else if(state.round===5)go('routes');else{state.round++;resetRound();go('round');}}
+ else if(a==='start-gsat')await startPaper('gsat',state.gsatSubjects);
+ else if(a==='start-split')await startPaper('split',state.splitSubjects);
+ else if(a==='continue-senior'){state.round=5;resetRound();go('round');}
+ else if(a==='open-distribution')setRoute('distribution');
+ else if(a==='choose-route')setRoute(b.dataset.route);
+ else if(a==='back-routes')go('routes');
+ else if(a==='prepare-split')prepareSplit();
+ else if(a==='star-school'){state.starSchool=b.dataset.id;state.starGroup=null;state.preferences=[];const sort=filter.sort;resetFilters();filter.sort=sort;save();render();}
+ else if(a==='star-group'){if(state.starGroup!==Number(b.dataset.id))state.preferences=[];state.starGroup=Number(b.dataset.id);save();render();}
+ else if(a==='change-star-school'){state.starSchool=null;state.starGroup=null;state.preferences=[];resetFilters();save();render();}
+ else if(a==='add'){const p=programs.find(x=>x.id===b.dataset.id),max=state.route==='distribution'?10:3;if(p&&eligibility(p)&&state.preferences.length<max&&!state.preferences.includes(p.id)){if(state.route==='star'&&(p.university!==state.starSchool||p.group!==state.starGroup))return;state.preferences.push(p.id);save();render();}}
+ else if(a==='remove'){state.preferences=state.preferences.filter(id=>id!==b.dataset.id);save();render();}
+ else if(a==='move'){const i=state.preferences.indexOf(b.dataset.id),j=i+Number(b.dataset.dir);if(i>=0&&j>=0&&j<state.preferences.length){[state.preferences[i],state.preferences[j]]=[state.preferences[j],state.preferences[i]];save();render();}}
+ else if(a==='submit-universities')await submitUniversities();
+ else if(a==='failed-star-apply')setRoute('apply');
+ else if(a==='revise')setRoute(state.route);
+ else if(a==='accept')finishEnding('admitted');
+ else if(a==='retake')confirmAction('選擇重新準備？','這輪會以重考生結局結束，旅程與解鎖成就仍會留下。',()=>finishEnding('retake'));
+ else if(a==='upload-photo')$('#photo-input').click();
+ else if(a==='reset-photo'){delete state.photo;save();render();}
+ else if(a==='download-card')await downloadCard();
+ else if(a==='download-story'){const p=admittedProgram();download(new Blob([`呆丸升學模擬 / LeleHuang\n種子：${state.seedText}\n${evaluation()}\n\n${p?p.universityName+' '+p.name+'\n學號：'+state.studentId:''}\n${ATTR.map((s,i)=>s+'：'+state.attrs[i]).join('\n')}\n\n${state.history.map(h=>`${h.term} 綜合${h.total}分／${h.event}：${h.eventChoice}／${h.game} ${h.gameScore}分／${h.dice||''}`).join('\n')}`],{type:'text/plain;charset=utf-8'}),'呆丸升學旅程.txt');}
 }
-function btn(label, action, style = 'primary', extra = '') { return `<button class="${style}" data-action="${action}" ${extra}>${label}</button>`; }
-function title(kicker, heading, text) { return `<div class="page-heading"><span class="eyebrow">${kicker}</span><h1>${heading}</h1><p>${text}</p></div>`; }
-function shell(content, active = 0) {
-  const steps = ['會考出發','高中職志願','三年養成','大學升學','旅程回顧'];
-  return `<div class="workspace"><aside class="sidebar"><div class="student-label">STUDENT FILE</div><h3>${escapeHTML(state.name)}</h3><p class="muted">${state.school ? escapeHTML(state.school.name) : '下一站，等你決定。'}</p><nav class="steps" aria-label="遊戲進度">${steps.map((s,i) => `<div class="step ${i===active?'active':i<active?'done':''}"><span>${i<active?'✓':String(i+1).padStart(2,'0')}</span>${s}</div>`).join('')}</nav>${state.attrs ? `<div class="aside-note"><span class="eyebrow">YOUR GROWTH</span>${attributeBars()}<div class="status-pair"><span>精力 <b>${Math.round(state.energy)}</b></span><span>壓力 <b>${Math.round(state.stress)}</b></span></div></div>` : '<div class="aside-note"><span class="little-star">✳</span><p>不用一開始就知道答案，<br>先走出自己的第一步。</p></div>'}</aside><section class="main-content">${content}</section></div>`;
-}
-function attributeBars() { return state.attrs.map((n,i) => `<div class="attribute"><span>${ATTR[i]}</span><div class="meter"><i style="width:${clamp(n)}%"></i></div><b>${Math.round(n)}</b></div>`).join(''); }
-function campusArt() { return `<svg class="campus" viewBox="0 0 600 460" role="img" aria-label="有樹木、跑道與校舍的校園插畫"><defs><pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" fill="none" stroke="#d9dfd4" stroke-width=".7"/></pattern></defs><rect width="600" height="460" fill="#eaf0e5"/><rect width="600" height="460" fill="url(#grid)"/><circle cx="470" cy="90" r="48" fill="#f3d19a"/><path d="M0 350Q150 260 310 330T600 320V460H0Z" fill="#cad7bf"/><path d="M80 460C85 370 220 345 600 382" fill="none" stroke="#d99579" stroke-width="56"/><path d="M80 460C85 370 220 345 600 382" fill="none" stroke="#f5e4cc" stroke-width="2"/><path d="M90 460C100 384 270 362 600 395" fill="none" stroke="#f5e4cc" stroke-width="2"/><path d="M145 315L145 185L355 185L355 315Z" fill="#f8f0dd"/><path d="M355 185L428 150V284L355 315" fill="#e0d1af"/><path d="M145 185L220 150H428L355 185Z" fill="#477260"/><rect x="227" y="99" width="65" height="87" rx="2" fill="#f8f0dd"/><path d="M220 101L260 67L299 101Z" fill="#365a49"/><circle cx="259" cy="125" r="17" fill="#fffaf0" stroke="#355547" stroke-width="2"/><path d="M259 114V125L268 131" fill="none" stroke="#355547" stroke-width="2"/><g fill="#7c9d90"><path d="M166 208h28v27h-28zM214 208h28v27h-28zM263 208h28v27h-28zM311 208h25v27h-25zM166 252h28v27h-28zM214 252h28v27h-28zM311 252h25v27h-25z"/></g><path d="M263 315v-63h28v63" fill="#477260"/><path d="M374 207l16-8v25l-16 8zM402 194l15-8v25l-15 8zM374 250l16-8v25l-16 8zM402 237l15-8v25l-15 8z" fill="#729183"/><path d="M110 345V238M470 322V227M520 330V251" stroke="#6b7753" stroke-width="8"/><ellipse cx="107" cy="225" rx="45" ry="65" fill="#6b8a61"/><ellipse cx="470" cy="213" rx="37" ry="57" fill="#456c50"/><ellipse cx="524" cy="249" rx="30" ry="44" fill="#8c9f70"/><path d="M443 75l8-4 8 4M385 63l8-4 8 4" stroke="#59745a" fill="none" stroke-width="2"/><g transform="translate(200 336)"><circle cy="-12" r="7" fill="#394f45"/><path d="M0-4v21M0 4l-10 8M0 5l10 4M0 17l-7 15M0 17l8 15" stroke="#394f45" stroke-width="5"/><path d="M-6 0h12v15H-6" fill="#d4866a"/></g><g transform="translate(232 340)"><circle cy="-12" r="7" fill="#394f45"/><path d="M0-4v21M0 4l-10 8M0 5l10 4M0 17l-7 15M0 17l8 15" stroke="#394f45" stroke-width="5"/><path d="M-6 0h12v15H-6" fill="#e4c777"/></g><rect x="36" y="35" width="105" height="32" rx="16" fill="#fffaf0"/><text x="88" y="56" text-anchor="middle" font-size="12" fill="#355547" font-family="sans-serif">青春，進行中。</text></svg>`; }
-
-function renderWelcome() {
-  return `<div class="landing"><section class="hero-copy"><span class="eyebrow"><i class="dot"></i> 一場關於選擇的校園冒險</span><h1>下一站，<br>你想成為<span>怎樣的大人？</span></h1><p class="hero-description">從會考的第一題，到大學的第一張錄取通知。<br>讀書、交朋友、追一點夢，寫下你的升學故事。</p><div class="intro-chips"><span>✦ 生活 × 學科問答</span><span>↗ 高中職自由選擇</span><span>♧ 多種升學結局</span></div><form id="start-form"><label for="player-name">先讓我們認識你</label><div class="name-row"><input id="player-name" name="name" maxlength="16" required placeholder="你的名字或暱稱" autocomplete="nickname" value="${state ? escapeHTML(state.name) : ''}"><button class="primary" type="submit">出發，迎接會考 <span>↗</span></button></div><p class="input-note">18 道選擇題＋1 個寫作小任務，不限時間。</p></form>${state ? `<div class="resume-card"><div><b>${escapeHTML(state.name)}，你的故事還在這裡。</b><small>上次進度：${stageLabel(state.stage)}</small></div>${btn('繼續旅程 →','resume','secondary')}</div>` : ''}</section><section class="hero-visual">${campusArt()}<div class="visual-caption"><span>CHAPTER 01 / 新的起點</span><b>人生沒有標準答案。</b></div><div class="stamp">你的故事<br><strong>由你決定</strong><span>EST. TODAY</span></div></section></div><section class="landing-bottom"><div><span class="number">01</span><h3>先試試你的直覺</h3><p>學科、常識、邏輯與生活情境，<br>讓每一種能力都有被看見的機會。</p></div><div><span class="number">02</span><h3>選一條自己的路</h3><p>填選高中職、培養專長，<br>在三年的日常中慢慢找到方向。</p></div><div><span class="number">03</span><h3>把選擇變成故事</h3><p>挑戰繁星、申請或分科，<br>帶著回憶走向下一個起點。</p></div></section>`;
-}
-function stageLabel(s) { return ({quiz:'會考問答',essay:'寫作任務',cap:'會考成績',highschools:'高中職志願',schoolResult:'高中職放榜',round:'校園生活',roundResult:'回合結算',gsatSelect:'學測選科',gsatResult:'學測成績',routes:'升學選擇',universities:'大學志願',admissionResult:'大學放榜',divisionSelect:'分科選科',divisionResult:'分科成績',ending:'旅程回顧'})[s] || '新的起點'; }
-function renderQuiz() {
-  const q = state.questions[state.qIndex];
-  return shell(`${title('CHAPTER 01 / 會考出發','先從一道題，認識自己的可能。','不只有課本知識。生活觀察、常識與判斷，也都是你的能力。')}<div class="question-progress"><span>QUESTION <b>${String(state.qIndex+1).padStart(2,'0')}</b> / ${state.questions.length}</span><span>已回答 ${state.answers.filter(a=>a!==null).length} 題</span></div><div class="progress-track"><i style="width:${(state.qIndex+1)/18*100}%"></i></div><article class="question-card"><div class="tags"><span>${q.subject}</span><span>${q.kind}</span></div><h2>${escapeHTML(q.text)}</h2><div class="answers">${q.options.map((a,i)=>`<button class="answer ${state.answers[state.qIndex]===i?'selected':''}" data-action="answer" data-value="${i}" aria-pressed="${state.answers[state.qIndex]===i}"><span class="answer-letter">${'ABCD'[i]}</span><span>${escapeHTML(a)}</span><span class="answer-check">${state.answers[state.qIndex]===i?'✓':'○'}</span></button>`).join('')}</div></article><div class="question-nav">${btn('← 上一題','previous-question','text-button',state.qIndex===0?'disabled':'')}<span class="muted">慢慢想，這裡沒有倒數計時。</span>${btn(state.qIndex===17?'前往寫作 →':'下一題 →','next-question','primary',state.answers[state.qIndex]===null?'disabled':'')}</div>`);
-}
-function renderEssay() {
-  return shell(`${title('WRITING / 最後一個小任務','寫給未來的自己。','如果升上高中職，你最想完成的一件事是什麼？為什麼？請舉一個例子。')}<article class="panel"><div class="tags"><span>寫作任務</span><span>40～300 字</span></div><label class="sr-only" for="essay">你的短文</label><textarea id="essay" rows="9" placeholder="我希望在高中職的三年裡……">${escapeHTML(state.essay||'')}</textarea><div class="writing-meta"><span>不需要完美，說說你的想法就好。</span><span id="essay-count">${[...(state.essay||'')].length} / 300 字</span></div><details class="rules"><summary>遊戲如何計算作文級分？</summary><p>這是簡化的結構練習：基本 1 級分；達 60 字、100 字、使用中文標點、包含因果或轉折詞、包含例證詞，各加 1，最高 6。例證詞如「例如、曾經」；因果詞如「因為、所以」。程式不判斷文章語意與真實品質。</p></details></article><div class="button-row end">${btn('← 回到題目','back-quiz','secondary')}${btn('交卷，看看我的成績 ↗','submit-exam')}</div>`);
-}
-function renderCAP() {
-  const c = state.cap;
-  return shell(`${title('RESULT / 你的第一張成績單','每一種表現，都有下一步。','這是旅程的起點。帶著你的成績，看看哪些高中職適合你。')}<div class="score-hero"><div><span>遊戲版會考積分</span><strong>${fmt(c.total)}<small> / 36</small></strong><p>選擇題答對 ${c.correct} / 18 題 · 常識答對 ${c.general} / 3 題</p></div><div class="score-message">${c.total>=28?'準備好，向理想學校挑戰。':c.total>=18?'每個選擇，都能長成新的可能。':'起點不決定終點，你還有很多可能。'}</div></div><div class="subject-grid">${c.scores.map(s=>`<div class="subject-tile"><span>${s.subject}</span><strong>${s.level}</strong><small>${s.points} 積分</small></div>`).join('')}<div class="subject-tile writing"><span>寫作</span><strong>${c.writing}<small> 級分</small></strong><small>加 ${fmt((c.writing-1)/5)} 分</small></div></div><p class="notice">短問答抽樣模擬：各科由學科答對率 85%＋常識答對率 15% 換算 1～7 積分，再加作文 0～1 分，非正式會考評量。</p><details class="panel review"><summary>查看 ${state.questions.length} 題答案與解析</summary>${state.questions.map((q,i)=>`<div class="review-item"><span class="review-result ${c.review[i].correct?'good':'bad'}">${c.review[i].correct?'✓ 答對':'↗ 再學一次'}</span><h3>${i+1}. ${escapeHTML(q.text)}</h3><p>你的答案：${escapeHTML(q.options[state.answers[i]])}<br>正確答案：${escapeHTML(q.options[c.review[i].answer])}</p><p class="muted">${escapeHTML(c.review[i].explanation)}</p></div>`).join('')}</details><div class="button-row end">${btn('選填高中職志願 →','open-highschools')}</div>`);
-}
-function filters(types) { return `<div class="filters"><label><span class="sr-only">搜尋學校或科系</span><input id="catalog-search" placeholder="搜尋學校、特色或科系…" value="${escapeHTML(filter.search)}"></label><label><span class="sr-only">類別</span><select id="catalog-type">${['全部',...types].map(t=>`<option ${filter.type===t?'selected':''}>${t}</option>`).join('')}</select></label><label><span class="sr-only">地區</span><select id="catalog-area">${['全部','北部','中部','南部','東部'].map(t=>`<option ${filter.area===t?'selected':''}>${t}</option>`).join('')}</select></label></div>`; }
-function filtered(list) { return list.filter(x=>(filter.type==='全部'||x.type===filter.type||x.track===filter.type)&&(filter.area==='全部'||x.area===filter.area)&&JSON.stringify(x).includes(filter.search.trim())); }
-function preferencePanel(list, selected, max, submit, label) {
-  return `<aside class="preferences"><div class="preference-heading"><h3>我的志願序</h3><span>${selected.length} / ${max}</span></div><p class="muted">把最想去的放前面。可以不填滿。</p>${selected.length?`<ol>${selected.map((id,i)=>{ const s=list.find(s=>s.id===id); return `<li><span class="preference-number">${i+1}</span><div><b>${escapeHTML(s.university||s.name)}</b>${s.university?`<small>${s.name}</small>`:''}<div class="preference-controls"><button data-action="move-preference" data-id="${id}" data-dir="-1" aria-label="將第 ${i+1} 志願往前移" ${i===0?'disabled':''}>↑</button><button data-action="move-preference" data-id="${id}" data-dir="1" aria-label="將第 ${i+1} 志願往後移" ${i===selected.length-1?'disabled':''}>↓</button><button data-action="remove-preference" data-id="${id}">移除</button></div></div></li>`;}).join('')}</ol>`:'<div class="empty-preferences"><span>＋</span>選一間學校，<br>把想像放進志願裡。</div>'}${btn(label,submit,'primary wide',selected.length?'':'disabled')}<p class="input-note">送出後會依目前順序進行模擬分發。</p></aside>`;
-}
-function renderHighSchools() {
-  const supplement = state.supplement;
-  const list = filtered(HIGH_SCHOOLS).filter(s=>!supplement||s.threshold<=state.cap.total);
-  return shell(`${title('CHAPTER 02 / 高中職志願',supplement?'再選一次，找到新的起點。':'下一站，想在哪裡長大？',supplement?'前五個志願沒有錄取，續招提供符合積分的學校，保留你的升學旅程。':'普通高中、技術高中、藝術高中。選填最多五個志願，由你排出順序。')}<div class="inline-banner">你的會考積分 <b>${fmt(state.cap.total)} / 36</b><span>18 個虛構示範校科 · 公私立皆可選</span></div>${filters(['公立','私立','普通高中','技術高中','藝術高中'])}<div class="catalog-layout"><div class="school-list">${list.map(s=>`<article class="school-card"><div><div class="tags"><span>${s.type} · ${s.area}</span><span>${s.track}</span></div><h3>${s.name}</h3><p>${s.feature} <span class="muted">／ 模擬錄取門檻 ${s.threshold}</span></p><span class="fit ${state.cap.total>=s.threshold?'good':'bad'}">${state.cap.total>=s.threshold+3?'保底選擇':state.cap.total>=s.threshold?'符合門檻':'挑戰志願（目前未達門檻）'}</span></div>${btn(state.preferences.includes(s.id)?'已加入 ✓':'＋ 加入志願','add-preference','secondary',`data-id="${s.id}" ${state.preferences.includes(s.id)||state.preferences.length>=5?'disabled':''}`)}</article>`).join('')||'<div class="panel empty">找不到符合篩選的學校，試著調整條件。</div>'}</div>${preferencePanel(HIGH_SCHOOLS,state.preferences,5,'submit-highschools','送出志願，等待放榜 →')}</div>`,1);
-}
-function renderSchoolResult() {
-  return shell(`${title('ADMISSION / 高中職放榜','新的校園，新的你。','你已依照志願順序，錄取第一個符合遊戲門檻的學校。')}<article class="admission-letter"><span class="eyebrow">WELCOME TO YOUR NEXT CHAPTER</span><div class="letter-seal">錄取</div><h2>${state.school.name}</h2><p>${escapeHTML(state.name)} 同學，歡迎加入。</p><div class="letter-details"><span>${state.school.type} · ${state.school.area} · ${state.school.track}</span><span>校園特色：${state.school.feature}</span><span>錄取第 ${state.schoolPreference} 志願 · 會考 ${fmt(state.cap.total)} 分</span></div>${btn('翻開高中職生活的第一頁 →','enter-school')}</article><p class="notice">本作高中職皆銜接一般大學模擬升學。技術高中的統測、技優與科技大學專屬管道尚未實作。</p>`,1);
-}
-const ACTIONS = [
-  {name:'人文閱讀',note:'人文＋國文／社會',attr:0,cost:10,stress:4},
-  {name:'科學解題',note:'數理＋數學／自然',attr:1,cost:12,stress:6},
-  {name:'語言練習',note:'語言＋國文／英文',attr:2,cost:10,stress:4},
-  {name:'運動訓練',note:'體育＋精力恢復',attr:3,cost:-5,stress:-7},
-  {name:'藝術創作',note:'藝術＋學習歷程',attr:4,cost:7,stress:-4},
-  {name:'音樂練習',note:'音樂＋學習歷程',attr:5,cost:7,stress:-4},
-  {name:'同伴共學',note:'人緣＋自信＋各科熟練',attr:6,cost:7,stress:-3},
-  {name:'好好休息',note:'精力＋20，壓力－15',attr:null,cost:-20,stress:-15}
-];
-function termName(round) { return `高${['一','二','三'][Math.floor(round/6)]}${Math.floor(round/3)%2===0?'上':'下'}`; }
-function renderRound() {
-  const e = EVENTS[state.eventOrder[state.round]];
-  const used = state.actions.reduce((a,b)=>a+b,0);
-  return shell(`${title(`CHAPTER 03 / ${termName(state.round)} · 第 ${state.round%3+1} 次段考前`,'日常的小選擇，會慢慢累積。',state.round>=15?'學測已結束，繼續完成高三生活，整理作品與升學準備。':'安排這段時間的生活，再決定如何回應校園裡的小插曲。')}<div class="term-strip"><span>第 ${state.round+1} / 18 回合</span><div class="mini-terms">${Array.from({length:6},(_,i)=>`<span class="${Math.floor(state.round/3)===i?'current':Math.floor(state.round/3)>i?'complete':''}">${termName(i*3)}</span>`).join('')}</div><span>成長點 <b>${state.points}</b></span></div><section class="panel"><div class="section-heading"><div><span class="eyebrow">01 / YOUR SCHEDULE</span><h2>把時間留給什麼？</h2></div><span class="budget">已安排 ${used} / 3 格</span></div><div class="action-grid">${ACTIONS.map((a,i)=>`<div class="action-card"><span class="action-icon">${['文','理','語','體','藝','樂','伴','息'][i]}</span><div><b>${a.name}</b><small>${a.note}</small></div><div class="stepper"><button data-action="change-action" data-id="${i}" data-dir="-1" aria-label="減少${a.name}" ${state.actions[i]===0?'disabled':''}>−</button><span>${state.actions[i]}</span><button data-action="change-action" data-id="${i}" data-dir="1" aria-label="增加${a.name}" ${used>=3?'disabled':''}>＋</button></div></div>`).join('')}</div></section><section class="event-panel"><div class="event-label">✳ 校園小插曲</div><h2>${e.title}</h2><p>${e.text}</p><div class="event-choices">${e.choices.map((c,i)=>`<button class="event-choice ${state.eventChoice===i?'selected':''}" data-action="event-choice" data-id="${i}" aria-pressed="${state.eventChoice===i}"><b>${c[0]}</b><small>${Object.entries(c[1]).map(([a,n])=>ATTR[a]+`＋${n}`).join(' · ')} · 壓力${c[2]>0?'＋':''}${c[2]} · 歷程＋${c[4]}</small></button>`).join('')}</div></section><div class="button-row end">${btn('完成這段日常，迎接段考 →','resolve-round','primary',used===3&&state.eventChoice!==null?'':'disabled')}</div>`,2);
-}
-function talentCost(value) { return value<60?1:value<80?2:value<95?3:5; }
-function renderRoundResult() {
-  const r = state.lastRound;
-  const isTermEnd = (state.round+1)%3===0;
-  return shell(`${title('GROWTH / 每一步，都算數',isTermEnd?`${termName(state.round)}，辛苦了。`:'又向前走了一小步。',isTermEnd?'一學期結束了。看看這段時間的累積，再為下一段日子做準備。':'分數是回饋，成長才是你可以帶走的東西。')}<div class="result-cards"><div class="metric"><span>平時表現</span><strong>${r.daily}</strong></div><div class="metric"><span>小考平均</span><strong>${r.quiz}</strong></div><div class="metric"><span>段考平均</span><strong>${r.exam}</strong></div><div class="metric highlight"><span>綜合成績</span><strong>${r.total}</strong></div></div><p class="notice">綜合成績＝平時 20%＋小考 20%＋段考 60%。本回合獲得 ${r.earned} 成長點。學習歷程 ${Math.round(state.portfolio)} / 100。</p>${isTermEnd?`<div class="inline-banner">${termName(state.round)} 學期平均 <b>${fmt(state.history.slice(-3).reduce((s,x)=>s+x.total,0)/3)}</b><span>${state.rank?`升學排名已固定：前 ${state.rank}%（高一至高三上）`:'升學排名於高三上結束時結算。'}</span></div>`:''}<section class="panel"><div class="section-heading"><div><span class="eyebrow">GROW AT YOUR OWN PACE</span><h2>把成長點，放進你的專長。</h2></div><span class="budget">剩餘 ${state.points} 點</span></div><div class="growth-grid">${state.attrs.slice(0,6).map((n,i)=>{const cost=talentCost(n); return `<div class="growth-row"><div><b>${ATTR[i]}</b><small>每提升 1 需 ${cost} 點</small></div><strong>${n}</strong>${btn('＋','allocate-point','round-button',`data-id="${i}" aria-label="提升${ATTR[i]}" ${state.points<cost||n>=100?'disabled':''}`)}</div>`;}).join('')}</div><p class="input-note">能力上限 100；60、80、95 以上升級成本增加。剩餘點數可保留。</p></section><div class="button-row end">${btn(state.round===14?'選擇學測報考科目 →':state.round===17?'前往大學升學選擇 →':'繼續下一段日常 →','next-round')}</div>`,2);
-}
-function renderExamSelection(split = false) {
-  const names = split ? SPLITS : SUBJECTS;
-  const selected = split ? state.splitSubjects : state.gsatSubjects;
-  return shell(`${title(split?'CHALLENGE / 分科測驗':'CHAPTER 04 / 學科能力測驗',split?'再給夢想，一次機會。':'選好科目，往想去的地方。',split?'分科每科最高 60 級分。先查看目標科系的採計需求，再決定報考科目。':'每科最高 15 級分。數學 A 的模擬難度高於數學 B，兩科可以同時選考。')}<section class="panel"><div class="exam-subjects">${names.map(s=>`<label class="subject-check ${selected.includes(s)?'checked':''}"><input type="checkbox" name="exam-subject" value="${s}" ${selected.includes(s)?'checked':''}><span>${s}</span><small>${split?'60 級分':s==='數學A'?'進階難度':'15 級分'}</small></label>`).join('')}</div><div class="notice">這場大考依累積能力、各科熟練度、精力與壓力模擬產生成績，不另出題。運氣只帶來小幅波動。${split?'本作分發簡化為所選分科科目的加權平均，不混採學測。':''}</div><details class="rules"><summary>先查看各示範科系需要的科目</summary><div class="requirements">${DEPTS.map(d=>`<p><b>${d.name}</b><span>${(split?d.split:d.subjects).join('、')}${d.field>=3?'；專長會影響申請表現':''}</span></p>`).join('')}</div></details></section><div class="button-row end">${btn(split?'準備好了，挑戰分科 →':'準備好了，參加學測 →',split?'take-division':'take-gsat','primary',selected.length?'':'disabled')}</div>`,3);
-}
-function renderExamResult(split = false) {
-  const scores = split ? state.division : state.gsat;
-  return shell(`${title('EXAM RESULT / 累積的答案',split?'這一次，你又向前了。':'三年的努力，有了新的回音。','接下來，把成績、專長與期待放在一起，選擇你的下一站。')}<div class="subject-grid exam-results">${Object.entries(scores).map(([s,n])=>`<div class="subject-tile"><span>${s}</span><strong>${n}</strong><small>最高 ${split?60:15} 級分</small></div>`).join('')}</div><div class="panel"><h3>你的升學檔案</h3><div class="file-grid"><p>在校排名<strong>前 ${state.rank}%</strong></p><p>學習歷程<strong>${Math.round(state.portfolio)} / 100</strong></p><p>自信<strong>${state.attrs[7]} / 100</strong></p></div><p class="muted">排名來自高一至高三上 15 回合綜合成績，與入學時生成的同校模擬同儕比較；高三下不再改變升學排名。</p></div><div class="button-row end">${btn(split?'選填分發志願 →':'繼續高三下的最後一學期 →',split?'open-distribution':'continue-senior')}</div>`,3);
-}
-function renderRoutes() {
-  return shell(`${title('CHOOSE YOUR PATH / 大學升學','通往未來，不只有一條路。','看看你的排名、學測與作品，選擇這次想嘗試的升學方式。')}<div class="route-grid"><article class="route-card"><span class="route-number">01</span><h2>繁星推薦</h2><p>讓長期努力被看見。以在校排名與學測表現進行模擬推薦。</p><ul><li>前 50% 才能參加，各校另有門檻</li><li>本作簡化為選一個校系</li><li>錄取後可接受或放棄改考分科</li></ul>${btn('選擇繁星 →','choose-route','secondary',`data-route="star" ${state.rank>50||state.starUsed?'disabled':''}`)}${state.starUsed?'<small>已使用本輪推薦機會</small>':''}</article><article class="route-card featured"><span class="route-number">02</span><h2>個人申請</h2><p>讓分數之外的你被看見。用學測、學習歷程與專長爭取錄取。</p><ul><li>最多選填六個校系</li><li>先檢定學測，再綜合評分</li><li>依志願順序錄取第一個達標校系</li></ul>${btn('選擇個人申請 →','choose-route','primary','data-route="apply"')}</article><article class="route-card"><span class="route-number">03</span><h2>分科測驗</h2><p>想再挑戰一次？選考需要的科目，用新的成績尋找新的可能。</p><ul><li>八科可自由選考</li><li>每科最高六十級分</li><li>最多選填五十個志願</li></ul>${btn('直接挑戰分科 →','prepare-division','secondary')}</article></div><p class="notice">本作採簡化模擬規則，不等同現行招生制度。繁星錄取後，本作不再開放個人申請；放棄後可進入分科。</p>`,3);
-}
-function subjectEligibility(p) { return (state.route==='distribution'?p.split:p.subjects).every(s=>Object.hasOwn(state.route==='distribution'?state.division:state.gsat,s)); }
-function programExam(p) {
-  const split = state.route==='distribution';
-  const names = split?p.split:p.subjects;
-  const scores = split?state.division:state.gsat;
-  // 第一採計科目權重2，其餘1。所有校系分別計分。
-  const sum = names.reduce((n,s,i)=>n+(scores[s]||0)*(i===0?2:1),0);
-  return sum/(names.length+1)/(split?60:15)*100;
-}
-function renderUniversities() {
-  const route = state.route;
-  const max = route==='star'?1:route==='apply'?6:50;
-  const list = filtered(PROGRAMS);
-  const names = {star:'繁星推薦',apply:'個人申請',distribution:'分發入學'};
-  return shell(`${title(`CHAPTER 04 / ${names[route]}`,'把理想，排進你的志願序。',`目前提供 16 間虛構大學、80 個示範系組，最多選填 ${max} 個。缺少採計科目的校系無法加入。`)}<div class="inline-banner"><b>${names[route]}</b><span>${route==='distribution'?`分科：${Object.keys(state.division).join('、')}`:`學測：${Object.keys(state.gsat).join('、')} ／ 排名前 ${state.rank}%`}</span></div><details class="rules"><summary>查看本管道的模擬錄取公式</summary><p>${route==='star'?'學測加權百分成績 × 65%＋（100－排名百分比）× 35%。另須符合校排名門檻。':route==='apply'?'第一階段：學測加權百分成績達到校系門檻－15（最低20）。第二階段：學測55%＋學習歷程20%＋自信10%＋科系對應專長15%。':'僅以分科加權百分成績比較門檻，不額外加入人緣或專長分數。'} 第一採計科目權重為2，其餘為1。達門檻即錄取，依志願順序保留第一個達標校系；本版未模擬其他考生競爭與名額。</p></details>${filters(['公立','私立'])}<div class="catalog-layout"><div class="school-list">${list.map(p=>{const eligible=subjectEligibility(p)&&(route!=='star'||state.rank<=p.maxRank);return `<article class="school-card program-card"><div><div class="tags"><span>${p.type} · ${p.area}</span><span>模擬門檻 ${p.threshold}</span></div><h3>${p.university}<small>${p.name}</small></h3><p>採計：${(route==='distribution'?p.split:p.subjects).join('、')}${route==='star'?` ／ 校排名前 ${p.maxRank}%`:''}</p><span class="fit ${eligible?'good':'bad'}">${eligible?`你的採計成績 ${fmt(programExam(p))} / 100`:'尚未符合科目或排名資格'}</span></div>${btn(state.preferences.includes(p.id)?'已加入 ✓':'＋ 加入','add-preference','secondary',`data-id="${p.id}" ${!eligible||state.preferences.includes(p.id)||state.preferences.length>=max?'disabled':''}`)}</article>`;}).join('')||'<div class="panel empty">找不到符合篩選的校系。</div>'}</div>${preferencePanel(PROGRAMS,state.preferences,max,'submit-universities','送出志願，查看結果 →')}</div><div class="button-row">${route==='distribution'?btn('沒有合適校系，選擇重考','retake-ending','text-button'):btn('← 返回升學管道','back-routes','text-button')}</div>`,3);
-}
-function renderAdmissionResult() {
-  const accepted = state.admission.accepted;
-  const p = accepted ? PROGRAMS.find(p=>p.id===state.admission.program) : null;
-  return shell(`${title('THE NEXT CHAPTER / 大學放榜',accepted?'恭喜，你的下一站到了。':'暫時沒有錄取，故事還沒結束。',accepted?'這張通知，裝著你一路累積的選擇與努力。':'可以重新整理志願、挑戰下一條管道，或帶著這次的經驗準備重考。')}${accepted?`<article class="admission-letter"><span class="eyebrow">YOUR ADMISSION LETTER</span><div class="letter-seal">錄取</div><h2>${p.university}</h2><h3>${p.name}</h3><p>${escapeHTML(state.name)} 同學，歡迎走向新的起點。</p><div class="letter-details"><span>${{star:'繁星推薦',apply:'個人申請',distribution:'分發入學'}[state.route]} · 第 ${state.admission.preference} 志願</span><span>模擬錄取分數 ${fmt(state.admission.score)} ／ 門檻 ${p.threshold}</span></div>${btn('接受錄取，回顧我的旅程 →','accept-admission')}</article>`:''}<details class="panel review" ${accepted?'':'open'}><summary>查看本次志願結果</summary>${state.admission.results.map(r=>{const d=PROGRAMS.find(p=>p.id===r.id);return `<div class="review-item"><b>${d.university} · ${d.name}</b><p>${r.reason} ／ 模擬分數 ${fmt(r.score)}</p></div>`;}).join('')}</details><div class="button-row">${state.route==='star'&&!accepted?btn('改走個人申請 →','failed-star-apply','secondary'):''}${state.route==='apply'&&!accepted?btn('調整申請志願','revise-applications','secondary'):''}${state.route!=='distribution'?btn(accepted?'放棄本次錄取，挑戰分科':'挑戰分科測驗 →','prepare-division','secondary'):''}${state.route==='distribution'&&!accepted?btn('重新調整分發志願','revise-distribution','secondary'):''}${btn(accepted?'放棄錄取，選擇重考':'選擇重考，回顧旅程','retake-ending','text-button')}</div><p class="notice">接受錄取就結束本輪旅程；放棄錄取後，原錄取資格不保留。個申結果不如預期也可改走分科。</p>`,3);
-}
-function renderEnding() {
-  const isAdmitted = state.ending==='admitted';
-  const p = isAdmitted ? PROGRAMS.find(x=>x.id===state.admission.program) : null;
-  const best = state.attrs.slice(0,6).indexOf(Math.max(...state.attrs.slice(0,6)));
-  const labels = ['人文觀察家','科學探索者','語言旅人','運動行動派','視覺創作者','音樂追夢人'];
-  const growth = state.attrs.slice(0,6).map((n,i)=>n-state.initialAttrs[i]);
-  const improved = growth.indexOf(Math.max(...growth));
-  const evaluation = `${state.name}，從會考的 ${fmt(state.cap.total)} 分出發，你在${state.school.name}走過了六個學期。${ATTR[improved]}是你進步最多的領域，累積提升了 ${growth[improved]} 點；${state.portfolio>=60?'持續累積的作品與活動，也成為你升學檔案中的亮點。':'你在課業與生活之間摸索自己的節奏，留下了屬於自己的選擇。'}${isAdmitted?`最後，你透過${{star:'繁星推薦',apply:'個人申請',distribution:'分發入學'}[state.route]}，走進${p.university}${p.name}。`:'這次你選擇再準備一年。回顧採計科目與自己的專長，會比只追求所有科目都高分，更有助於下一次出發。'}${state.stress>70?'下段旅程，記得也為休息留一點位置。':'願你帶著這些經驗，繼續探索自己想成為的樣子。'}`;
-  return shell(`${title('EPILOGUE / 你的升學故事',isAdmitted?'準大學生，準備出發。':'重考生，新的篇章正在等你。','終點是一個名字，旅程是你自己走出來的。')}<section class="ending-card"><span class="ending-flower">✳</span><span class="eyebrow">${isAdmitted?'A NEW BEGINNING':'ANOTHER CHANCE'}</span><h2>${isAdmitted?p.university:'下一次，帶著經驗再出發。'}</h2><p>${isAdmitted?p.name:'暫停一下，不代表失去方向。'}</p><div class="tags centered"><span>${labels[best]}</span>${state.attrs[6]>=65?'<span>可靠的夥伴</span>':''}${state.portfolio>=60?'<span>實作累積者</span>':''}</div></section><article class="panel evaluation"><h2>寫給 ${escapeHTML(state.name)} 的旅程評語</h2><p>${escapeHTML(evaluation)}</p></article><div class="timeline"><div><span>起點</span><b>會考 ${fmt(state.cap.total)} / 36</b></div><div><span>三年校園</span><b>${state.school.name}</b></div><div><span>成長</span><b>${ATTR[improved]} ＋${growth[improved]}</b></div><div><span>下一站</span><b>${isAdmitted?'準大學生':'重考生'}</b></div></div><section class="panel"><h3>最後的能力檔案</h3><div class="ending-attrs">${attributeBars()}</div></section><div class="button-row end">${btn('下載旅程紀錄','download-story','secondary')}${btn('再寫一個不同的故事 ↗','restart')}</div>`,4);
-}
-function render() {
-  $('#restart-button').hidden = !state;
-  if (welcome || !state) app.innerHTML = renderWelcome();
-  else {
-    const views = {quiz:renderQuiz,essay:renderEssay,cap:renderCAP,highschools:renderHighSchools,schoolResult:renderSchoolResult,round:renderRound,roundResult:renderRoundResult,gsatSelect:()=>renderExamSelection(),gsatResult:()=>renderExamResult(),routes:renderRoutes,universities:renderUniversities,admissionResult:renderAdmissionResult,divisionSelect:()=>renderExamSelection(true),divisionResult:()=>renderExamResult(true),ending:renderEnding};
-    app.innerHTML = views[state.stage]();
-  }
-}
-
-function enterSchool() {
-  const score = Object.fromEntries(state.cap.scores.map(s=>[s.subject,s.raw]));
-  state.attrs = [score.社會*.28+22,(score.數學+score.自然)*.14+22,(score.國文+score.英文)*.14+22,30+state.cap.general*4,30+state.cap.general*4,30+state.cap.general*4,45,45,45].map(n=>Math.round(n));
-  state.attrs[state.school.boost] = clamp(state.attrs[state.school.boost]+5);
-  state.initialAttrs = [...state.attrs];
-  state.proficiency = {國文:25,英文:25,數學A:20,數學B:25,自然:25,社會:25};
-  state.energy = 85; state.stress = 20; state.points = 0; state.portfolio = 5;
-  state.round = 0; state.history = []; state.rank = null;
-  state.eventOrder = EVENTS.map((_,i)=>i);
-  for (let i=state.eventOrder.length-1;i>0;i--) {const j=Math.floor(random()*(i+1)); [state.eventOrder[i],state.eventOrder[j]]=[state.eventOrder[j],state.eventOrder[i]];}
-  const peerBase = 45 + state.school.threshold * .8;
-  state.peers = Array.from({length:99},()=>clamp(peerBase+(random()+random()+random()-1.5)*23,25,95));
-  resetRound(); go('round');
-}
-function resetRound() { state.actions=Array(8).fill(0); state.eventChoice=null; }
-function addAttr(i,n) { state.attrs[i]=clamp(state.attrs[i]+n); }
-function resolveRound() {
-  if (state.actions.reduce((a,b)=>a+b,0)!==3 || state.eventChoice===null) return;
-  state.actions.forEach((times,i)=>{
-    const a=ACTIONS[i];
-    for(let t=0;t<times;t++) {
-      if(a.attr!==null) addAttr(a.attr,2);
-      state.energy=clamp(state.energy-a.cost); state.stress=clamp(state.stress+a.stress);
-      if(i===0) {state.proficiency.國文=clamp(state.proficiency.國文+4);state.proficiency.社會=clamp(state.proficiency.社會+6);}
-      if(i===1) for(const s of ['數學A','數學B','自然']) state.proficiency[s]=clamp(state.proficiency[s]+5);
-      if(i===2) {state.proficiency.國文=clamp(state.proficiency.國文+4);state.proficiency.英文=clamp(state.proficiency.英文+6);}
-      if(i===4||i===5) state.portfolio=clamp(state.portfolio+3);
-      if(i===6) { addAttr(7,1); Object.keys(state.proficiency).forEach(s=>state.proficiency[s]=clamp(state.proficiency[s]+2)); }
-    }
-  });
-  const e=EVENTS[state.eventOrder[state.round]], c=e.choices[state.eventChoice];
-  for(const [i,n] of Object.entries(c[1])) addAttr(Number(i),n);
-  state.stress=clamp(state.stress+c[2]); state.energy=clamp(state.energy+c[3]); state.portfolio=clamp(state.portfolio+c[4]);
-  // 課內學習的自然累積讓各種養成路線都有基本進步。
-  Object.keys(state.proficiency).forEach(s=>state.proficiency[s]=clamp(state.proficiency[s]+2));
-  const academic=(state.attrs[0]+state.attrs[1]+state.attrs[2])/3;
-  const mastery=Object.values(state.proficiency).reduce((a,b)=>a+b,0)/6;
-  const condition=state.energy*.08-state.stress*.09+(state.attrs[7]-50)*.04;
-  const daily=Math.round(clamp(48+academic*.32+state.attrs[6]*.12+condition+random()*5));
-  const quiz=Math.round(clamp(25+academic*.42+mastery*.28+condition+(random()-.5)*10));
-  const exam=Math.round(clamp(22+academic*.48+mastery*.3+condition+(random()-.5)*(10-state.attrs[8]*.04)));
-  const total=Math.round(daily*.2+quiz*.2+exam*.6);
-  const earned=total<60?3:total<70?4:total<80?5:total<90?6:7;
-  state.points+=earned;
-  state.lastRound={daily,quiz,exam,total,earned,term:termName(state.round),event:e.title,choice:c[0]};
-  state.history.push({...state.lastRound});
-  if(state.round===14) {
-    const avg=state.history.reduce((a,b)=>a+b.total,0)/15;
-    state.rank=1+state.peers.filter(n=>n>avg).length;
-  }
-  // 每回合間有固定休息，避免精力不可逆地耗盡。
-  state.energy=clamp(state.energy+18); state.stress=clamp(state.stress-5);
-  go('roundResult');
-}
-function takeExam(split=false) {
-  const selected=split?state.splitSubjects:state.gsatSubjects;
-  if(!selected.length)return;
-  const result={};
-  selected.forEach(s=>{
-    const social=['社會','歷史','地理','公民與社會'].includes(s);
-    const lang=['國文','英文'].includes(s);
-    const ability=lang?(s==='國文'?state.attrs[2]*.65+state.attrs[0]*.35:state.attrs[2]):social?state.attrs[0]:state.attrs[1];
-    const mastery=state.proficiency[split?(social?'社會':s==='數學甲'?'數學A':s==='數學乙'?'數學B':'自然'):s];
-    const difficulty=['數學A','數學甲'].includes(s)?7:0;
-    const raw=clamp(ability*.63+mastery*.37+state.energy*.07-state.stress*.065+(state.attrs[7]-50)*.035+(random()-.5)*(10-state.attrs[8]*.04)-difficulty+(split?5:0));
-    result[s]=clamp(Math.round(raw/100*(split?60:15)),1,split?60:15);
-  });
-  if(split) {state.division=result;go('divisionResult');}
-  else {state.gsat=result;go('gsatResult');}
-}
-async function submitUniversities() {
-  if(!state.preferences.length)return;
-  const route=state.route;
-  const results=[];
-  let accepted=null;
-  for(let i=0;i<state.preferences.length;i++) {
-    const p=PROGRAMS.find(p=>p.id===state.preferences[i]);
-    if(!p||!subjectEligibility(p))throw new Error('志願資格不符合，請重新選擇。');
-    const r=await api('admission',{route,exam:programExam(p),portfolio:state.portfolio,confidence:state.attrs[7],talent:state.attrs[p.field],threshold:p.threshold,rank:state.rank,maxRank:p.maxRank});
-    results.push({...r,id:p.id});
-    if(r.accepted) {accepted={...r,program:p.id,preference:i+1};break;}
-  }
-  state.admission={accepted:!!accepted,...accepted,results};
-  if(route==='star')state.starUsed=true;
-  go('admissionResult');
-}
-function setRoute(route) {state.route=route;state.preferences=[];filter={search:'',type:'全部',area:'全部'};go('universities');}
-function prepareDivision() {
-  if(state.stage==='admissionResult'&&state.admission.accepted) {
-    showDecision('放棄這次錄取，挑戰分科？','確認後原錄取資格不保留，將以分科成績重新選填志願。',()=>{state.admission=null;state.splitSubjects=['數學乙','歷史','地理','公民與社會'];go('divisionSelect');});
-  } else {state.admission=null;state.splitSubjects=['數學乙','歷史','地理','公民與社會'];go('divisionSelect');}
-}
-function showDecision(heading,text,callback) {
-  const old=$('#decision-dialog'); if(old)old.remove();
-  const d=document.createElement('dialog');d.id='decision-dialog';d.innerHTML=`<div class="dialog-content"><h2>${heading}</h2><p>${text}</p><div class="button-row"><button class="secondary" data-cancel>再想想</button><button class="primary" data-confirm>確定</button></div></div>`;document.body.append(d);d.querySelector('[data-cancel]').onclick=()=>d.close();d.querySelector('[data-confirm]').onclick=()=>{d.close();callback();};d.showModal();
-}
-function finishRetake() {showDecision('選擇重考，結束這輪旅程？','這會結束目前的升學選擇，保留旅程紀錄與評語。',()=>{state.ending='retake';go('ending');});}
-
-app.addEventListener('submit',async event=>{
-  if(event.target.id!=='start-form')return;
-  event.preventDefault();if(busy)return;
-  const name=$('#player-name').value.trim();if(!name){toast('先填寫你的名字或暱稱。');return;}
-  const start=async()=>{
-    busy=true;const button=$('#start-form button');button.disabled=true;button.textContent='準備題目中…';
-    try {const data=await api('exam');state={version:1,stage:'quiz',name,questions:data.questions,answers:Array(18).fill(null),qIndex:0,essay:'',seed:(Date.now()>>>0)||1234567};welcome=false;go('quiz');}
-    catch(e){toast('無法取得題目：'+(e.name==='AbortError'?'連線逾時，請確認 Java 伺服器仍在執行。':e.message));render();}
-    finally{busy=false;}
-  };
-  if(state)showDecision('開始新的故事？','目前儲存的旅程會被新遊戲取代。',start);else await start();
-});
-app.addEventListener('click',async event=>{
-  const b=event.target.closest('[data-action]');if(!b||b.disabled||busy)return;
-  const action=b.dataset.action;
-  try {
-    if(action==='resume'){welcome=false;render();return;}
-    if(action==='restart'){$('#restart-dialog').showModal();return;}
-    if(action==='answer'){state.answers[state.qIndex]=Number(b.dataset.value);save();render();}
-    else if(action==='previous-question'){state.qIndex=Math.max(0,state.qIndex-1);go('quiz');}
-    else if(action==='next-question'){if(state.answers[state.qIndex]===null)return;if(state.qIndex===17)go('essay');else{state.qIndex++;go('quiz');}}
-    else if(action==='back-quiz')go('quiz');
-    else if(action==='submit-exam'){
-      const n=[...(state.essay||'').trim()].length;if(n<40||n>300){toast('請先完成 40～300 字的寫作任務。');return;}
-      busy=true;b.disabled=true;b.textContent='批改中…';
-      const cap=await api('grade',{ids:state.questions.map(q=>q.id).join(','),answers:state.answers.join(','),essay:state.essay});state.cap=cap;go('cap');
-    }
-    else if(action==='open-highschools'){state.preferences=[];filter={search:'',type:'全部',area:'全部'};go('highschools');}
-    else if(action==='add-preference'){
-      const isHigh=state.stage==='highschools',max=isHigh?5:state.route==='star'?1:state.route==='apply'?6:50;
-      const item=(isHigh?HIGH_SCHOOLS:PROGRAMS).find(s=>s.id===b.dataset.id);
-      if(!item||state.preferences.length>=max||state.preferences.includes(item.id)||(!isHigh&&!subjectEligibility(item)))return;
-      state.preferences.push(item.id);save();render();
-    }
-    else if(action==='remove-preference'){state.preferences=state.preferences.filter(id=>id!==b.dataset.id);save();render();}
-    else if(action==='move-preference'){const i=state.preferences.indexOf(b.dataset.id),j=i+Number(b.dataset.dir);if(i<0||j<0||j>=state.preferences.length)return;[state.preferences[i],state.preferences[j]]=[state.preferences[j],state.preferences[i]];save();render();}
-    else if(action==='submit-highschools'){
-      if(!state.preferences.length)return;
-      const index=state.preferences.findIndex(id=>HIGH_SCHOOLS.find(s=>s.id===id).threshold<=state.cap.total);
-      if(index===-1){state.supplement=true;state.preferences=[];filter={search:'',type:'全部',area:'全部'};go('highschools');toast('本次志願未錄取，已開放符合積分的續招選擇。');}
-      else{state.school=HIGH_SCHOOLS.find(s=>s.id===state.preferences[index]);state.schoolPreference=index+1;go('schoolResult');}
-    }
-    else if(action==='enter-school')enterSchool();
-    else if(action==='change-action'){const i=Number(b.dataset.id),d=Number(b.dataset.dir);if(state.actions[i]+d<0||state.actions.reduce((a,b)=>a+b,0)+d>3)return;state.actions[i]+=d;save();render();}
-    else if(action==='event-choice'){state.eventChoice=Number(b.dataset.id);save();render();}
-    else if(action==='resolve-round')resolveRound();
-    else if(action==='allocate-point'){const i=Number(b.dataset.id),cost=talentCost(state.attrs[i]);if(state.points<cost||state.attrs[i]>=100)return;state.points-=cost;addAttr(i,1);save();render();}
-    else if(action==='next-round'){
-      if(state.round===14){state.gsatSubjects=['國文','英文','數學B','社會'];go('gsatSelect');}
-      else if(state.round===17)go('routes');
-      else{state.round++;resetRound();go('round');}
-    }
-    else if(action==='take-gsat')takeExam();
-    else if(action==='continue-senior'){state.round=15;resetRound();go('round');}
-    else if(action==='choose-route')setRoute(b.dataset.route);
-    else if(action==='back-routes')go('routes');
-    else if(action==='prepare-division')prepareDivision();
-    else if(action==='take-division')takeExam(true);
-    else if(action==='open-distribution')setRoute('distribution');
-    else if(action==='submit-universities'){busy=true;b.disabled=true;b.textContent='正在模擬錄取…';await submitUniversities();}
-    else if(action==='failed-star-apply')setRoute('apply');
-    else if(action==='revise-applications')setRoute('apply');
-    else if(action==='revise-distribution')setRoute('distribution');
-    else if(action==='accept-admission'){state.ending='admitted';go('ending');}
-    else if(action==='retake-ending')finishRetake();
-    else if(action==='download-story'){
-      const p=state.ending==='admitted'?PROGRAMS.find(x=>x.id===state.admission.program):null;
-      const text=`呆丸升學模擬｜${state.name}的旅程\n結局：${state.ending==='admitted'?'準大學生':'重考生'}\n會考：${state.cap.total}/36\n高中職：${state.school.name}\n在校排名：前${state.rank}%\n學測：${JSON.stringify(state.gsat)}\n分科：${JSON.stringify(state.division||{})}\n${p?'大學：'+p.university+' '+p.name:''}\n\n${$('.evaluation p').textContent}\n\n能力：\n${ATTR.map((a,i)=>`${a}：${state.attrs[i]}`).join('\n')}\n\n校園回憶：\n${state.history.map(h=>`${h.term} ${h.event} → ${h.choice}；綜合成績 ${h.total}`).join('\n')}`;
-      const url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='呆丸升學旅程.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
-    }
-  } catch(e){toast('操作未完成：'+(e.name==='AbortError'?'連線逾時，請確認伺服器後重試。':e.message));render();}
-  finally{busy=false;}
-});
-app.addEventListener('input',event=>{
-  if(event.target.id==='essay'){state.essay=event.target.value;save();$('#essay-count').textContent=`${[...state.essay].length} / 300 字`;}
-  if(event.target.id==='catalog-search'){
-    const start=event.target.selectionStart;filter.search=event.target.value;render();$('#catalog-search').focus();$('#catalog-search').setSelectionRange(start,start);
-  }
-});
-app.addEventListener('change',event=>{
-  if(event.target.id==='catalog-type'){filter.type=event.target.value;render();}
-  if(event.target.id==='catalog-area'){filter.area=event.target.value;render();}
-  if(event.target.name==='exam-subject'){
-    const field=state.stage==='divisionSelect'?'splitSubjects':'gsatSubjects';
-    state[field]=Array.from(app.querySelectorAll('[name="exam-subject"]:checked'),x=>x.value);save();render();
-  }
-});
-$('#help-button').onclick=()=>$('#help-dialog').showModal();
-$('#close-help').onclick=()=>$('#help-dialog').close();
-$('#restart-button').onclick=()=>$('#restart-dialog').showModal();
-$('#cancel-restart').onclick=()=>$('#restart-dialog').close();
-$('#confirm-restart').onclick=()=>{
-  state=null;welcome=true;try{localStorage.removeItem(KEY);}catch{}$('#restart-dialog').close();$('#save-status').textContent='你的故事，從這裡開始';render();window.scrollTo(0,0);
-};
-for(const d of document.querySelectorAll('dialog'))d.addEventListener('click',event=>{if(event.target===d){const r=d.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)d.close();}});
-render();
+app.addEventListener('click',async e=>{const b=e.target.closest('[data-action]');if(!b||b.disabled||busy)return;const a=b.dataset.action,asyncAction=['next','start-term','start-gsat','start-split','submit-universities','download-card'].includes(a);try{if(asyncAction){busy=true;b.disabled=true;}await action(a,b);}catch(error){toast(error.name==='AbortError'?'連線逾時，請確認Java仍在執行後重試。':error.message);render();}finally{busy=false;if(b.isConnected&&asyncAction)b.disabled=false;}});
+app.addEventListener('submit',async e=>{if(e.target.id!=='start-form')return;e.preventDefault();if(busy)return;const name=$('#player-name').value.trim(),seed=$('#seed-input').value;if(!name)return;const run=async()=>{busy=true;const b=$('#start-form button');b.disabled=true;try{await startRun(name,seed,new FormData($('#start-form')).get('gender'),new FormData($('#start-form')).get('schoolType'));}catch(error){toast(error.message);render();}finally{busy=false;if(b.isConnected)b.disabled=false;}};if(state)confirmAction('開始新的旅程？','目前的旅程會被新故事取代，已解鎖成就保留。',run);else await run();});
+app.addEventListener('input',e=>{if(e.target.id==='short-answer'){state.paper.answers[state.paper.index]=e.target.value;save();const b=app.querySelector('[data-action="next"]');b.disabled=!answerReady(state.paper.questions[state.paper.index],e.target.value);}else if(e.target.id==='catalog-search'){const pos=e.target.selectionStart;filter.search=e.target.value;render();$('#catalog-search')?.focus();$('#catalog-search')?.setSelectionRange(pos,pos);}});
+app.addEventListener('change',e=>{if(e.target.name==='exam-subject'){const key=state.stage==='splitSelect'?'splitSubjects':'gsatSubjects';state[key]=Array.from(app.querySelectorAll('[name="exam-subject"]:checked'),x=>x.value);save();render();}});
+document.addEventListener('click',e=>{if(openSelect&&!e.target.closest('[data-select-wrap]')){openSelect=null;render();}});
+document.addEventListener('keydown',e=>{const trigger=e.target.closest('.select-trigger'),option=e.target.closest('[role="option"]');if(trigger&&['ArrowDown','ArrowUp'].includes(e.key)){e.preventDefault();openSelect=trigger.closest('[data-select-wrap]').dataset.selectWrap;render();const items=[...app.querySelectorAll('.select-menu [role="option"]')];(e.key==='ArrowUp'?items.at(-1):items[0])?.focus();}else if(option&&['ArrowDown','ArrowUp','Home','End'].includes(e.key)){e.preventDefault();const items=[...option.closest('.select-menu').querySelectorAll('[role="option"]')],i=items.indexOf(option);items[e.key==='Home'?0:e.key==='End'?items.length-1:(i+(e.key==='ArrowDown'?1:-1)+items.length)%items.length]?.focus();}else if(openSelect&&['Escape','Tab'].includes(e.key)){if(e.key==='Escape')e.preventDefault();const key=openSelect;openSelect=null;render();app.querySelector(`[data-select-wrap="${key}"] .select-trigger`)?.focus({preventScroll:true});}});
+$('#help-button').onclick=()=>$('#help-dialog').showModal();$('#close-help').onclick=()=>$('#help-dialog').close();$('#restart-button').onclick=()=>{if(!busy)action('restart');};$('#confirm-cancel').onclick=()=>$('#confirm-dialog').close();$('#achievement-button').onclick=showAchievements;$('#close-achievements').onclick=()=>$('#achievement-dialog').close();
+$('#photo-input').addEventListener('change',async e=>{if(!state||state.ending!=='admitted'||photoBusy)return;photoBusy=true;busy=true;try{await uploadPhoto(e.target.files[0]);toast('照片已更新，只保存在此瀏覽器。');}catch(error){toast(error.message);}finally{photoBusy=false;busy=false;e.target.value='';}});
+async function boot(){try{const responses=await Promise.all(['/catalog.json','/minigames.json','/songs.json','/events.json'].map(url=>fetch(url)));if(responses.some(r=>!r.ok))throw new Error('校園資料讀取失敗');[catalog,miniBank,songs,events]=await Promise.all(responses.map(r=>r.json()));programs=catalog.programs.map(p=>{const u=university(p.university);return{...p,universityName:u.name,realName:u.realName,abbr:u.abbr,type:u.type,area:u.area,source:p.source||u.source};});achievements=readStore(ACH_KEY,{});seen=readStore(SEEN_KEY,[]);miniSeen=readStore(MINI_KEY,[]);try{legacy=['daiwan-next-chapter-v1','daiwan-next-chapter-v2','daiwan-classroom-v3','daiwan-campus-v4'].some(k=>!!localStorage.getItem(k));const s=readStore(KEY,null);if(s?.version===5&&typeof s.name==='string'&&s.attrs?.length===5&&s.aptitude?.length===5&&s.round>=0&&s.round<=5)state=s;}catch{storageOK=false;}if(state){state.gameOrder=state.gameOrder?.map(id=>id==='lyric-fill'?'lyric-artist':id);if(state.game?.type==='lyric-fill'&&!state.game.done){state.game=null;if(state.stage==='game')state.stage='dice';}saveStore(KEY,state);}if(state?.ending&&state.achievementVersion!==6){unlockAchievements();save();}render();}catch(e){app.innerHTML=`<div class="boot-error"><h1>校園資料還沒準備好。</h1><p>${esc(e.message)}，請確認Java已啟動。</p><button class="primary" onclick="location.reload()">重新整理</button></div>`;}}
+boot();

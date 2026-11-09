@@ -1,23 +1,20 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#254c3e">
-  <meta name="description" content="從會考開始，寫下你的高中職與大學升學故事。">
-  <title>呆丸升學模擬｜你的下一站，由你決定</title>
-  <link rel="stylesheet" href="/style.css">
-  <script src="/app.js" defer></script>
+ <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+ <meta name="theme-color" content="#2467c5"><meta name="description" content="六個學期、校園事件與課間挑戰，寫下你的升學故事。作者LeleHuang。">
+ <title>呆丸升學模擬｜同學，上課了。</title>
+ <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' rx='10' fill='%23234d42'/%3E%3Ctext x='10' y='44' fill='%23fff8df' font-size='39'%3E呆%3C/text%3E%3C/svg%3E">
+ <link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script>
 </head>
 <body>
-  <header class="topbar">
-    <a href="/" class="brand" aria-label="呆丸升學模擬首頁"><span class="brand-mark">呆</span><span>呆丸升學模擬<small>TAIWAN · NEXT CHAPTER</small></span></a>
-    <div class="header-actions"><span id="save-status" role="status">你的故事，從這裡開始</span><button id="help-button" class="text-button">遊戲說明</button><button id="restart-button" class="text-button" hidden>重新開始</button></div>
-  </header>
-  <main id="app" tabindex="-1"></main>
-  <footer><span>每條路，都有自己的風景。</span><span>虛構校名 · 遊戲模擬規則 · 本機自動存檔</span></footer>
-  <dialog id="help-dialog"><div class="dialog-content"><span class="eyebrow">HOW TO PLAY</span><h2>選擇，會慢慢變成你的樣子。</h2><p>先回答 18 道學科、常識與生活應用題，再完成一個寫作小任務。成績會換算為遊戲版會考積分，選填最多五個高中職志願。</p><p>高中職共有六學期，每學期三回合。分配三格行動、處理事件、領取成長點，累積專長與學習歷程。高三上結算升學排名與學測，高三下準備申請，最後選擇繁星、申請或分科。</p><p>會考滿分 36、學測每科最高 15、分科每科最高 60。繁星、個申與分發採簡化玩法，與現實招生規則不同。學校與科系為示範資料，不是全臺完整招生清單。高中職皆可遊玩本作的一般大學升學路線，技專統測尚未加入。</p><p>進度存在此瀏覽器，重新整理可以繼續。清除網站資料或更換瀏覽器不會保留。請使用 Java 啟動，勿直接雙擊 HTML。</p><button id="close-help" class="primary">開始我的故事</button></div></dialog>
-  <dialog id="restart-dialog"><div class="dialog-content"><h2>開始一段新的旅程？</h2><p>目前的遊戲進度將被清除。</p><div class="button-row"><button id="cancel-restart" class="secondary">繼續這段故事</button><button id="confirm-restart" class="primary">確定重新開始</button></div></div></dialog>
-  <div id="toast" role="status" aria-live="polite"></div>
+ <header class="topbar"><a class="brand" href="/"><span class="brand-mark">呆</span><span>呆丸升學模擬<small>CLASSROOM EDITION / 同學，上課了。</small></span></a><div class="header-actions"><span id="save-status" role="status">你的座位，留好了。</span><button id="achievement-button" class="text-button">成就收藏</button><button id="help-button" class="text-button">課程說明</button><button id="restart-button" class="text-button" hidden>重新開始</button></div></header>
+ <main id="app" tabindex="-1"><div class="boot-error">正在準備教室與考卷…</div></main>
+ <footer><span>考卷有答案，人生有很多種走法。</span><span>諧音校名 · 遊戲模擬招生 · 本機存檔</span></footer>
+ <dialog id="help-dialog"><div class="dialog-content"><span class="eyebrow">本學期課程表</span><h2>同學，帶著好奇心就好。</h2><p>填上名字，收下隨機高中的入學通知。選擇角色性別與公私立偏好，學校按稀有度分配，各校有不同起始能力。</p><p>六個學期，每學期兩題問答 → 突發事件 → 成長骰子 → 一個小遊戲。能力上限100，學期問答答對每題加2點、答錯每題扣3點；一對一錯同時加扣，全錯只有扣分。小遊戲兩次失誤即結束，失敗或跳過扣4點能力。</p><p>高三上參加學測，高三下後選繁星或個申。學測與分科每個選考科目各三題；英文只有選擇與配對，其他科含短填答。</p><p>繁星限一所大學、一類組、最多三系；個申最多三系；放榜後可挑戰分科，分發最多十系。考試、在校排名與科系資質會影響機會。</p><p>25所諧音大學、328個實際設系對照。採計、類組與錄取率為遊戲設定。錄取可領取學生證、上傳頭貼，並下載紀念卡。歌曲小遊戲只有猜歌名與猜歌手，不用填空。</p><p>選校可依錄取率高低排序。60種成就隱藏在不同旅程裡。旅程、照片與成就只保存在此瀏覽器。作者 LeleHuang。</p><button id="close-help" class="primary">好，開始上課！</button></div></dialog>
+ <dialog id="confirm-dialog"><div class="dialog-content"><h2 id="confirm-title"></h2><p id="confirm-text"></p><div class="button-row"><button id="confirm-cancel" class="secondary">再想想</button><button id="confirm-ok" class="primary">確定</button></div></div></dialog>
+ <dialog id="achievement-dialog"><div class="dialog-content"><div id="achievement-content"></div><button id="close-achievements" class="primary">收好收藏</button></div></dialog>
+ <input id="photo-input" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+ <div id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>
