@@ -30,6 +30,12 @@ def build(out):
  programs=json.loads((ROOT/'web/catalog.json').read_text())['programs']
  (out/'runtime-data.json').write_text(json.dumps(dict(questions=questions,schools=schools,programs=programs),ensure_ascii=False,separators=(',',':')))
  (out/'.nojekyll').write_text('')
+ # Fingerprinted scripts/styles prevent old cached UI after a Pages update.
+ index=(out/'index.html').read_text()
+ for name in ['app.js','runtime.js','style.css']:
+  digest=hashlib.sha256((out/name).read_bytes()).hexdigest()[:12]
+  index=index.replace('./'+name+'\"','./'+name+'?v='+digest+'\"')
+ (out/'index.html').write_text(index)
  manifest={str(f.relative_to(out)):hashlib.sha256(f.read_bytes()).hexdigest() for f in sorted(out.rglob('*')) if f.is_file() and f.name!='build-manifest.json'}
  (out/'build-manifest.json').write_text(json.dumps({'files':manifest},indent=2)+'\n')
  print(f'Static game: {out}; {len(questions)} questions, {len(programs)} programs.')
