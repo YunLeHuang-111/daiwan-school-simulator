@@ -4,6 +4,8 @@
 
 ## 分享給朋友玩
 
+**[直接開始遊戲](https://yunlehuang-111.github.io/daiwan-school-simulator/)**
+
 分享版是純瀏覽器遊戲，朋友開啟網站即可遊玩，不需安裝Java或登入帳號。玩家進度、照片與成就留在各自瀏覽器。
 
 GitHub儲存庫：[YunLeHuang-111/daiwan-school-simulator](https://github.com/YunLeHuang-111/daiwan-school-simulator)。

@@ -5,7 +5,7 @@ ROOT=Path(__file__).resolve().parents[1]
 def read_rows(name):return [s.split('|') for s in (ROOT/'data'/name).read_text().splitlines() if s and not s.startswith('#')]
 def build(out):
  out=out.resolve()
- if out==ROOT or ROOT not in out.parents:raise ValueError('Output must be a child of the project root.')
+ if out != (ROOT/'dist').resolve():raise ValueError('The share build writes only to the generated dist directory.')
  out.mkdir(parents=True,exist_ok=True)
  # Only generated outputs are removed; source data and user files are never touched.
  for name in ['index.html','app.js','style.css','runtime.js','runtime-data.json','catalog.json','songs.json','events.json','minigames.json','assets','.nojekyll','build-manifest.json']:
