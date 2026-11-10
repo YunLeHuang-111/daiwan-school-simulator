@@ -8,7 +8,7 @@ BASE=sys.argv[1] if len(sys.argv)>1 else 'http://localhost:8080'
 ROOT=Path(__file__).resolve().parents[1]
 rows=[s.split('|') for s in (ROOT/'data/questions.tsv').read_text().splitlines() if s and not s.startswith('#')]
 BANK={p[0]:p for p in rows}
-assert len(BANK)==len(rows)==661
+assert len(BANK)==len(rows)==803
 for row in rows:
  assert len(row)==10
  assert not(row[1]=='英文' and row[4]=='fill')
@@ -88,9 +88,15 @@ req('/api/paper',{'mode':'term','round':6},400)
 req('/api/paper',{'mode':'term','round':0,'attrs':'1,2,3,4,5,6'},400)
 req('/api/paper',{'mode':'term','round':0,'attrs':'NaN,1,2,3,4'},400)
 catalog=json.loads((ROOT/'web/catalog.json').read_text());ps=catalog['programs']
-assert len(catalog['universities'])==25 and len(ps)==328
-assert len({p['id'] for p in ps})==328
+assert len(catalog['universities'])==100 and len(ps)==827
+assert len({p['id'] for p in ps})==827
 by_id={p['id']:p for p in ps}
+levels=['medical','pharmacy','top','midTech','midOther','public','privateTech','private']
+for harder,easier in zip(levels,levels[1:]):
+ for field in ['threshold','examFloor','talentFloor']:
+  assert min(p[field] for p in ps if p['selectivity']==harder)>max(p[field] for p in ps if p['selectivity']==easier)
+assert {u['id'] for u in catalog['universities']} >= {'ntpu','ntust','ntut','nkust','ndhu','dyu','fgu','cnu'}
+assert len({p['id'] for p in ps if p.get('admissionReference',{}).get('scope')=='program'})>750
 for row in (ROOT/'data/programs.tsv').read_text().splitlines():
  if not row or row.startswith('#'):continue
  fields=row.split('|');p=by_id[fields[0]]
@@ -98,11 +104,11 @@ for row in (ROOT/'data/programs.tsv').read_text().splitlines():
  assert float(fields[8])==p['examFloor'] and float(fields[9])==p['talentFloor'] and fields[10]==p['selectivity']
  assert fields[5].split(',')==p['subjects'] and fields[6].split(',')==p['split'] and list(map(float,fields[7].split(',')))==p['weights']
 for u in catalog['universities']:assert (ROOT/'web'/u['crest'].lstrip('/')).is_file()
-assert len({u['crest'] for u in catalog['universities']})==25
+assert len({u['crest'] for u in catalog['universities']})==100
 assert not any(p['name']=='音樂學系' and p['university'] in ['ntu','nycu','nccu'] for p in ps)
 assert all(len(p['weights'])==5 and abs(sum(p['weights'])-1)<.001 for p in ps)
-assert len(json.loads((ROOT/'web/songs.json').read_text()))==32
-for song in json.loads((ROOT/'web/songs.json').read_text()):assert song['group'] and len(song['excerpt'])<=10
+assert len(json.loads((ROOT/'web/songs.json').read_text()))==54
+for song in json.loads((ROOT/'web/songs.json').read_text()):assert song['group'] and len(song['excerpt'])<=20
 assert any(p[3]=='文言小紙條' for p in rows)
 assert any('臣妾做不到' in p[5] for p in rows)
 assert any('常住人口' in p[5] for p in rows)
@@ -129,6 +135,6 @@ med=next(x for x in ps if x['group']==8)
 low=dict(a,program=med['id'],preferences=med['id'],**{'s.'+s:12 for s in ['國文','英文','數學A','數學B','自然','社會']})
 assert req('/api/admission',low)['chance']==0
 strong=dict(low,attrs='100,100,100,100,100',aptitude='100,100,100,100,100',**{'s.'+s:15 for s in ['國文','英文','數學A','數學B','自然','社會']})
-assert req('/api/admission',strong)['chance']<=30
-assert req('/api/admission',dict(a,attrs='100,100,100,100,100',aptitude='100,100,100,100,100'))['chance']<=55
-print('PASS: 661 questions; weighted/gender-restricted 50 high schools; 6 x 2 questions; GSAT/split 3 per selected subject; grading/validation; 25 universities / 328 programs; four-pair questions, no English fill, elite/medical gates.')
+assert req('/api/admission',strong)['chance']<=18
+assert req('/api/admission',dict(a,attrs='100,100,100,100,100',aptitude='100,100,100,100,100'))['chance']<=35
+print('PASS: 803 questions; weighted/gender-restricted 50 high schools; 6 x 2 questions; GSAT/split 3 per selected subject; grading/validation; 100 universities / 827 programs; four-pair questions, no English fill, elite/medical gates.')

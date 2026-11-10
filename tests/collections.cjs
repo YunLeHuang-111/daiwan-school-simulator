@@ -5,7 +5,7 @@ async function choose(p,key,value){await p.locator(`[data-select-wrap="${key}"] 
 async function noOverflow(p){assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));}
 (async()=>{const b=await chromium.launch({channel:'chrome',headless:true});try{
 const p=await b.newPage({viewport:{width:390,height:844},reducedMotion:'reduce'}),errors=[];p.on('pageerror',e=>errors.push(e.message));
-await p.goto(BASE+'#collection');await p.waitForSelector('.collection-page');assert.equal(await p.locator('.collection-school').count(),25);assert.equal(await p.locator('.collection-school[open]').count(),0);assert((await p.locator('.collection-summary').innerText()).includes('0 / 328'));await noOverflow(p);
+await p.goto(BASE+'#collection');await p.waitForSelector('.collection-page');assert.equal(await p.locator('.collection-school').count(),100);assert.equal(await p.locator('.collection-school[open]').count(),0);assert((await p.locator('.collection-summary').innerText()).includes('0 / 827'));await noOverflow(p);
 await p.locator('[data-university=nccu] summary').click();
 assert.equal(await p.locator('.collection-school[open] li.locked:visible').count(),36);
 assert.equal(await p.locator('.collection-school:not([open]) li:visible').count(),0);
@@ -44,11 +44,14 @@ assert(await p.evaluate(()=>searchBeforeComposition===document.activeElement));
 assert((await p.locator('.school-card h3').allTextContents()).every(name=>name==='楊明蕉通大學'));
 assert.equal(await p.locator('.school-card').count(),19);
 await p.locator('#catalog-search').fill('');
-assert.equal(await p.locator('.school-card').count(),328);
+assert.equal(await p.locator('.school-card').count(),827);
+await p.locator('#catalog-search').fill('台北大學');
+assert.equal(await p.locator('.school-card h3').first().textContent(),'苔北大學');
+await p.locator('#catalog-search').fill('');
 const preferences=await p.evaluate(()=>JSON.stringify(state.preferences));await choose(p,'university','nycu');assert.equal(await p.locator('.school-card').count(),19);assert((await p.locator('.school-card h3').allTextContents()).every(s=>s==='楊明蕉通大學'));
 for(const sort of ['chance-asc','chance-desc']){await choose(p,'sort',sort);assert.equal(await p.evaluate(()=>JSON.stringify(state.preferences)),preferences);const values=(await p.locator('.program-fit>b').allTextContents()).map(t=>Number(t.replace('%','')));assert(values.every((n,i)=>!i||(sort==='chance-asc'?n>=values[i-1]:n<=values[i-1])));}
 await p.evaluate(()=>scrollTo(0,document.body.scrollHeight));await click(p,'review-preferences');await p.waitForFunction(()=>document.querySelector('[data-action="submit-universities"]').getBoundingClientRect().top>=0&&document.querySelector('[data-action="submit-universities"]').getBoundingClientRect().bottom<innerHeight);await p.screenshot({path:'/tmp/daiwan-mobile-preferences.png',fullPage:false});
-const current=await p.evaluate(()=>JSON.stringify(state));await p.locator('#collection-button').click();assert.equal(await p.locator('.collection-school').count(),25);assert.equal(await p.locator('.collection-school[open]').count(),0);await click(p,'close-collection');assert.equal(await p.evaluate(()=>JSON.stringify(state)),current);
+const current=await p.evaluate(()=>JSON.stringify(state));await p.locator('#collection-button').click();assert.equal(await p.locator('.collection-school').count(),100);assert.equal(await p.locator('.collection-school[open]').count(),0);await click(p,'close-collection');assert.equal(await p.evaluate(()=>JSON.stringify(state)),current);
 await p.setViewportSize({width:1440,height:1000});panel=await p.locator('#preferences-panel').boundingBox();list=await p.locator('.school-list').boundingBox();assert(panel.x>list.x,'desktop preferences remain on the right');
 // Use an actual successful admission result; an unaccepted offer must not unlock the collection.
 const chosen=await p.evaluate(async()=>{for(const q of programs){if(!eligibility(q))continue;const f={route:'apply',program:q.id,preferences:q.id,attrs:state.attrs.join(','),aptitude:state.aptitude.join(','),portfolio:state.portfolio,rank:state.rank,seed:state.originSeed};Object.entries(state.gsat).forEach(([s,v])=>f['s.'+s]=v);const r=await api('admission',f);if(r.accepted){state.preferences=[q.id];resetFilters();save();render();return q.id;}}});assert(chosen);

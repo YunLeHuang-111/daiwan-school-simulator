@@ -232,7 +232,7 @@ public class Main {
         double score=switch(route){case "star" -> exam*.5+(100-rank)*.25+talent*.25;case "apply" -> exam*.5+talent*.35+portfolio*.15;default -> exam*.7+talent*.3;};
         boolean qualified=!route.equals("star")||rank<=p.maxRank;
         boolean screened=exam>=p.examFloor&&talent>=p.talentFloor;
-        double chance=qualified&&screened?Math.max(0.5,Math.min(switch(p.selectivity){case "medical"->18;case "pharmacy"->32;case "top"->40;case "elite"->55;default->98;},100/(1+Math.exp((p.threshold-score)/5)))):0;
+        double chance=qualified&&screened?Math.max(0.5,Math.min(switch(p.selectivity){case "medical"->18;case "pharmacy"->25;case "top"->35;case "midTech"->46;case "midOther"->57;case "public"->70;case "privateTech"->83;default->98;},100/(1+Math.exp((p.threshold-score)/5)))):0;
         double draw=new Random(seed(f)*6364136223846793005L^p.id.hashCode()^route.hashCode()).nextDouble()*100;
         boolean accepted=draw<chance;
         json(ex,200,Map.of("accepted",accepted,"score",Math.round(score*10)/10.0,"chance",Math.round(chance*10)/10.0,
