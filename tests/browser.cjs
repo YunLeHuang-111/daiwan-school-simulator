@@ -30,6 +30,12 @@ async function win(p){if(await p.locator('[data-action="memory-ready"]').count()
  await mobile(p,'enrollment');await click(p,'enter-school');
  for(let r=0;r<6;r++){
   await click(p,'start-term');await p.waitForSelector('[data-action="answer"]');assert.equal(await p.evaluate(()=>state.paper.questions.length),2);
+  if(r===0){
+   await p.setViewportSize({width:320,height:568});
+   const nav=await p.locator('.question-nav').boundingBox();
+   assert(nav.y>=0&&nav.y+nav.height<=569);
+   await p.setViewportSize({width:1440,height:1000});
+  }
   if(r===0){const b=await p.evaluate(()=>JSON.stringify(state.paper));await resume(p);assert.equal(await p.evaluate(()=>JSON.stringify(state.paper)),b);}
   await paper(p,2);await p.waitForSelector('[data-action="event-choice"]');assert.equal(await p.evaluate(()=>state.lastRound.correct),2);assert.equal(await p.evaluate(()=>state.lastRound.rewards.reduce((a,b)=>a+b,0)),4);assert(await p.locator('.reward-notice').isVisible());
   if(r===0){await p.screenshot({path:'/tmp/daiwan-v6-event.png',fullPage:true});await mobile(p,'event');}
@@ -99,6 +105,17 @@ async function win(p){if(await p.locator('[data-action="memory-ready"]').count()
  assert((await p.locator('.card-portrait').getAttribute('src')).endsWith('/assets/avatar-female.svg'));assert(await p.locator('.card-crest').isVisible());const abbr=await p.evaluate(()=>university(admittedProgram().university).abbr);assert(!(await p.locator('.card-school').innerText()).includes(abbr));assert.equal(await p.locator('.unlocked-banner').count(),1);await mobile(p,'student card');
  await p.screenshot({path:'/tmp/daiwan-v6-card.png',fullPage:true});
  let dl=p.waitForEvent('download');await click(p,'download-card');let file=await dl;await file.saveAs('/tmp/daiwan-v6-card-export.png');let buf=fs.readFileSync('/tmp/daiwan-v6-card-export.png');assert.equal(buf.readUInt32BE(16),1520);assert.equal(buf.readUInt32BE(20),960);
+ dl=p.waitForEvent('download');await click(p,'download-story');file=await dl;
+ assert.equal(file.suggestedFilename(),'呆丸升學旅程.html');
+ await file.saveAs('/tmp/daiwan-journey-test.html');
+ const story=await browser.newPage({viewport:{width:320,height:568}});
+ await story.goto('file:///tmp/daiwan-journey-test.html');
+ assert.equal(await story.locator('h1').textContent(),'試玩同學 <樂>的升學旅程');
+ assert.equal(await story.locator('.timeline li').count(),6);
+ assert.equal(await story.locator('.abilities progress').count(),5);
+ assert(await story.getByRole('heading',{name:'學測成績'}).isVisible());
+ assert(await story.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+ await story.close();
  await p.locator('#photo-input').setInputFiles(path.join(__dirname,'../web/assets/campus-summer-v4.png'));await p.waitForFunction(()=>state.photo?.startsWith('data:image/jpeg'));await resume(p);assert((await p.locator('.card-portrait').getAttribute('src')).startsWith('data:image/jpeg'));
  dl=p.waitForEvent('download');await click(p,'download-card');await(await dl).saveAs('/tmp/daiwan-v6-photo-export.png');await click(p,'reset-photo');assert((await p.locator('.card-portrait').getAttribute('src')).endsWith('/assets/avatar-female.svg'));
  const originalAward=await p.evaluate(()=>achievements.first.date);await p.evaluate(()=>{delete state.achievementVersion;delete achievements.firstchoice;saveStore(ACH_KEY,achievements);save();});await resume(p);assert(await p.evaluate(()=>!!achievements.firstchoice));assert.equal(await p.evaluate(()=>achievements.first.date),originalAward);assert.equal(await p.evaluate(()=>state.achievementVersion),6);const seedCount=await p.evaluate(()=>achievements._seeds.length);await resume(p);assert.equal(await p.evaluate(()=>achievements._seeds.length),seedCount);

@@ -341,7 +341,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 93,
+      "threshold": 96,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -352,9 +352,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://www.ntu.edu.tw/academics/academics_list.html",
       "verifiedOn": "2026-11-10"
     },
@@ -371,7 +371,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 93,
+      "threshold": 96,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -382,9 +382,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://www.ntu.edu.tw/academics/academics_list.html",
       "verifiedOn": "2026-11-10"
     },
@@ -401,7 +401,7 @@
         "歷史",
         "公民與社會"
       ],
-      "threshold": 93,
+      "threshold": 96,
       "maxRank": 10,
       "group": 1,
       "kind": "social",
@@ -412,9 +412,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://www.ntu.edu.tw/academics/academics_list.html",
       "verifiedOn": "2026-11-10"
     },
@@ -431,7 +431,7 @@
         "歷史",
         "公民與社會"
       ],
-      "threshold": 93,
+      "threshold": 96,
       "maxRank": 10,
       "group": 1,
       "kind": "social",
@@ -442,9 +442,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://www.ntu.edu.tw/academics/academics_list.html",
       "verifiedOn": "2026-11-10"
     },
@@ -461,7 +461,7 @@
         "數學乙",
         "公民與社會"
       ],
-      "threshold": 93,
+      "threshold": 96,
       "maxRank": 10,
       "group": 1,
       "kind": "business",
@@ -472,9 +472,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://www.ntu.edu.tw/academics/academics_list.html",
       "verifiedOn": "2026-11-10"
     },
@@ -491,7 +491,7 @@
         "歷史",
         "公民與社會"
       ],
-      "threshold": 93,
+      "threshold": 96,
       "maxRank": 10,
       "group": 1,
       "kind": "social",
@@ -502,9 +502,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://www.ntu.edu.tw/academics/academics_list.html",
       "verifiedOn": "2026-11-10"
     },
@@ -521,7 +521,7 @@
         "數學甲",
         "物理"
       ],
-      "threshold": 93,
+      "threshold": 96,
       "maxRank": 10,
       "group": 2,
       "kind": "science",
@@ -532,9 +532,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://www.ntu.edu.tw/academics/academics_list.html",
       "verifiedOn": "2026-11-10"
     },
@@ -551,7 +551,7 @@
         "數學甲",
         "物理"
       ],
-      "threshold": 93,
+      "threshold": 96,
       "maxRank": 10,
       "group": 2,
       "kind": "science",
@@ -562,15 +562,496 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://www.ntu.edu.tw/academics/academics_list.html",
       "verifiedOn": "2026-11-10"
     },
     {
       "id": "ntu-8",
       "university": "ntu",
+      "name": "醫學系",
+      "field": 0,
+      "subjects": [
+        "國文",
+        "英文",
+        "自然"
+      ],
+      "split": [
+        "化學",
+        "生物"
+      ],
+      "threshold": 98,
+      "maxRank": 5,
+      "group": 8,
+      "kind": "medicine",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 96,
+      "talentFloor": 73,
+      "selectivity": "medical",
+      "source": "https://www.ntu.edu.tw/academics/academics_list.html",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "ntu-9",
+      "university": "ntu",
+      "name": "財務金融學系",
+      "field": 2,
+      "subjects": [
+        "英文",
+        "數學B"
+      ],
+      "split": [
+        "數學乙",
+        "公民與社會"
+      ],
+      "threshold": 96,
+      "maxRank": 10,
+      "group": 1,
+      "kind": "business",
+      "weights": [
+        0,
+        0.3,
+        0.7,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://www.ntu.edu.tw/academics/academics_list.html",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nthu-0",
+      "university": "nthu",
+      "name": "中國文學系",
+      "field": 1,
+      "subjects": [
+        "國文",
+        "英文"
+      ],
+      "split": [
+        "歷史",
+        "地理"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 1,
+      "kind": "language",
+      "weights": [
+        0,
+        0.7,
+        0.3,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://www.nthu.edu.tw/units/education",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nthu-1",
+      "university": "nthu",
+      "name": "外國語文學系",
+      "field": 1,
+      "subjects": [
+        "國文",
+        "英文"
+      ],
+      "split": [
+        "歷史",
+        "地理"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 1,
+      "kind": "language",
+      "weights": [
+        0,
+        0.7,
+        0.3,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://www.nthu.edu.tw/units/education",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nthu-2",
+      "university": "nthu",
+      "name": "數學系",
+      "field": 0,
+      "subjects": [
+        "數學A",
+        "自然"
+      ],
+      "split": [
+        "數學甲",
+        "物理"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 2,
+      "kind": "science",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://www.nthu.edu.tw/units/education",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nthu-3",
+      "university": "nthu",
+      "name": "物理學系",
+      "field": 0,
+      "subjects": [
+        "數學A",
+        "自然"
+      ],
+      "split": [
+        "數學甲",
+        "物理"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 2,
+      "kind": "science",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://www.nthu.edu.tw/units/education",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nthu-4",
+      "university": "nthu",
+      "name": "化學系",
+      "field": 0,
+      "subjects": [
+        "數學A",
+        "自然"
+      ],
+      "split": [
+        "數學甲",
+        "化學"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 2,
+      "kind": "science",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://www.nthu.edu.tw/units/education",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nthu-5",
+      "university": "nthu",
+      "name": "資訊工程學系",
+      "field": 0,
+      "subjects": [
+        "數學A",
+        "自然"
+      ],
+      "split": [
+        "數學甲",
+        "物理"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 2,
+      "kind": "science",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://www.nthu.edu.tw/units/education",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nthu-6",
+      "university": "nthu",
+      "name": "電機工程學系",
+      "field": 0,
+      "subjects": [
+        "數學A",
+        "自然"
+      ],
+      "split": [
+        "數學甲",
+        "物理"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 2,
+      "kind": "science",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://www.nthu.edu.tw/units/education",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nthu-7",
+      "university": "nthu",
+      "name": "經濟學系",
+      "field": 2,
+      "subjects": [
+        "英文",
+        "數學B"
+      ],
+      "split": [
+        "數學乙",
+        "公民與社會"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 1,
+      "kind": "business",
+      "weights": [
+        0,
+        0.3,
+        0.7,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://www.nthu.edu.tw/units/education",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nthu-8",
+      "university": "nthu",
+      "name": "藝術與設計學系",
+      "field": 3,
+      "subjects": [
+        "國文",
+        "英文"
+      ],
+      "split": [
+        "歷史",
+        "地理"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 5,
+      "kind": "arts",
+      "weights": [
+        0,
+        0,
+        0,
+        0.7,
+        0.3
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://www.nthu.edu.tw/units/education",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nthu-9",
+      "university": "nthu",
+      "name": "音樂學系",
+      "field": 4,
+      "subjects": [
+        "國文",
+        "英文"
+      ],
+      "split": [
+        "歷史",
+        "地理"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 4,
+      "kind": "music",
+      "weights": [
+        0,
+        0,
+        0,
+        0.3,
+        0.7
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://www.nthu.edu.tw/units/education",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nycu-0",
+      "university": "nycu",
+      "name": "資訊工程學系",
+      "field": 0,
+      "subjects": [
+        "數學A",
+        "自然"
+      ],
+      "split": [
+        "數學甲",
+        "物理"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 2,
+      "kind": "science",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nycu-1",
+      "university": "nycu",
+      "name": "電機工程學系",
+      "field": 0,
+      "subjects": [
+        "數學A",
+        "自然"
+      ],
+      "split": [
+        "數學甲",
+        "物理"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 2,
+      "kind": "science",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nycu-2",
+      "university": "nycu",
+      "name": "外國語文學系",
+      "field": 1,
+      "subjects": [
+        "國文",
+        "英文"
+      ],
+      "split": [
+        "歷史",
+        "地理"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 1,
+      "kind": "language",
+      "weights": [
+        0,
+        0.7,
+        0.3,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nycu-3",
+      "university": "nycu",
+      "name": "傳播與科技學系",
+      "field": 2,
+      "subjects": [
+        "國文",
+        "社會"
+      ],
+      "split": [
+        "歷史",
+        "公民與社會"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 1,
+      "kind": "social",
+      "weights": [
+        0,
+        0.3,
+        0.7,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nycu-4",
+      "university": "nycu",
       "name": "醫學系",
       "field": 0,
       "subjects": [
@@ -593,489 +1074,8 @@
         0,
         0
       ],
-      "examFloor": 93,
-      "talentFloor": 70,
-      "selectivity": "medical",
-      "source": "https://www.ntu.edu.tw/academics/academics_list.html",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "ntu-9",
-      "university": "ntu",
-      "name": "財務金融學系",
-      "field": 2,
-      "subjects": [
-        "英文",
-        "數學B"
-      ],
-      "split": [
-        "數學乙",
-        "公民與社會"
-      ],
-      "threshold": 93,
-      "maxRank": 10,
-      "group": 1,
-      "kind": "business",
-      "weights": [
-        0,
-        0.3,
-        0.7,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://www.ntu.edu.tw/academics/academics_list.html",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nthu-0",
-      "university": "nthu",
-      "name": "中國文學系",
-      "field": 1,
-      "subjects": [
-        "國文",
-        "英文"
-      ],
-      "split": [
-        "歷史",
-        "地理"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 1,
-      "kind": "language",
-      "weights": [
-        0,
-        0.7,
-        0.3,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://www.nthu.edu.tw/units/education",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nthu-1",
-      "university": "nthu",
-      "name": "外國語文學系",
-      "field": 1,
-      "subjects": [
-        "國文",
-        "英文"
-      ],
-      "split": [
-        "歷史",
-        "地理"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 1,
-      "kind": "language",
-      "weights": [
-        0,
-        0.7,
-        0.3,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://www.nthu.edu.tw/units/education",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nthu-2",
-      "university": "nthu",
-      "name": "數學系",
-      "field": 0,
-      "subjects": [
-        "數學A",
-        "自然"
-      ],
-      "split": [
-        "數學甲",
-        "物理"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 2,
-      "kind": "science",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://www.nthu.edu.tw/units/education",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nthu-3",
-      "university": "nthu",
-      "name": "物理學系",
-      "field": 0,
-      "subjects": [
-        "數學A",
-        "自然"
-      ],
-      "split": [
-        "數學甲",
-        "物理"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 2,
-      "kind": "science",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://www.nthu.edu.tw/units/education",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nthu-4",
-      "university": "nthu",
-      "name": "化學系",
-      "field": 0,
-      "subjects": [
-        "數學A",
-        "自然"
-      ],
-      "split": [
-        "數學甲",
-        "化學"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 2,
-      "kind": "science",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://www.nthu.edu.tw/units/education",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nthu-5",
-      "university": "nthu",
-      "name": "資訊工程學系",
-      "field": 0,
-      "subjects": [
-        "數學A",
-        "自然"
-      ],
-      "split": [
-        "數學甲",
-        "物理"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 2,
-      "kind": "science",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://www.nthu.edu.tw/units/education",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nthu-6",
-      "university": "nthu",
-      "name": "電機工程學系",
-      "field": 0,
-      "subjects": [
-        "數學A",
-        "自然"
-      ],
-      "split": [
-        "數學甲",
-        "物理"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 2,
-      "kind": "science",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://www.nthu.edu.tw/units/education",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nthu-7",
-      "university": "nthu",
-      "name": "經濟學系",
-      "field": 2,
-      "subjects": [
-        "英文",
-        "數學B"
-      ],
-      "split": [
-        "數學乙",
-        "公民與社會"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 1,
-      "kind": "business",
-      "weights": [
-        0,
-        0.3,
-        0.7,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://www.nthu.edu.tw/units/education",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nthu-8",
-      "university": "nthu",
-      "name": "藝術與設計學系",
-      "field": 3,
-      "subjects": [
-        "國文",
-        "英文"
-      ],
-      "split": [
-        "歷史",
-        "地理"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 5,
-      "kind": "arts",
-      "weights": [
-        0,
-        0,
-        0,
-        0.7,
-        0.3
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://www.nthu.edu.tw/units/education",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nthu-9",
-      "university": "nthu",
-      "name": "音樂學系",
-      "field": 4,
-      "subjects": [
-        "國文",
-        "英文"
-      ],
-      "split": [
-        "歷史",
-        "地理"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 4,
-      "kind": "music",
-      "weights": [
-        0,
-        0,
-        0,
-        0.3,
-        0.7
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://www.nthu.edu.tw/units/education",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nycu-0",
-      "university": "nycu",
-      "name": "資訊工程學系",
-      "field": 0,
-      "subjects": [
-        "數學A",
-        "自然"
-      ],
-      "split": [
-        "數學甲",
-        "物理"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 2,
-      "kind": "science",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nycu-1",
-      "university": "nycu",
-      "name": "電機工程學系",
-      "field": 0,
-      "subjects": [
-        "數學A",
-        "自然"
-      ],
-      "split": [
-        "數學甲",
-        "物理"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 2,
-      "kind": "science",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nycu-2",
-      "university": "nycu",
-      "name": "外國語文學系",
-      "field": 1,
-      "subjects": [
-        "國文",
-        "英文"
-      ],
-      "split": [
-        "歷史",
-        "地理"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 1,
-      "kind": "language",
-      "weights": [
-        0,
-        0.7,
-        0.3,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nycu-3",
-      "university": "nycu",
-      "name": "傳播與科技學系",
-      "field": 2,
-      "subjects": [
-        "國文",
-        "社會"
-      ],
-      "split": [
-        "歷史",
-        "公民與社會"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 1,
-      "kind": "social",
-      "weights": [
-        0,
-        0.3,
-        0.7,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nycu-4",
-      "university": "nycu",
-      "name": "醫學系",
-      "field": 0,
-      "subjects": [
-        "國文",
-        "英文",
-        "自然"
-      ],
-      "split": [
-        "化學",
-        "生物"
-      ],
-      "threshold": 94,
-      "maxRank": 5,
-      "group": 8,
-      "kind": "medicine",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 93,
-      "talentFloor": 70,
+      "examFloor": 96,
+      "talentFloor": 73,
       "selectivity": "medical",
       "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
       "verifiedOn": "2026-11-10"
@@ -1094,7 +1094,7 @@
         "化學",
         "生物"
       ],
-      "threshold": 94,
+      "threshold": 96,
       "maxRank": 5,
       "group": 8,
       "kind": "medicine",
@@ -1105,8 +1105,8 @@
         0,
         0
       ],
-      "examFloor": 93,
-      "talentFloor": 70,
+      "examFloor": 96,
+      "talentFloor": 73,
       "selectivity": "medical",
       "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
       "verifiedOn": "2026-11-10"
@@ -1124,7 +1124,7 @@
         "化學",
         "生物"
       ],
-      "threshold": 91,
+      "threshold": 94,
       "maxRank": 10,
       "group": 3,
       "kind": "health",
@@ -1135,9 +1135,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
       "verifiedOn": "2026-11-10"
     },
@@ -1154,7 +1154,7 @@
         "數學甲",
         "物理"
       ],
-      "threshold": 91,
+      "threshold": 94,
       "maxRank": 10,
       "group": 2,
       "kind": "science",
@@ -1165,9 +1165,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
       "verifiedOn": "2026-11-10"
     },
@@ -1184,7 +1184,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 90,
+      "threshold": 93,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -1195,9 +1195,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -1214,7 +1214,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 90,
+      "threshold": 93,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -1225,9 +1225,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -1244,7 +1244,7 @@
         "歷史",
         "公民與社會"
       ],
-      "threshold": 90,
+      "threshold": 93,
       "maxRank": 10,
       "group": 1,
       "kind": "social",
@@ -1255,9 +1255,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -1274,7 +1274,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 90,
+      "threshold": 93,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -1285,9 +1285,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6B555",
       "verifiedOn": "2026-11-10"
     },
@@ -1304,7 +1304,7 @@
         "數學甲",
         "物理"
       ],
-      "threshold": 90,
+      "threshold": 93,
       "maxRank": 10,
       "group": 2,
       "kind": "science",
@@ -1315,9 +1315,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -1334,7 +1334,7 @@
         "數學甲",
         "物理"
       ],
-      "threshold": 90,
+      "threshold": 93,
       "maxRank": 10,
       "group": 2,
       "kind": "science",
@@ -1345,9 +1345,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -1364,7 +1364,7 @@
         "數學甲",
         "化學"
       ],
-      "threshold": 90,
+      "threshold": 93,
       "maxRank": 10,
       "group": 2,
       "kind": "science",
@@ -1375,9 +1375,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -1394,7 +1394,7 @@
         "數學甲",
         "物理"
       ],
-      "threshold": 90,
+      "threshold": 93,
       "maxRank": 10,
       "group": 2,
       "kind": "science",
@@ -1405,9 +1405,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -1424,7 +1424,7 @@
         "數學甲",
         "物理"
       ],
-      "threshold": 90,
+      "threshold": 93,
       "maxRank": 10,
       "group": 2,
       "kind": "science",
@@ -1435,9 +1435,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -1454,7 +1454,7 @@
         "歷史",
         "公民與社會"
       ],
-      "threshold": 90,
+      "threshold": 93,
       "maxRank": 10,
       "group": 1,
       "kind": "social",
@@ -1465,9 +1465,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -1484,7 +1484,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -1495,9 +1495,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -1514,7 +1514,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -1526,9 +1526,9 @@
         0
       ],
       "college": "外國語文學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -1545,7 +1545,7 @@
         "歷史",
         "公民與社會"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "social",
@@ -1556,9 +1556,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -1575,7 +1575,7 @@
         "歷史",
         "公民與社會"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "social",
@@ -1586,9 +1586,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -1605,7 +1605,7 @@
         "歷史",
         "公民與社會"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "social",
@@ -1616,9 +1616,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -1635,7 +1635,7 @@
         "歷史",
         "公民與社會"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "social",
@@ -1646,9 +1646,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -1665,7 +1665,7 @@
         "歷史",
         "公民與社會"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "social",
@@ -1676,9 +1676,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -1695,7 +1695,7 @@
         "數學乙",
         "公民與社會"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "business",
@@ -1707,9 +1707,9 @@
         0
       ],
       "college": "商學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -1726,7 +1726,7 @@
         "數學乙",
         "公民與社會"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "business",
@@ -1738,9 +1738,9 @@
         0
       ],
       "college": "商學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -1757,7 +1757,7 @@
         "數學甲",
         "物理"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 2,
       "kind": "science",
@@ -1768,9 +1768,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -3908,7 +3908,7 @@
       "id": "tmu-0",
       "university": "tmu",
       "name": "醫學系",
-      "threshold": 94,
+      "threshold": 96,
       "maxRank": 5,
       "field": 0,
       "group": 8,
@@ -3929,8 +3929,8 @@
         0,
         0
       ],
-      "examFloor": 93,
-      "talentFloor": 70,
+      "examFloor": 96,
+      "talentFloor": 73,
       "selectivity": "medical",
       "source": "https://aca.tmu.edu.tw/front/TeachingResourceCenter/7pg081/7pg0811/pages.php?ID=be5b28fbe9ce7c72b26da50b32a44357",
       "verifiedOn": "2026-11-10"
@@ -3939,7 +3939,7 @@
       "id": "tmu-1",
       "university": "tmu",
       "name": "牙醫學系",
-      "threshold": 94,
+      "threshold": 96,
       "maxRank": 5,
       "field": 0,
       "group": 8,
@@ -3960,8 +3960,8 @@
         0,
         0
       ],
-      "examFloor": 93,
-      "talentFloor": 70,
+      "examFloor": 96,
+      "talentFloor": 73,
       "selectivity": "medical",
       "source": "https://aca.tmu.edu.tw/front/TeachingResourceCenter/7pg081/7pg0811/pages.php?ID=be5b28fbe9ce7c72b26da50b32a44357",
       "verifiedOn": "2026-11-10"
@@ -3970,7 +3970,7 @@
       "id": "tmu-2",
       "university": "tmu",
       "name": "藥學系",
-      "threshold": 69,
+      "threshold": 91,
       "maxRank": 30,
       "field": 0,
       "group": 3,
@@ -3990,9 +3990,9 @@
         0,
         0
       ],
-      "examFloor": 51,
-      "talentFloor": 0,
-      "selectivity": "regular",
+      "examFloor": 89,
+      "talentFloor": 65,
+      "selectivity": "pharmacy",
       "source": "https://aca.tmu.edu.tw/front/TeachingResourceCenter/7pg081/7pg0811/pages.php?ID=be5b28fbe9ce7c72b26da50b32a44357",
       "verifiedOn": "2026-11-10"
     },
@@ -4120,7 +4120,7 @@
       "id": "cmu-0",
       "university": "cmu",
       "name": "醫學系",
-      "threshold": 94,
+      "threshold": 96,
       "maxRank": 5,
       "field": 0,
       "group": 8,
@@ -4141,8 +4141,8 @@
         0,
         0
       ],
-      "examFloor": 93,
-      "talentFloor": 70,
+      "examFloor": 96,
+      "talentFloor": 73,
       "selectivity": "medical",
       "source": "https://www.cmu.edu.tw/academics.html",
       "verifiedOn": "2026-11-10"
@@ -4151,7 +4151,7 @@
       "id": "cmu-1",
       "university": "cmu",
       "name": "牙醫學系",
-      "threshold": 94,
+      "threshold": 96,
       "maxRank": 5,
       "field": 0,
       "group": 8,
@@ -4172,8 +4172,8 @@
         0,
         0
       ],
-      "examFloor": 93,
-      "talentFloor": 70,
+      "examFloor": 96,
+      "talentFloor": 73,
       "selectivity": "medical",
       "source": "https://www.cmu.edu.tw/academics.html",
       "verifiedOn": "2026-11-10"
@@ -4182,7 +4182,7 @@
       "id": "cmu-2",
       "university": "cmu",
       "name": "中醫學系",
-      "threshold": 94,
+      "threshold": 96,
       "maxRank": 5,
       "field": 0,
       "group": 8,
@@ -4203,8 +4203,8 @@
         0,
         0
       ],
-      "examFloor": 93,
-      "talentFloor": 70,
+      "examFloor": 96,
+      "talentFloor": 73,
       "selectivity": "medical",
       "source": "https://www.cmu.edu.tw/academics.html",
       "verifiedOn": "2026-11-10"
@@ -4213,7 +4213,7 @@
       "id": "cmu-3",
       "university": "cmu",
       "name": "藥學系",
-      "threshold": 67,
+      "threshold": 91,
       "maxRank": 30,
       "field": 0,
       "group": 3,
@@ -4233,9 +4233,9 @@
         0,
         0
       ],
-      "examFloor": 49,
-      "talentFloor": 0,
-      "selectivity": "regular",
+      "examFloor": 89,
+      "talentFloor": 65,
+      "selectivity": "pharmacy",
       "source": "https://www.cmu.edu.tw/academics.html",
       "verifiedOn": "2026-11-10"
     },
@@ -4303,7 +4303,7 @@
       "id": "cmu-6",
       "university": "cmu",
       "name": "中國藥學暨中藥資源學系",
-      "threshold": 67,
+      "threshold": 91,
       "maxRank": 30,
       "field": 0,
       "group": 3,
@@ -4323,9 +4323,9 @@
         0,
         0
       ],
-      "examFloor": 49,
-      "talentFloor": 0,
-      "selectivity": "regular",
+      "examFloor": 89,
+      "talentFloor": 65,
+      "selectivity": "pharmacy",
       "source": "https://www.cmu.edu.tw/academics.html",
       "verifiedOn": "2026-11-10"
     },
@@ -4333,7 +4333,7 @@
       "id": "kmu-0",
       "university": "kmu",
       "name": "醫學系",
-      "threshold": 94,
+      "threshold": 96,
       "maxRank": 5,
       "field": 0,
       "group": 8,
@@ -4354,8 +4354,8 @@
         0,
         0
       ],
-      "examFloor": 93,
-      "talentFloor": 70,
+      "examFloor": 96,
+      "talentFloor": 73,
       "selectivity": "medical",
       "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E7FA3E",
       "verifiedOn": "2026-11-10"
@@ -4364,7 +4364,7 @@
       "id": "kmu-1",
       "university": "kmu",
       "name": "牙醫學系",
-      "threshold": 94,
+      "threshold": 96,
       "maxRank": 5,
       "field": 0,
       "group": 8,
@@ -4385,8 +4385,8 @@
         0,
         0
       ],
-      "examFloor": 93,
-      "talentFloor": 70,
+      "examFloor": 96,
+      "talentFloor": 73,
       "selectivity": "medical",
       "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E7FA3E",
       "verifiedOn": "2026-11-10"
@@ -4395,7 +4395,7 @@
       "id": "kmu-2",
       "university": "kmu",
       "name": "藥學系",
-      "threshold": 66,
+      "threshold": 91,
       "maxRank": 30,
       "field": 0,
       "group": 3,
@@ -4415,9 +4415,9 @@
         0,
         0
       ],
-      "examFloor": 48,
-      "talentFloor": 0,
-      "selectivity": "regular",
+      "examFloor": 89,
+      "talentFloor": 65,
+      "selectivity": "pharmacy",
       "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E7FA3E",
       "verifiedOn": "2026-11-10"
     },
@@ -4545,7 +4545,7 @@
       "id": "csmu-0",
       "university": "csmu",
       "name": "醫學系",
-      "threshold": 94,
+      "threshold": 96,
       "maxRank": 5,
       "field": 0,
       "group": 8,
@@ -4566,8 +4566,8 @@
         0,
         0
       ],
-      "examFloor": 93,
-      "talentFloor": 70,
+      "examFloor": 96,
+      "talentFloor": 73,
       "selectivity": "medical",
       "source": "https://www.csmu.edu.tw/p/412-1000-139.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
@@ -4576,7 +4576,7 @@
       "id": "csmu-1",
       "university": "csmu",
       "name": "牙醫學系",
-      "threshold": 94,
+      "threshold": 96,
       "maxRank": 5,
       "field": 0,
       "group": 8,
@@ -4597,8 +4597,8 @@
         0,
         0
       ],
-      "examFloor": 93,
-      "talentFloor": 70,
+      "examFloor": 96,
+      "talentFloor": 73,
       "selectivity": "medical",
       "source": "https://csom.csmu.edu.tw/",
       "verifiedOn": "2026-11-10"
@@ -4757,7 +4757,7 @@
       "id": "cgu-0",
       "university": "cgu",
       "name": "醫學系",
-      "threshold": 94,
+      "threshold": 96,
       "maxRank": 5,
       "field": 0,
       "group": 8,
@@ -4778,8 +4778,8 @@
         0,
         0
       ],
-      "examFloor": 93,
-      "talentFloor": 70,
+      "examFloor": 96,
+      "talentFloor": 73,
       "selectivity": "medical",
       "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E7C3A0",
       "verifiedOn": "2026-11-10"
@@ -4788,7 +4788,7 @@
       "id": "cgu-1",
       "university": "cgu",
       "name": "中醫學系",
-      "threshold": 94,
+      "threshold": 96,
       "maxRank": 5,
       "field": 0,
       "group": 8,
@@ -4809,8 +4809,8 @@
         0,
         0
       ],
-      "examFloor": 93,
-      "talentFloor": 70,
+      "examFloor": 96,
+      "talentFloor": 73,
       "selectivity": "medical",
       "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E7C3A0",
       "verifiedOn": "2026-11-10"
@@ -4969,7 +4969,7 @@
       "id": "tcu-0",
       "university": "tcu",
       "name": "醫學系",
-      "threshold": 94,
+      "threshold": 96,
       "maxRank": 5,
       "field": 0,
       "group": 8,
@@ -4990,8 +4990,8 @@
         0,
         0
       ],
-      "examFloor": 93,
-      "talentFloor": 70,
+      "examFloor": 96,
+      "talentFloor": 73,
       "selectivity": "medical",
       "source": "https://www.tcu.edu.tw/p/412-1033-4801.php",
       "verifiedOn": "2026-11-10"
@@ -6389,7 +6389,7 @@
         "數學乙",
         "公民與社會"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "business",
@@ -6401,9 +6401,9 @@
         0
       ],
       "college": "商學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -6420,7 +6420,7 @@
         "數學乙",
         "公民與社會"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "business",
@@ -6432,9 +6432,9 @@
         0
       ],
       "college": "商學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -6451,7 +6451,7 @@
         "數學乙",
         "公民與社會"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "business",
@@ -6463,9 +6463,9 @@
         0
       ],
       "college": "商學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -6482,7 +6482,7 @@
         "數學乙",
         "公民與社會"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "business",
@@ -6494,9 +6494,9 @@
         0
       ],
       "college": "商學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -6513,7 +6513,7 @@
         "數學乙",
         "公民與社會"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "business",
@@ -6525,9 +6525,9 @@
         0
       ],
       "college": "商學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -6544,7 +6544,7 @@
         "數學乙",
         "公民與社會"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "business",
@@ -6556,9 +6556,9 @@
         0
       ],
       "college": "商學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -6575,7 +6575,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -6587,9 +6587,9 @@
         0
       ],
       "college": "傳播學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -6606,7 +6606,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -6618,9 +6618,9 @@
         0
       ],
       "college": "傳播學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -6637,7 +6637,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -6649,9 +6649,9 @@
         0
       ],
       "college": "傳播學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -6668,7 +6668,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -6680,9 +6680,9 @@
         0
       ],
       "college": "傳播學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E66D07",
       "verifiedOn": "2026-11-10"
     },
@@ -6699,7 +6699,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -6711,9 +6711,9 @@
         0
       ],
       "college": "傳播學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -6730,7 +6730,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -6742,9 +6742,9 @@
         0
       ],
       "college": "外國語文學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -6761,7 +6761,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -6773,9 +6773,9 @@
         0
       ],
       "college": "外國語文學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -6792,7 +6792,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -6804,9 +6804,9 @@
         0
       ],
       "college": "外國語文學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -6823,7 +6823,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -6835,9 +6835,9 @@
         0
       ],
       "college": "外國語文學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -6854,7 +6854,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -6866,9 +6866,9 @@
         0
       ],
       "college": "外國語文學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -6885,7 +6885,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -6897,9 +6897,9 @@
         0
       ],
       "college": "外國語文學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -6916,7 +6916,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -6928,9 +6928,9 @@
         0
       ],
       "college": "外國語文學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -6947,7 +6947,7 @@
         "歷史",
         "公民與社會"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "social",
@@ -6959,9 +6959,9 @@
         0
       ],
       "college": "社會科學學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -6978,7 +6978,7 @@
         "歷史",
         "公民與社會"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "social",
@@ -6990,9 +6990,9 @@
         0
       ],
       "college": "社會科學學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -7009,7 +7009,7 @@
         "歷史",
         "公民與社會"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "social",
@@ -7021,9 +7021,9 @@
         0
       ],
       "college": "社會科學學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -7040,7 +7040,7 @@
         "歷史",
         "公民與社會"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "social",
@@ -7052,9 +7052,9 @@
         0
       ],
       "college": "社會科學學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -7071,7 +7071,7 @@
         "歷史",
         "公民與社會"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "social",
@@ -7083,9 +7083,9 @@
         0
       ],
       "college": "社會科學學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -7102,7 +7102,7 @@
         "歷史",
         "公民與社會"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "social",
@@ -7114,9 +7114,9 @@
         0
       ],
       "college": "社會科學學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -7133,7 +7133,7 @@
         "歷史",
         "公民與社會"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 1,
       "kind": "social",
@@ -7145,9 +7145,9 @@
         0
       ],
       "college": "理學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -7164,7 +7164,7 @@
         "數學甲",
         "物理"
       ],
-      "threshold": 89,
+      "threshold": 92,
       "maxRank": 10,
       "group": 2,
       "kind": "science",
@@ -7176,9 +7176,9 @@
         0
       ],
       "college": "理學院",
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://2024nccu.nccu.edu.tw/p/426-1000-55.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -7195,7 +7195,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 93,
+      "threshold": 96,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -7206,9 +7206,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://www.ntu.edu.tw/academics/academics_list.html",
       "verifiedOn": "2026-11-10"
     },
@@ -7225,7 +7225,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 93,
+      "threshold": 96,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -7236,9 +7236,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://www.ntu.edu.tw/academics/academics_list.html",
       "verifiedOn": "2026-11-10"
     },
@@ -7255,7 +7255,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 93,
+      "threshold": 96,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -7266,9 +7266,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://www.ntu.edu.tw/academics/academics_list.html",
       "verifiedOn": "2026-11-10"
     },
@@ -7285,7 +7285,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 93,
+      "threshold": 96,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -7296,9 +7296,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://www.ntu.edu.tw/academics/academics_list.html",
       "verifiedOn": "2026-11-10"
     },
@@ -7315,7 +7315,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 93,
+      "threshold": 96,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -7326,9 +7326,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://www.ntu.edu.tw/academics/academics_list.html",
       "verifiedOn": "2026-11-10"
     },
@@ -7345,7 +7345,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 93,
+      "threshold": 96,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -7356,9 +7356,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://www.ntu.edu.tw/academics/academics_list.html",
       "verifiedOn": "2026-11-10"
     },
@@ -7375,7 +7375,7 @@
         "數學甲",
         "物理"
       ],
-      "threshold": 93,
+      "threshold": 96,
       "maxRank": 10,
       "group": 2,
       "kind": "science",
@@ -7386,9 +7386,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://www.ntu.edu.tw/academics/academics_list.html",
       "verifiedOn": "2026-11-10"
     },
@@ -7405,7 +7405,7 @@
         "數學甲",
         "物理"
       ],
-      "threshold": 93,
+      "threshold": 96,
       "maxRank": 10,
       "group": 2,
       "kind": "science",
@@ -7416,9 +7416,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://www.ntu.edu.tw/academics/academics_list.html",
       "verifiedOn": "2026-11-10"
     },
@@ -7435,7 +7435,7 @@
         "數學甲",
         "物理"
       ],
-      "threshold": 93,
+      "threshold": 96,
       "maxRank": 10,
       "group": 2,
       "kind": "science",
@@ -7446,9 +7446,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://www.ntu.edu.tw/academics/academics_list.html",
       "verifiedOn": "2026-11-10"
     },
@@ -7465,7 +7465,7 @@
         "數學甲",
         "物理"
       ],
-      "threshold": 93,
+      "threshold": 96,
       "maxRank": 10,
       "group": 2,
       "kind": "science",
@@ -7476,9 +7476,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://www.ntu.edu.tw/academics/academics_list.html",
       "verifiedOn": "2026-11-10"
     },
@@ -7486,6 +7486,697 @@
       "id": "ntu-v5-20",
       "university": "ntu",
       "name": "土木工程學系",
+      "field": 0,
+      "subjects": [
+        "數學A",
+        "自然"
+      ],
+      "split": [
+        "數學甲",
+        "物理"
+      ],
+      "threshold": 96,
+      "maxRank": 10,
+      "group": 2,
+      "kind": "science",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://www.ntu.edu.tw/academics/academics_list.html",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "ntu-v5-21",
+      "university": "ntu",
+      "name": "化學工程學系",
+      "field": 0,
+      "subjects": [
+        "數學A",
+        "自然"
+      ],
+      "split": [
+        "數學甲",
+        "物理"
+      ],
+      "threshold": 96,
+      "maxRank": 10,
+      "group": 2,
+      "kind": "science",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://www.ntu.edu.tw/academics/academics_list.html",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "ntu-v5-22",
+      "university": "ntu",
+      "name": "材料科學與工程學系",
+      "field": 0,
+      "subjects": [
+        "數學A",
+        "自然"
+      ],
+      "split": [
+        "數學甲",
+        "物理"
+      ],
+      "threshold": 96,
+      "maxRank": 10,
+      "group": 2,
+      "kind": "science",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://www.ntu.edu.tw/academics/academics_list.html",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "ntu-v5-23",
+      "university": "ntu",
+      "name": "牙醫學系",
+      "field": 0,
+      "subjects": [
+        "國文",
+        "英文",
+        "自然"
+      ],
+      "split": [
+        "化學",
+        "生物"
+      ],
+      "threshold": 98,
+      "maxRank": 5,
+      "group": 8,
+      "kind": "medicine",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 96,
+      "talentFloor": 73,
+      "selectivity": "medical",
+      "source": "https://www.ntu.edu.tw/academics/academics_list.html",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "ntu-v5-24",
+      "university": "ntu",
+      "name": "生命科學系",
+      "threshold": 96,
+      "maxRank": 10,
+      "field": 0,
+      "group": 3,
+      "kind": "health",
+      "subjects": [
+        "英文",
+        "自然"
+      ],
+      "split": [
+        "化學",
+        "生物"
+      ],
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://www.ntu.edu.tw/academics/academics_list.html",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "ntu-v5-25",
+      "university": "ntu",
+      "name": "藥學系",
+      "threshold": 94,
+      "maxRank": 10,
+      "field": 0,
+      "group": 3,
+      "kind": "health",
+      "subjects": [
+        "英文",
+        "自然"
+      ],
+      "split": [
+        "化學",
+        "生物"
+      ],
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 89,
+      "talentFloor": 65,
+      "selectivity": "pharmacy",
+      "source": "https://www.ntu.edu.tw/academics/academics_list.html",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "ntu-v5-26",
+      "university": "ntu",
+      "name": "護理學系",
+      "threshold": 96,
+      "maxRank": 10,
+      "field": 0,
+      "group": 3,
+      "kind": "health",
+      "subjects": [
+        "英文",
+        "自然"
+      ],
+      "split": [
+        "化學",
+        "生物"
+      ],
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://www.ntu.edu.tw/academics/academics_list.html",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nthu-v5-10",
+      "university": "nthu",
+      "name": "化學工程學系",
+      "field": 0,
+      "subjects": [
+        "數學A",
+        "自然"
+      ],
+      "split": [
+        "數學甲",
+        "物理"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 2,
+      "kind": "science",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://www.nthu.edu.tw/units/education",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nthu-v5-11",
+      "university": "nthu",
+      "name": "動力機械工程學系",
+      "field": 0,
+      "subjects": [
+        "數學A",
+        "自然"
+      ],
+      "split": [
+        "數學甲",
+        "物理"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 2,
+      "kind": "science",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://www.nthu.edu.tw/units/education",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nthu-v5-12",
+      "university": "nthu",
+      "name": "材料科學工程學系",
+      "field": 0,
+      "subjects": [
+        "數學A",
+        "自然"
+      ],
+      "split": [
+        "數學甲",
+        "物理"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 2,
+      "kind": "science",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://www.nthu.edu.tw/units/education",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nthu-v5-13",
+      "university": "nthu",
+      "name": "工業工程與工程管理學系",
+      "field": 0,
+      "subjects": [
+        "數學A",
+        "自然"
+      ],
+      "split": [
+        "數學甲",
+        "物理"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 2,
+      "kind": "science",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://www.nthu.edu.tw/units/education",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nthu-v5-14",
+      "university": "nthu",
+      "name": "工程與系統科學系",
+      "field": 0,
+      "subjects": [
+        "數學A",
+        "自然"
+      ],
+      "split": [
+        "數學甲",
+        "物理"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 2,
+      "kind": "science",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://www.nthu.edu.tw/units/education",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nycu-v5-8",
+      "university": "nycu",
+      "name": "電子物理學系",
+      "field": 0,
+      "subjects": [
+        "數學A",
+        "自然"
+      ],
+      "split": [
+        "數學甲",
+        "物理"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 2,
+      "kind": "science",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://newstudents.nycu.edu.tw/m12/s2/",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nycu-v5-9",
+      "university": "nycu",
+      "name": "光電工程學系",
+      "field": 0,
+      "subjects": [
+        "數學A",
+        "自然"
+      ],
+      "split": [
+        "數學甲",
+        "物理"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 2,
+      "kind": "science",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nycu-v5-10",
+      "university": "nycu",
+      "name": "機械工程學系",
+      "field": 0,
+      "subjects": [
+        "數學A",
+        "自然"
+      ],
+      "split": [
+        "數學甲",
+        "物理"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 2,
+      "kind": "science",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nycu-v5-11",
+      "university": "nycu",
+      "name": "土木工程學系",
+      "field": 0,
+      "subjects": [
+        "數學A",
+        "自然"
+      ],
+      "split": [
+        "數學甲",
+        "物理"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 2,
+      "kind": "science",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nycu-v5-12",
+      "university": "nycu",
+      "name": "材料科學與工程學系",
+      "field": 0,
+      "subjects": [
+        "數學A",
+        "自然"
+      ],
+      "split": [
+        "數學甲",
+        "物理"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 2,
+      "kind": "science",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nycu-v5-13",
+      "university": "nycu",
+      "name": "工業工程與管理學系",
+      "field": 0,
+      "subjects": [
+        "數學A",
+        "自然"
+      ],
+      "split": [
+        "數學甲",
+        "物理"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 2,
+      "kind": "science",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nycu-v5-14",
+      "university": "nycu",
+      "name": "資訊管理與財務金融學系",
+      "field": 2,
+      "subjects": [
+        "英文",
+        "數學B"
+      ],
+      "split": [
+        "數學乙",
+        "公民與社會"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 1,
+      "kind": "business",
+      "weights": [
+        0,
+        0.3,
+        0.7,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nycu-v5-15",
+      "university": "nycu",
+      "name": "管理科學系",
+      "field": 2,
+      "subjects": [
+        "英文",
+        "數學B"
+      ],
+      "split": [
+        "數學乙",
+        "公民與社會"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 1,
+      "kind": "business",
+      "weights": [
+        0,
+        0.3,
+        0.7,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nycu-v5-16",
+      "university": "nycu",
+      "name": "運輸與物流管理學系",
+      "field": 2,
+      "subjects": [
+        "英文",
+        "數學B"
+      ],
+      "split": [
+        "數學乙",
+        "公民與社會"
+      ],
+      "threshold": 94,
+      "maxRank": 10,
+      "group": 1,
+      "kind": "business",
+      "weights": [
+        0,
+        0.3,
+        0.7,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nycu-v5-17",
+      "university": "nycu",
+      "name": "護理學系",
+      "threshold": 94,
+      "maxRank": 10,
+      "field": 0,
+      "group": 3,
+      "kind": "health",
+      "subjects": [
+        "英文",
+        "自然"
+      ],
+      "split": [
+        "化學",
+        "生物"
+      ],
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "nycu-v5-18",
+      "university": "nycu",
+      "name": "物理治療暨輔助科技學系",
+      "threshold": 94,
+      "maxRank": 10,
+      "field": 0,
+      "group": 3,
+      "kind": "health",
+      "subjects": [
+        "英文",
+        "自然"
+      ],
+      "split": [
+        "化學",
+        "生物"
+      ],
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "ncku-v5-10",
+      "university": "ncku",
+      "name": "資訊工程學系",
       "field": 0,
       "subjects": [
         "數學A",
@@ -7506,15 +8197,45 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://www.ntu.edu.tw/academics/academics_list.html",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
     {
-      "id": "ntu-v5-21",
-      "university": "ntu",
+      "id": "ncku-v5-11",
+      "university": "ncku",
+      "name": "電機工程學系",
+      "field": 0,
+      "subjects": [
+        "數學A",
+        "自然"
+      ],
+      "split": [
+        "數學甲",
+        "物理"
+      ],
+      "threshold": 93,
+      "maxRank": 10,
+      "group": 2,
+      "kind": "science",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "ncku-v5-12",
+      "university": "ncku",
       "name": "化學工程學系",
       "field": 0,
       "subjects": [
@@ -7536,16 +8257,16 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://www.ntu.edu.tw/academics/academics_list.html",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
     {
-      "id": "ntu-v5-22",
-      "university": "ntu",
-      "name": "材料科學與工程學系",
+      "id": "ncku-v5-13",
+      "university": "ncku",
+      "name": "材料科學及工程學系",
       "field": 0,
       "subjects": [
         "數學A",
@@ -7566,15 +8287,76 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://www.ntu.edu.tw/academics/academics_list.html",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
     {
-      "id": "ntu-v5-23",
-      "university": "ntu",
+      "id": "ncku-v5-14",
+      "university": "ncku",
+      "name": "航空太空工程學系",
+      "field": 0,
+      "subjects": [
+        "數學A",
+        "自然"
+      ],
+      "split": [
+        "數學甲",
+        "物理"
+      ],
+      "threshold": 93,
+      "maxRank": 10,
+      "group": 2,
+      "kind": "science",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
+      "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "ncku-v5-15",
+      "university": "ncku",
+      "name": "醫學系",
+      "field": 0,
+      "subjects": [
+        "國文",
+        "英文",
+        "自然"
+      ],
+      "split": [
+        "化學",
+        "生物"
+      ],
+      "threshold": 96,
+      "maxRank": 5,
+      "group": 8,
+      "kind": "medicine",
+      "weights": [
+        0.7,
+        0.3,
+        0,
+        0,
+        0
+      ],
+      "examFloor": 96,
+      "talentFloor": 73,
+      "selectivity": "medical",
+      "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
+      "verifiedOn": "2026-11-10"
+    },
+    {
+      "id": "ncku-v5-16",
+      "university": "ncku",
       "name": "牙醫學系",
       "field": 0,
       "subjects": [
@@ -7597,790 +8379,8 @@
         0,
         0
       ],
-      "examFloor": 93,
-      "talentFloor": 70,
-      "selectivity": "medical",
-      "source": "https://www.ntu.edu.tw/academics/academics_list.html",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "ntu-v5-24",
-      "university": "ntu",
-      "name": "生命科學系",
-      "threshold": 93,
-      "maxRank": 10,
-      "field": 0,
-      "group": 3,
-      "kind": "health",
-      "subjects": [
-        "英文",
-        "自然"
-      ],
-      "split": [
-        "化學",
-        "生物"
-      ],
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://www.ntu.edu.tw/academics/academics_list.html",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "ntu-v5-25",
-      "university": "ntu",
-      "name": "藥學系",
-      "threshold": 93,
-      "maxRank": 10,
-      "field": 0,
-      "group": 3,
-      "kind": "health",
-      "subjects": [
-        "英文",
-        "自然"
-      ],
-      "split": [
-        "化學",
-        "生物"
-      ],
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://www.ntu.edu.tw/academics/academics_list.html",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "ntu-v5-26",
-      "university": "ntu",
-      "name": "護理學系",
-      "threshold": 93,
-      "maxRank": 10,
-      "field": 0,
-      "group": 3,
-      "kind": "health",
-      "subjects": [
-        "英文",
-        "自然"
-      ],
-      "split": [
-        "化學",
-        "生物"
-      ],
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://www.ntu.edu.tw/academics/academics_list.html",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nthu-v5-10",
-      "university": "nthu",
-      "name": "化學工程學系",
-      "field": 0,
-      "subjects": [
-        "數學A",
-        "自然"
-      ],
-      "split": [
-        "數學甲",
-        "物理"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 2,
-      "kind": "science",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://www.nthu.edu.tw/units/education",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nthu-v5-11",
-      "university": "nthu",
-      "name": "動力機械工程學系",
-      "field": 0,
-      "subjects": [
-        "數學A",
-        "自然"
-      ],
-      "split": [
-        "數學甲",
-        "物理"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 2,
-      "kind": "science",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://www.nthu.edu.tw/units/education",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nthu-v5-12",
-      "university": "nthu",
-      "name": "材料科學工程學系",
-      "field": 0,
-      "subjects": [
-        "數學A",
-        "自然"
-      ],
-      "split": [
-        "數學甲",
-        "物理"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 2,
-      "kind": "science",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://www.nthu.edu.tw/units/education",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nthu-v5-13",
-      "university": "nthu",
-      "name": "工業工程與工程管理學系",
-      "field": 0,
-      "subjects": [
-        "數學A",
-        "自然"
-      ],
-      "split": [
-        "數學甲",
-        "物理"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 2,
-      "kind": "science",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://www.nthu.edu.tw/units/education",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nthu-v5-14",
-      "university": "nthu",
-      "name": "工程與系統科學系",
-      "field": 0,
-      "subjects": [
-        "數學A",
-        "自然"
-      ],
-      "split": [
-        "數學甲",
-        "物理"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 2,
-      "kind": "science",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://www.nthu.edu.tw/units/education",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nycu-v5-8",
-      "university": "nycu",
-      "name": "電子物理學系",
-      "field": 0,
-      "subjects": [
-        "數學A",
-        "自然"
-      ],
-      "split": [
-        "數學甲",
-        "物理"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 2,
-      "kind": "science",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://newstudents.nycu.edu.tw/m12/s2/",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nycu-v5-9",
-      "university": "nycu",
-      "name": "光電工程學系",
-      "field": 0,
-      "subjects": [
-        "數學A",
-        "自然"
-      ],
-      "split": [
-        "數學甲",
-        "物理"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 2,
-      "kind": "science",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nycu-v5-10",
-      "university": "nycu",
-      "name": "機械工程學系",
-      "field": 0,
-      "subjects": [
-        "數學A",
-        "自然"
-      ],
-      "split": [
-        "數學甲",
-        "物理"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 2,
-      "kind": "science",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nycu-v5-11",
-      "university": "nycu",
-      "name": "土木工程學系",
-      "field": 0,
-      "subjects": [
-        "數學A",
-        "自然"
-      ],
-      "split": [
-        "數學甲",
-        "物理"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 2,
-      "kind": "science",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nycu-v5-12",
-      "university": "nycu",
-      "name": "材料科學與工程學系",
-      "field": 0,
-      "subjects": [
-        "數學A",
-        "自然"
-      ],
-      "split": [
-        "數學甲",
-        "物理"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 2,
-      "kind": "science",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nycu-v5-13",
-      "university": "nycu",
-      "name": "工業工程與管理學系",
-      "field": 0,
-      "subjects": [
-        "數學A",
-        "自然"
-      ],
-      "split": [
-        "數學甲",
-        "物理"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 2,
-      "kind": "science",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nycu-v5-14",
-      "university": "nycu",
-      "name": "資訊管理與財務金融學系",
-      "field": 2,
-      "subjects": [
-        "英文",
-        "數學B"
-      ],
-      "split": [
-        "數學乙",
-        "公民與社會"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 1,
-      "kind": "business",
-      "weights": [
-        0,
-        0.3,
-        0.7,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nycu-v5-15",
-      "university": "nycu",
-      "name": "管理科學系",
-      "field": 2,
-      "subjects": [
-        "英文",
-        "數學B"
-      ],
-      "split": [
-        "數學乙",
-        "公民與社會"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 1,
-      "kind": "business",
-      "weights": [
-        0,
-        0.3,
-        0.7,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nycu-v5-16",
-      "university": "nycu",
-      "name": "運輸與物流管理學系",
-      "field": 2,
-      "subjects": [
-        "英文",
-        "數學B"
-      ],
-      "split": [
-        "數學乙",
-        "公民與社會"
-      ],
-      "threshold": 91,
-      "maxRank": 10,
-      "group": 1,
-      "kind": "business",
-      "weights": [
-        0,
-        0.3,
-        0.7,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nycu-v5-17",
-      "university": "nycu",
-      "name": "護理學系",
-      "threshold": 91,
-      "maxRank": 10,
-      "field": 0,
-      "group": 3,
-      "kind": "health",
-      "subjects": [
-        "英文",
-        "自然"
-      ],
-      "split": [
-        "化學",
-        "生物"
-      ],
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "nycu-v5-18",
-      "university": "nycu",
-      "name": "物理治療暨輔助科技學系",
-      "threshold": 91,
-      "maxRank": 10,
-      "field": 0,
-      "group": 3,
-      "kind": "health",
-      "subjects": [
-        "英文",
-        "自然"
-      ],
-      "split": [
-        "化學",
-        "生物"
-      ],
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://udb.moe.edu.tw/ulist/Institution?id=000021E6D459",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "ncku-v5-10",
-      "university": "ncku",
-      "name": "資訊工程學系",
-      "field": 0,
-      "subjects": [
-        "數學A",
-        "自然"
-      ],
-      "split": [
-        "數學甲",
-        "物理"
-      ],
-      "threshold": 90,
-      "maxRank": 10,
-      "group": 2,
-      "kind": "science",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "ncku-v5-11",
-      "university": "ncku",
-      "name": "電機工程學系",
-      "field": 0,
-      "subjects": [
-        "數學A",
-        "自然"
-      ],
-      "split": [
-        "數學甲",
-        "物理"
-      ],
-      "threshold": 90,
-      "maxRank": 10,
-      "group": 2,
-      "kind": "science",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "ncku-v5-12",
-      "university": "ncku",
-      "name": "化學工程學系",
-      "field": 0,
-      "subjects": [
-        "數學A",
-        "自然"
-      ],
-      "split": [
-        "數學甲",
-        "物理"
-      ],
-      "threshold": 90,
-      "maxRank": 10,
-      "group": 2,
-      "kind": "science",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "ncku-v5-13",
-      "university": "ncku",
-      "name": "材料科學及工程學系",
-      "field": 0,
-      "subjects": [
-        "數學A",
-        "自然"
-      ],
-      "split": [
-        "數學甲",
-        "物理"
-      ],
-      "threshold": 90,
-      "maxRank": 10,
-      "group": 2,
-      "kind": "science",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "ncku-v5-14",
-      "university": "ncku",
-      "name": "航空太空工程學系",
-      "field": 0,
-      "subjects": [
-        "數學A",
-        "自然"
-      ],
-      "split": [
-        "數學甲",
-        "物理"
-      ],
-      "threshold": 90,
-      "maxRank": 10,
-      "group": 2,
-      "kind": "science",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
-      "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "ncku-v5-15",
-      "university": "ncku",
-      "name": "醫學系",
-      "field": 0,
-      "subjects": [
-        "國文",
-        "英文",
-        "自然"
-      ],
-      "split": [
-        "化學",
-        "生物"
-      ],
-      "threshold": 94,
-      "maxRank": 5,
-      "group": 8,
-      "kind": "medicine",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 93,
-      "talentFloor": 70,
-      "selectivity": "medical",
-      "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
-      "verifiedOn": "2026-11-10"
-    },
-    {
-      "id": "ncku-v5-16",
-      "university": "ncku",
-      "name": "牙醫學系",
-      "field": 0,
-      "subjects": [
-        "國文",
-        "英文",
-        "自然"
-      ],
-      "split": [
-        "化學",
-        "生物"
-      ],
-      "threshold": 94,
-      "maxRank": 5,
-      "group": 8,
-      "kind": "medicine",
-      "weights": [
-        0.7,
-        0.3,
-        0,
-        0,
-        0
-      ],
-      "examFloor": 93,
-      "talentFloor": 70,
+      "examFloor": 96,
+      "talentFloor": 73,
       "selectivity": "medical",
       "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
@@ -8398,7 +8398,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 90,
+      "threshold": 93,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -8409,9 +8409,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -8428,7 +8428,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 90,
+      "threshold": 93,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -8439,9 +8439,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -8458,7 +8458,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 90,
+      "threshold": 93,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -8469,9 +8469,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -8488,7 +8488,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 90,
+      "threshold": 93,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -8499,9 +8499,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -8518,7 +8518,7 @@
         "歷史",
         "地理"
       ],
-      "threshold": 90,
+      "threshold": 93,
       "maxRank": 10,
       "group": 1,
       "kind": "language",
@@ -8529,9 +8529,9 @@
         0,
         0
       ],
-      "examFloor": 85,
-      "talentFloor": 60,
-      "selectivity": "elite",
+      "examFloor": 87,
+      "talentFloor": 62,
+      "selectivity": "top",
       "source": "https://academic.web2.ncku.edu.tw/p/412-1159-25413.php?Lang=zh-tw",
       "verifiedOn": "2026-11-10"
     },
@@ -9499,7 +9499,7 @@
       "id": "fju-v5-8",
       "university": "fju",
       "name": "醫學系",
-      "threshold": 94,
+      "threshold": 96,
       "maxRank": 5,
       "field": 0,
       "group": 8,
@@ -9520,8 +9520,8 @@
         0,
         0
       ],
-      "examFloor": 93,
-      "talentFloor": 70,
+      "examFloor": 96,
+      "talentFloor": 73,
       "selectivity": "medical",
       "source": "https://www.fju.edu.tw/academics.jsp?labelID=5",
       "verifiedOn": "2026-11-10"

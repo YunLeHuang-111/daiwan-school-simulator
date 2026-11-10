@@ -26,6 +26,25 @@ await p.setViewportSize({width:390,height:844});
 await p.evaluate(()=>{state.route='apply';state.rank=5;state.round=5;state.attrs=[85,85,85,85,85];state.aptitude=[75,75,75,75,75];state.portfolio=90;state.gsat=Object.fromEntries(GSAT.map(s=>[s,15]));state.history=TERMS.map(term=>({term,total:90,correct:2,gameScore:100}));state.preferences=['tku-0','fcu-0','fju-0'];welcome=false;resetFilters();go('universities');});
 await noOverflow(p);let panel=await p.locator('#preferences-panel').boundingBox(),list=await p.locator('.school-list').boundingBox();assert(panel.y+panel.height<list.y+1,'preferences before the whole catalog');
 const submit=await p.locator('[data-action="submit-universities"]').boundingBox();assert(submit.y<844&&submit.y+submit.height<844,'mobile submit is visible near top');
+// Zhuyin composition must preserve the live input and only apply the committed text.
+await p.locator('[data-select-wrap="sort"] .select-trigger').click();
+await p.locator('#catalog-search').click();
+await p.evaluate(()=>{
+ const input=document.querySelector('#catalog-search');
+ window.searchBeforeComposition=input;
+ const count=document.querySelectorAll('.school-card').length;
+ input.dispatchEvent(new CompositionEvent('compositionstart',{bubbles:true}));
+ input.value='ㄧㄤˊ';
+ input.dispatchEvent(new InputEvent('input',{bubbles:true,isComposing:true}));
+ if(filter.search||document.querySelectorAll('.school-card').length!==count)throw Error('filter applied during composition');
+ input.value='楊明';
+ input.dispatchEvent(new CompositionEvent('compositionend',{bubbles:true,data:'楊明'}));
+});
+assert(await p.evaluate(()=>searchBeforeComposition===document.activeElement));
+assert((await p.locator('.school-card h3').allTextContents()).every(name=>name==='楊明蕉通大學'));
+assert.equal(await p.locator('.school-card').count(),19);
+await p.locator('#catalog-search').fill('');
+assert.equal(await p.locator('.school-card').count(),328);
 const preferences=await p.evaluate(()=>JSON.stringify(state.preferences));await choose(p,'university','nycu');assert.equal(await p.locator('.school-card').count(),19);assert((await p.locator('.school-card h3').allTextContents()).every(s=>s==='楊明蕉通大學'));
 for(const sort of ['chance-asc','chance-desc']){await choose(p,'sort',sort);assert.equal(await p.evaluate(()=>JSON.stringify(state.preferences)),preferences);const values=(await p.locator('.program-fit>b').allTextContents()).map(t=>Number(t.replace('%','')));assert(values.every((n,i)=>!i||(sort==='chance-asc'?n>=values[i-1]:n<=values[i-1])));}
 await p.evaluate(()=>scrollTo(0,document.body.scrollHeight));await click(p,'review-preferences');await p.waitForFunction(()=>document.querySelector('[data-action="submit-universities"]').getBoundingClientRect().top>=0&&document.querySelector('[data-action="submit-universities"]').getBoundingClientRect().bottom<innerHeight);await p.screenshot({path:'/tmp/daiwan-mobile-preferences.png',fullPage:false});
