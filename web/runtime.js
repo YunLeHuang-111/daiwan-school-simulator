@@ -76,7 +76,8 @@ class Engine {
  request(path,f){switch(path){case 'enroll':return this.enroll(f);case 'paper':return this.paper(f);case 'grade':return this.grade(f);case 'answer':return this.reviewAnswer(f,labels(f),f.id,f.label,f.answer,f.ms);case 'admission':return this.admission(f);default:throw Error('找不到這個API。');}}
  enroll(f){if(!['male','female'].includes(f.gender)||!['公立','私立'].includes(f.schoolType))throw Error('請選擇性別與公私立偏好。');const r=new JavaRandom(seed(f)),all=this.data.schools.filter(s=>s.type===f.schoolType&&(s.gender==='all'||s.gender===f.gender));let draw=r.nextInt(all.reduce((a,s)=>a+s.weight,0)),school=all[0];for(const s of all){draw-=s.weight;if(draw<0){school=s;break;}}const attrs=[],aptitude=[];for(const b of school.base){attrs.push(Math.max(0,Math.min(100,b+r.nextInt(7)-3)));aptitude.push(Math.max(20,Math.min(85,b+8+(school.tier-3)*2+r.nextInt(11)-5)));}const {weight,...publicSchool}=school;return {school:publicSchool,attrs,aptitude};}
  pick(label,type,level,used,seen,current,facts,categories,r,theme,term,termCounts,paperSeed){
-  let candidates=this.data.questions.filter(q=>sources(label).includes(q.subject)&&q.type===type&&active(q)&&(!term||(
+  const logicFill=type==='fill'&&label.startsWith('數學');
+  let candidates=this.data.questions.filter(q=>(!logicFill||q.id.startsWith('math-logic-'))&&sources(label).includes(q.subject)&&q.type===type&&active(q)&&(!term||(
     (paperSeed%6===0||!q.theme.includes('麻將'))&&
     (paperSeed%4!==1||!q.theme.includes('柯南')&&!q.text.includes('柯南'))&&
     (paperSeed%4!==2||termCategory(q)!=='棒球')))
@@ -96,7 +97,7 @@ class Engine {
     candidates=candidates.filter(q=>recency.get(q.id)===oldest);
    }
   }
-  const focus=label.startsWith('數學')&&type!=='match'?'math-concept-':
+  const focus=label.startsWith('數學')&&type==='choice'?'math-concept-':
    label==='國文'&&type==='match'&&paperSeed%4!==0?'chinese-modern-':'';
   if(focus){
    const preferred=candidates.filter(q=>q.id.startsWith(focus)||focus==='chinese-modern-'&&q.id.startsWith('match-bank-chinese-'));

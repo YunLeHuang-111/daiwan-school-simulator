@@ -8,7 +8,7 @@ BASE=sys.argv[1] if len(sys.argv)>1 else 'http://localhost:8080'
 ROOT=Path(__file__).resolve().parents[1]
 rows=[s.split('|') for s in (ROOT/'data/questions.tsv').read_text().splitlines() if s and not s.startswith('#')]
 BANK={p[0]:p for p in rows}
-assert len(BANK)==len(rows)==969
+assert len(BANK)==len(rows)==985
 for row in rows:
  assert len(row)==10
  assert not(row[1]=='英文' and row[4]=='fill')
@@ -69,6 +69,7 @@ for mode,subjects in [('gsat',['國文','英文','數學A','數學B','自然','�
     assert all(q['difficulty']<=2 for q in qs if q['examSubject']==subject)
    if subject.startswith('數學'):
     assert all((q['difficulty']<=2 or q['id'].startswith(('math-concept-','match-bank-math-')) or mode=='gsat' and q['id'].startswith('advanced-match-')) for q in qs if q['examSubject']==subject)
+    assert all(q['id'].startswith('math-logic-') for q in qs if q['examSubject']==subject and q['type']=='fill')
     assert not any(q['theme'] in ['數學史與解謎','數學史','典籍考古'] for q in qs if q['examSubject']==subject)
    expected={'choice','match'} if subject=='英文' else {'choice','match','fill'}
    assert {q['type'] for q in qs if q['examSubject']==subject}==expected
@@ -142,4 +143,4 @@ assert req('/api/admission',low)['chance']==0
 strong=dict(low,attrs='100,100,100,100,100',aptitude='100,100,100,100,100',**{'s.'+s:15 for s in ['國文','英文','數學A','數學B','自然','社會']})
 assert req('/api/admission',strong)['chance']<=18
 assert req('/api/admission',dict(a,attrs='100,100,100,100,100',aptitude='100,100,100,100,100'))['chance']<=45
-print('PASS: 969 questions; weighted/gender-restricted 50 high schools; 6 x 2 questions; GSAT/split 3 per selected subject; grading/validation; 50 universities / 538 programs; four-pair questions, no English fill, elite/medical gates.')
+print('PASS: 985 questions; weighted/gender-restricted 50 high schools; 6 x 2 questions; GSAT/split 3 per selected subject; grading/validation; 50 universities / 538 programs; four-pair questions, no English fill, elite/medical gates.')

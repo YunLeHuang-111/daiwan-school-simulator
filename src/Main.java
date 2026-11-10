@@ -180,7 +180,8 @@ public class Main {
         categories.merge(questionCategory(q),1,Integer::sum);
     }
     static Question pick(String label,String type,int level,Set<String> used,Set<String> seen,Set<String> current,Set<String> facts,Map<String,Integer> categories,Random random,String preferredTheme,boolean term,Map<String,Integer> termCounts,long paperSeed) {
-        List<Question> candidates=QUESTIONS.stream().filter(q->sources(label).contains(q.subject)&&q.type.equals(type)&&active(q)&&(!term||(
+        boolean logicFill=type.equals("fill")&&label.startsWith("數學");
+        List<Question> candidates=QUESTIONS.stream().filter(q->(!logicFill||q.id.startsWith("math-logic-"))&&sources(label).contains(q.subject)&&q.type.equals(type)&&active(q)&&(!term||(
                 (paperSeed%6==0||!q.theme.contains("麻將"))&&
                 (paperSeed%4!=1||!q.theme.contains("柯南")&&!q.text.contains("柯南"))&&
                 (paperSeed%4!=2||!termCategory(q).equals("棒球"))))
@@ -201,7 +202,7 @@ public class Main {
                 candidates=candidates.stream().filter(q->recency.get(q.id)==oldest).toList();
             }
         }
-        String focus=label.startsWith("數學")&&!type.equals("match")?"math-concept-":
+        String focus=label.startsWith("數學")&&type.equals("choice")?"math-concept-":
             label.equals("國文")&&type.equals("match")&&paperSeed%4!=0?"chinese-modern-":"";
         if(!focus.isEmpty()){
             List<Question> preferred=candidates.stream().filter(q->q.id.startsWith(focus)||focus.equals("chinese-modern-")&&q.id.startsWith("match-bank-chinese-")).toList();
