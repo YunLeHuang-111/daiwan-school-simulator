@@ -26,6 +26,23 @@ function gradeForm(p,subjects,round,wrong=false){const form={mode:p.mode,subject
  }
  assert.equal(used.length,54);
  for(const seed of [0,42,4294967295])for(const route of ['star','apply','distribution'])for(const p of data.programs.filter((_,i)=>i%23===0)){const form={seed,route,program:p.id,preferences:p.id,attrs:'80,80,75,65,55',aptitude:'60,65,65,60,60',portfolio:90,rank:5};for(const s of route==='distribution'?p.split:p.subjects)form['s.'+s]=route==='distribution'?56:14;await parity('admission',form);}
+ for(const university of ['ntua','tnua','tnnua']){
+  for(const route of ['star','apply','distribution']){
+   const p=data.programs.find(p=>p.university===university&&p.group===4);
+   const subjects=route==='distribution'?p.split:p.subjects,max=route==='distribution'?60:15;
+   const form={seed:42,route,program:p.id,preferences:p.id,attrs:'50,50,50,70,100',
+    aptitude:'50,50,50,70,85',portfolio:85,rank:5};
+   for(const s of subjects)form['s.'+s]=Math.ceil(max*.6);
+   const artFirst=await parity('admission',form);
+   assert(artFirst.chance>0);
+   const scoreFirst={...form,attrs:'50,50,50,75,75',aptitude:'50,50,50,65,70'};
+   for(const s of subjects)scoreFirst['s.'+s]=max;
+   const higherExam=await parity('admission',scoreFirst);
+   assert(artFirst.score>higherExam.score&&artFirst.chance>=higherExam.chance);
+   const weak=await parity('admission',{...scoreFirst,attrs:'100,100,100,35,35',aptitude:'100,100,100,35,35'});
+   assert.equal(weak.chance,0);
+  }
+ }
  await parity('paper',{mode:'split',subjects:'物理'});await parity('enroll',{seed:5,gender:'other',schoolType:'公立'});
  console.log('PASS:',count,'Java/browser runtime parity cases, including seed boundaries, grading, selected subjects, admission.');
 })().catch(err=>{console.error(err);process.exitCode=1;});

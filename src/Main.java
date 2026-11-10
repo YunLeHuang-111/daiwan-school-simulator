@@ -229,14 +229,25 @@ public class Main {
         for(int i=0;i<subjects.size();i++)sum+=number(f.get("s."+subjects.get(i)),0,split?60:15)*(i==0?2:1);
         double exam=sum/(subjects.size()+1)/(split?60:15)*100,talent=0;
         for(int i=0;i<5;i++)talent+=(attrs[i]*.65+apt[i]*.35)*p.weights[i];
-        double score=switch(route){case "star" -> exam*.5+(100-rank)*.25+talent*.25;case "apply" -> exam*.5+talent*.35+portfolio*.15;default -> exam*.7+talent*.3;};
+        boolean art=List.of("ntua","tnua","tnnua").contains(p.university);
+        double score=art?switch(route){
+            case "star" -> exam*.2+(100-rank)*.15+talent*.65;
+            case "apply" -> exam*.2+talent*.65+portfolio*.15;
+            default -> exam*.25+talent*.75;
+        }:switch(route){
+            case "star" -> exam*.5+(100-rank)*.25+talent*.25;
+            case "apply" -> exam*.5+talent*.35+portfolio*.15;
+            default -> exam*.7+talent*.3;
+        };
+        double examFloor=art?Math.min(p.examFloor,55):p.examFloor;
+        double talentFloor=art?Math.max(p.talentFloor,58):p.talentFloor;
         boolean qualified=!route.equals("star")||rank<=p.maxRank;
-        boolean screened=exam>=p.examFloor&&talent>=p.talentFloor;
+        boolean screened=exam>=examFloor&&talent>=talentFloor;
         double chance=qualified&&screened?Math.max(0.5,Math.min(switch(p.selectivity){case "medical"->18;case "pharmacy"->25;case "top"->35;case "midTech"->46;case "midOther"->57;case "public"->70;case "privateTech"->83;default->98;},100/(1+Math.exp((p.threshold-score)/5)))):0;
         double draw=new Random(seed(f)*6364136223846793005L^p.id.hashCode()^route.hashCode()).nextDouble()*100;
         boolean accepted=draw<chance;
         json(ex,200,Map.of("accepted",accepted,"score",Math.round(score*10)/10.0,"chance",Math.round(chance*10)/10.0,
-            "reason",!qualified?"在校排名未達門檻":!screened?exam<p.examFloor?"考試門檻未達標":"科系資質未達標":accepted?"錄取":"本輪未錄取"));
+            "reason",!qualified?"在校排名未達門檻":!screened?exam<examFloor?"考試門檻未達標":"科系資質未達標":accepted?"錄取":"本輪未錄取"));
     }
     static Map<String, String> form(HttpExchange ex) throws IOException {
         String contentType = ex.getRequestHeaders().getFirst("Content-Type");

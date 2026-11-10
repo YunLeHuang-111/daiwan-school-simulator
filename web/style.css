@@ -127,3 +127,7 @@
  .route-return button{min-height:44px;padding:8px 14px}
  .route-return~.catalog-layout>.preferences{scroll-margin-top:72px}
 }
+
+.achievement-filters{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 16px}
+.achievement-filters button{padding:5px 10px;min-height:34px;font-size:12px}
+.achievement-filters button[aria-pressed="true"]{background:#2869c6;border-color:#2869c6;color:#fff}
