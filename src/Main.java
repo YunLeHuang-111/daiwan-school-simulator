@@ -116,7 +116,7 @@ public class Main {
     // Retired questions remain available only to grade already-saved papers.
     static boolean active(Question q){
         return !(q.subject.equals("音樂")&&List.of("歌詞選字","歌手點名","emoji猜歌","歌名謎語").contains(q.theme))
-            &&!(q.difficulty>2&&(q.subject.equals("英文")||q.subject.equals("數學")&&!q.id.startsWith("advanced-match-")&&!q.id.startsWith("math-concept-")))
+            &&!(q.difficulty>2&&(q.subject.equals("英文")||q.subject.equals("數學")&&!q.id.startsWith("advanced-match-")&&!q.id.startsWith("math-concept-")&&!q.id.startsWith("match-bank-math-")))
             &&!(q.subject.equals("英文")&&List.of("Literary bookshelf","Authors and works").contains(q.theme))
             &&!(q.subject.equals("數學")&&List.of("數學史與解謎","數學史","典籍考古").contains(q.theme));
     }
@@ -179,16 +179,34 @@ public class Main {
         if(!song.isEmpty())used.add(song);
         categories.merge(questionCategory(q),1,Integer::sum);
     }
-    static Question pick(String label,String type,int level,Set<String> used,Set<String> seen,Set<String> current,Set<String> facts,Map<String,Integer> categories,Random random,String preferredTheme,boolean advanced,boolean term,Map<String,Integer> termCounts,long paperSeed) {
+    static Question pick(String label,String type,int level,Set<String> used,Set<String> seen,Set<String> current,Set<String> facts,Map<String,Integer> categories,Random random,String preferredTheme,boolean term,Map<String,Integer> termCounts,long paperSeed) {
         List<Question> candidates=QUESTIONS.stream().filter(q->sources(label).contains(q.subject)&&q.type.equals(type)&&active(q)&&(!term||(
                 (paperSeed%6==0||!q.theme.contains("麻將"))&&
                 (paperSeed%4!=1||!q.theme.contains("柯南")&&!q.text.contains("柯南"))&&
                 (paperSeed%4!=2||!termCategory(q).equals("棒球"))))
             &&!used.contains(q.id)&&!current.contains(questionPrompt(q))&&questionFingerprints(q).stream().noneMatch(facts::contains)&&!used.contains(songKey(q))).toList();
         if(candidates.isEmpty())throw new IllegalArgumentException("本科題庫不足，無法再抽出未作答的題目。");
-        String focus=label.startsWith("數學")?"math-concept-":label.equals("國文")&&type.equals("match")&&paperSeed%4!=0?"chinese-modern-":"";
-        List<Question> preferred=candidates.stream().filter(q->focus.isEmpty()?q.id.startsWith("advanced-match-")==advanced:q.id.startsWith(focus)).toList();
-        if(!preferred.isEmpty())candidates=preferred;
+        if(type.equals("match")&&label.startsWith("數學")){
+            List<Question> tier=candidates.stream().filter(q->level==3?q.difficulty==3:q.id.startsWith("match-bank-math-b-")).toList();
+            if(!tier.isEmpty())candidates=tier;
+        }
+        if(type.equals("match")){
+            Map<String,Integer> recency=new HashMap<>();
+            int index=0;
+            for(String id:seen)recency.put(id,index++);
+            List<Question> fresh=candidates.stream().filter(q->!recency.containsKey(q.id)).toList();
+            if(!fresh.isEmpty())candidates=fresh;
+            else{
+                int oldest=candidates.stream().mapToInt(q->recency.get(q.id)).min().orElseThrow();
+                candidates=candidates.stream().filter(q->recency.get(q.id)==oldest).toList();
+            }
+        }
+        String focus=label.startsWith("數學")&&!type.equals("match")?"math-concept-":
+            label.equals("國文")&&type.equals("match")&&paperSeed%4!=0?"chinese-modern-":"";
+        if(!focus.isEmpty()){
+            List<Question> preferred=candidates.stream().filter(q->q.id.startsWith(focus)||focus.equals("chinese-modern-")&&q.id.startsWith("match-bank-chinese-")).toList();
+            if(!preferred.isEmpty())candidates=preferred;
+        }
         if(term){
             Map<String,Integer> local=new HashMap<>();
             for(Question q:QUESTIONS){
@@ -200,12 +218,14 @@ public class Main {
             candidates=candidates.stream().filter(q->local.getOrDefault(termCategory(q),0)==least).toList();
             int recent=candidates.stream().mapToInt(q->termCounts.getOrDefault(termCategory(q),0)).min().orElseThrow();
             candidates=candidates.stream().filter(q->termCounts.getOrDefault(termCategory(q),0)==recent).toList();
-        }else if(preferredTheme.isEmpty()){
+        }else if(preferredTheme.isEmpty()&&!type.equals("match")){
             int least=candidates.stream().mapToInt(q->categories.getOrDefault(questionCategory(q),0)).min().orElseThrow();
             candidates=candidates.stream().filter(q->categories.getOrDefault(questionCategory(q),0)==least).toList();
         }
-        List<Question> fresh=candidates.stream().filter(q->!seen.contains(q.id)).toList();
-        if(!fresh.isEmpty())candidates=fresh;
+        if(!type.equals("match")){
+            List<Question> fresh=candidates.stream().filter(q->!seen.contains(q.id)).toList();
+            if(!fresh.isEmpty())candidates=fresh;
+        }
         List<Question> themed=candidates.stream().filter(q->q.theme.equals(preferredTheme)).toList();
         if(!themed.isEmpty())candidates=themed;
         int distance=candidates.stream().mapToInt(q->Math.abs(q.difficulty-(term&&q.theme.equals("柯南案卷")?2:level))).min().orElseThrow();
@@ -221,7 +241,7 @@ public class Main {
         if(parts.length!=5)throw new IllegalArgumentException("需要五項能力值。");
         double[] attrs=Arrays.stream(parts).mapToDouble(x->number(x,0,100)).toArray();
         Set<String> used=new HashSet<>(List.of(f.getOrDefault("used","").split(","))),current=new HashSet<>();
-        Set<String> seen=new HashSet<>(List.of(f.getOrDefault("seen","").split(",")));
+        Set<String> seen=new LinkedHashSet<>(List.of(f.getOrDefault("seen","").split(",")));
         used.remove("");
         Set<String> facts=new HashSet<>();
         Map<String,Integer> categories=new HashMap<>();
@@ -246,7 +266,7 @@ public class Main {
                 if(label.equals("英文"))level=2;
                 if(label.startsWith("數學"))level=List.of("數學A","數學甲").contains(label)?3:2;
                 String theme=label.equals("英文")?(j==1?(r.nextBoolean()?"Screen matching":"Grammar matching"):j==0?"Movie clues":"Grammar practice"):label.startsWith("數學")?(type.equals("choice")&&r.nextBoolean()?"數學家點名":""):"";
-                Question q=pick(label,type,level,used,seen,current,facts,categories,r,theme,mode.equals("gsat")&&type.equals("match")&&!label.equals("英文"),mode.equals("term"),termCounts,paperSeed);result.add(q.publicData(label));
+                Question q=pick(label,type,level,used,seen,current,facts,categories,r,theme,mode.equals("term"),termCounts,paperSeed);result.add(q.publicData(label));
             }
         }
         json(ex,200,Map.of("mode",mode,"questions",result));

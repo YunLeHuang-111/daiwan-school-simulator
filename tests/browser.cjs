@@ -14,7 +14,8 @@ async function answer(p){const q=await p.evaluate(()=>state.paper.questions[stat
 }
 async function confirmAnswer(p,status){
  await click(p,'next');
- assert((await p.locator('.answer-result strong').innerText()).includes(status));
+ const actual=await p.locator('.answer-result strong').innerText();
+ assert(actual.includes(status),await p.evaluate(()=>JSON.stringify([state.paper.questions[state.paper.index].id,state.paper.answers[state.paper.index],state.paper.reviews[state.paper.index]])));
  assert((await p.locator('.answer-result').innerText()).includes('正確答案'));
  await click(p,'next');
 }
@@ -81,7 +82,7 @@ async function win(p){if(await p.locator('[data-action="memory-ready"]').count()
  // All mini-game themes: exercise real generation and handlers against a saved run.
 
  for(const source of await p.evaluate(()=>miniBank)){
-  await p.evaluate(id=>{state.stage='dice';state.round=0;state.game=null;state.gameOrder[0]=id;state.dice=[1];state.dieIndex=1;state.assignments=[{attr:0,added:1}];render();},source.id);await click(p,'start-game');
+  await p.evaluate(id=>{state.stage='dice';state.round=0;state.game=null;state.dice=[1];state.dieIndex=1;state.assignments=[{attr:0,added:1}];startGame(miniBank.find(g=>g.id===id));},source.id);
   if(source.id==='anime')assert.equal(await p.evaluate(()=>new Set(state.game.right.map(title=>title.normalize('NFKC'))).size),4);
   if(source.id==='flags')assert(await p.evaluate(()=>state.game.right.every(name=>!['波札那','加彭','盧安達','迦納'].includes(name))));
   if(source.type==='swatch'){assert.equal(await p.locator('.brand-palette').count(),4);assert.equal(await p.locator('.brand-palette i').count()>3,true);await p.screenshot({path:'/tmp/daiwan-v6-brand.png',fullPage:true});}
@@ -109,7 +110,7 @@ async function win(p){if(await p.locator('[data-action="memory-ready"]').count()
    assert.equal(await p.evaluate(()=>state.game.puzzle.steps),0);
    // A pre-update football save should resume on the same semester's dice page.
    await p.evaluate(s=>{
-    state=structuredClone(s);state.gameOrder[0]='football';state.game={id:'football',type:'football',done:false};save();
+    state=structuredClone(s);state.gameOrder=['football'];state.game={id:'football',type:'football',done:false};save();
    },gameStart);
    await resume(p);
    assert.equal(await p.evaluate(()=>state.stage),'dice');

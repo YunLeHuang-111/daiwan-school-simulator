@@ -188,34 +188,22 @@ const miniType=id=>{
  const type=miniBank.find(g=>g.id===id)?.type;
  return ['swatch','lyrics','singer','lyric-singer'].includes(type)?'match':type;
 };
-function variedMiniOrder(order,past=[]){
- const picked=[...past],pool=order.filter(id=>(id!=='mahjong'||state.originSeed%6===3)&&(id!=='art'||state.originSeed%2===0));
- while(picked.length<6&&pool.length){
-  const count=(list,category,key)=>list.filter(id=>key(id)===category).length;
-  const rank=id=>[
-   count(picked,miniType(id),miniType),
-   count(picked,miniFamily(id),miniFamily),
-   count(miniHistory,miniType(id),miniType),
-   count(miniHistory,miniFamily(id),miniFamily),
-   count(miniHistory,id,x=>x),
-   miniHistory.lastIndexOf(id)
-  ];
-  const ranked=pool.map(id=>({id,rank:rank(id)}));
-  ranked.sort((a,b)=>a.rank.reduce((result,n,i)=>result||n-b.rank[i],0));
-  const id=ranked[0].id;
-  picked.push(id);
-  pool.splice(pool.indexOf(id),1);
- }
- return [...picked,...pool];
+function drawMiniGame(){
+ const played=state.history.map(h=>RETIRED_GAMES[h.gameId]||h.gameId).filter(Boolean);
+ const pool=miniBank.filter(g=>!played.includes(g.id)&&(g.id!=='mahjong'||state.originSeed%6===3)
+  &&(g.id!=='art'||state.originSeed%2===0));
+ const unusedTypes=pool.filter(g=>!played.some(id=>miniType(id)===miniType(g.id)));
+ const candidates=unusedTypes.length?unusedTypes:pool;
+ const recent=miniHistory.slice(-12);
+ const weights=candidates.map(g=>{
+  const sameType=candidates.filter(other=>miniType(other.id)===miniType(g.id)).length;
+  const appearances=recent.filter(id=>id===g.id||miniFamily(id)===miniFamily(g.id)).length;
+  return 1/(sameType*(1+appearances));
+ });
+ let draw=rng()*weights.reduce((sum,weight)=>sum+weight,0);
+ return candidates.find((_,i)=>(draw-=weights[i])<0)??candidates.at(-1);
 }
-function refreshMiniOrder(){
- if(state.miniVariety===4||!state.gameOrder)return;
- const committed=state.round+(state.game?1:0);
- const past=state.gameOrder.slice(0,committed);
- state.gameOrder=variedMiniOrder(shuffle(miniBank.map(g=>g.id).filter(id=>!past.includes(id))),past);
- state.miniVariety=4;
-}
-async function startRun(name,seedText,gender,schoolType){const previous=state;const text=seedText.trim()||randomSeed();const originSeed=hashSeed(text);try{const d=await api('enroll',{seed:originSeed,gender,schoolType});state={version:5,name,gender,schoolType,stage:'enrolled',seedText:text,originSeed,seed:originSeed||1234567,school:d.school,attrs:d.attrs,initialAttrs:[...d.attrs],aptitude:d.aptitude,portfolio:0,round:0,history:[],used:[],miniUsed:[],rank:null};state.eventOrder=shuffle(events.map(e=>e.id));state.gameOrder=variedMiniOrder(shuffle(miniBank.map(g=>g.id)));state.miniVariety=4;const base=66;state.peers=Array.from({length:99},()=>clamp(base+(rng()+rng()+rng()-1.5)*28,25,96));resetRound();pendingSeed=randomSeed();welcome=false;go('enrolled');}catch(e){state=previous;throw e;}}
+async function startRun(name,seedText,gender,schoolType){const previous=state;const text=seedText.trim()||randomSeed();const originSeed=hashSeed(text);try{const d=await api('enroll',{seed:originSeed,gender,schoolType});state={version:5,name,gender,schoolType,stage:'enrolled',seedText:text,originSeed,seed:originSeed||1234567,school:d.school,attrs:d.attrs,initialAttrs:[...d.attrs],aptitude:d.aptitude,portfolio:0,round:0,history:[],used:[],miniUsed:[],rank:null};state.eventOrder=shuffle(events.map(e=>e.id));const base=66;state.peers=Array.from({length:99},()=>clamp(base+(rng()+rng()+rng()-1.5)*28,25,96));resetRound();pendingSeed=randomSeed();welcome=false;go('enrolled');}catch(e){state=previous;throw e;}}
 async function startPaper(mode,subjects=[]){
  const used=[...state.used,...(state.miniUsed||[]).filter(key=>key.startsWith('song:'))];
  const data=await api('paper',{mode,subjects:subjects.join(','),attrs:state.attrs.join(','),
@@ -391,12 +379,12 @@ const PUZZLE_NAMES={stack:'房子疊疊樂',relay:'記憶接力・限時版',rec
 const RETIRED_GAMES={pattern:'stack',maze:'relay',football:'relay',sum:'recycle'};
 const PUZZLE_SKILLS=['stack','relay','recycle'];
 const RECYCLE_ITEMS=[
- ['📰','乾淨報紙',0],['📦','乾紙箱',0],['📄','乾淨影印紙',0],['🧃','乾淨廣告傳單',0],['✉️','紙信封',0],['📓','拆下的乾淨筆記紙',0],
- ['🍌','香蕉皮',1],['🍎','蘋果核',1],['🥬','菜葉',1],['🍊','橘子皮',1],['🍐','梨子皮',1],['🥭','芒果皮',1],
- ['🤧','用過的衛生紙',2],['🩹','用過的 OK 繃',2],['🪥','舊牙刷',2],['🩺','用過的口罩',2],['🧽','破海綿',2],['🧹','掃起來的灰塵',2],
- ['🥫','沖乾淨的鐵罐',3],['🍾','空玻璃瓶',3],['🧴','洗過的塑膠瓶',3],['🥤','洗過的鋁罐',3],['🫙','玻璃果醬瓶',3],['💧','空寶特瓶',3],
+ ['📰','乾淨、乾燥的報紙',0],['📦','拆平的乾紙箱',0],['📄','沒有沾到油污的影印紙',0],['📃','乾燥的普通紙傳單',0],['✉️','沒有塑膠窗的紙信封',0],['📓','從筆記本拆下的乾淨紙頁',0],
+ ['🍌','吃完香蕉剩下的皮',1],['🍎','吃完蘋果剩下的果核',1],['🥬','備料時摘下的生菜葉',1],['🍊','剝下來的橘子皮',1],['🍐','吃完梨子剩下的果皮',1],['🥭','削下來的芒果皮',1],
+ ['🤧','擦過鼻涕的衛生紙',2],['🩹','從手指撕下的用過 OK 繃',2],['🪥','刷毛已磨損的舊牙刷',2],['😷','戴過的一次性口罩',2],['🧽','破掉的洗碗海綿',2],['🧹','打掃地板掃起的灰塵',2],
+ ['🥫','倒空、沖洗過的鐵罐',3],['🍾','倒空的完整玻璃瓶',3],['🧴','倒空、洗過的塑膠瓶',3],['🥤','喝完、沖過的鋁製飲料罐',3],['🫙','洗乾淨的玻璃果醬罐',3],['💧','喝完水的空寶特瓶',3],
 ];
-const BINS=['廢紙','果皮菜葉','一般垃圾','瓶罐'];
+const BINS=['乾淨紙類','果皮與生菜葉','一般垃圾','空瓶與罐'];
 const STACK_LEVELS=5;
 const RELAY_SYMBOLS=[['★','星形'],['●','圓形'],['▲','三角形'],['■','方形'],['◆','菱形'],['♥','愛心']];
 const RELAY_LENGTHS=[4,5,6];
@@ -516,8 +504,8 @@ function puzzleBoard(g){
  }
  if(g.type==='recycle'){
   const [icon,item]=g.items[g.steps];
-  return `<p class="game-instruction">依校園四個分類桶，把手上的東西放到對的位置。</p>${progress}
-   <p class="puzzle-item"><span>${icon}</span> ${item}</p>
+  return `<p class="game-instruction">先讀物品名稱和狀態，再點校園對應的回收桶或垃圾桶。</p>${progress}
+   <p class="puzzle-item"><span aria-hidden="true">${icon}</span> 手上的物品：${item}</p>
    <div class="puzzle-grid recycle-grid">${BINS.map((bin,i)=>button(bin,'puzzle-tile','secondary',`data-id="${i}"`)).join('')}</div>`;
  }
  return `<p class="game-instruction">挑一個幸運袋。每袋都有獎，能抽到多少就看運氣！</p>
@@ -551,10 +539,10 @@ function animateStack(slider){
  };
  requestAnimationFrame(tick);
 }
-function startGame(){
+function startGame(source){
  if(state.dieIndex<state.dice.length)return;
  if(!state.game){
-  const source=miniBank.find(g=>g.id===state.gameOrder[state.round]);
+  source??=miniBank.find(g=>g.id===state.replacementGame)||drawMiniGame();
   const g={id:source.id,name:source.name,type:source.type,attr:source.attr,image:source.image,
    done:false,mistakes:0,selected:null,matched:[],index:0,hits:0,feedback:''};
   const promptKey=item=>'mini:'+String(item).normalize('NFKC').replace(/\s+/g,'');
@@ -592,6 +580,7 @@ function startGame(){
    g.puzzle=newPuzzle(source.type);
   }
   state.game=g;
+  delete state.replacementGame;
   if(['lyrics','lyric-artist','singer'].includes(g.id))g.songRevision=2;
   miniHistory=[...miniHistory,g.id].slice(-36);
   saveStore(MINI_ROTATION_KEY,miniHistory);
@@ -1329,9 +1318,9 @@ async function boot(){try{const responses=await Promise.all(['/catalog.json','/m
   if(q.id==='v5q176')q.text=q.text.replace('你的聲音','妳的聲音');
   if(q.id==='v5q195')q.text=q.text.replace('讓我將你心兒摘下','讓我將妳心兒摘下');
  }
- restoreMiniHistory();state.gameOrder=state.gameOrder?.map(id=>id==='lyric-fill'?'lyric-artist':RETIRED_GAMES[id]||id);
- if(state.stage==='game'&&!state.game?.done&&RETIRED_GAMES[state.game?.type]){state.game=null;state.stage='dice';}
+ restoreMiniHistory();delete state.gameOrder;delete state.miniVariety;
+ if(state.stage==='game'&&!state.game?.done&&RETIRED_GAMES[state.game?.type]){state.replacementGame=RETIRED_GAMES[state.game.type];state.game=null;state.stage='dice';}
  if(['applyScreen','interview'].includes(state.stage)&&!interviewComplete()&&state.interview?.games?.some(g=>RETIRED_GAMES[g.type])){
   state.interview.games=state.interview.games.map(g=>!g.done&&RETIRED_GAMES[g.type]?newPuzzle(RETIRED_GAMES[g.type]):g);
- }refreshMiniOrder();if(state.game?.type==='lyric-fill'&&!state.game.done){state.game=null;if(state.stage==='game')state.stage='dice';}saveStore(KEY,state);}if(state?.ending&&state.achievementVersion!==6){unlockAchievements();save();}if(state?.stage==='game'&&savedBoardNeedsRefresh(state.game)){state.game=null;startGame();}else render();}catch(e){app.innerHTML=`<div class="boot-error"><h1>校園資料還沒準備好。</h1><p>${esc(e.message)}，請重新整理後再試。</p><button class="primary" onclick="location.reload()">重新整理</button></div>`;}}
+ }if(state.game?.type==='lyric-fill'&&!state.game.done){state.game=null;if(state.stage==='game')state.stage='dice';}saveStore(KEY,state);}if(state?.ending&&state.achievementVersion!==6){unlockAchievements();save();}if(state?.stage==='game'&&savedBoardNeedsRefresh(state.game)){const source=miniBank.find(g=>g.id===state.game.id);state.game=null;startGame(source);}else render();}catch(e){app.innerHTML=`<div class="boot-error"><h1>校園資料還沒準備好。</h1><p>${esc(e.message)}，請重新整理後再試。</p><button class="primary" onclick="location.reload()">重新整理</button></div>`;}}
 boot();

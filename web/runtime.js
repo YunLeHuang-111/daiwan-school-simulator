@@ -18,7 +18,7 @@ const vector=v=>{const a=String(v??'').split(',');if(a.length!==5)throw Error('�
 function labels(f){if(f.mode==='term'){int(f.round,0,5);return ['流行文化','生活推理'];}const allowed=f.mode==='gsat'?GSAT:f.mode==='split'?SPLIT:[],a=String(f.subjects??'').split(',');if(!a.length||new Set(a).size!==a.length||a.some(s=>!allowed.includes(s)))throw Error('請選擇有效且不重複的應考科目。');return a;}
 function sources(s){return ({'流行文化':['校園趣聞','影視','動漫','體育','時事','音樂'],'生活推理':['校園趣聞','國文','英文','數學','自然','歷史','地理','公民','藝術','常識'],'數學A':['數學'],'數學B':['數學'],'數學甲':['數學'],'數學乙':['數學'],'自然':['自然','物理','化學','生物'],'社會':['歷史','地理','公民'],'公民與社會':['公民']})[s]||[s];}
 function ability(s){if(['國文','英文'].includes(s))return 1;if(['歷史','地理','公民','公民與社會','社會','流行文化'].includes(s))return 2;return s==='藝術'?3:s==='音樂'?4:0;}
-function active(q){return !(q.difficulty>2&&(q.subject==='英文'||q.subject==='數學'&&!q.id.startsWith('advanced-match-')&&!q.id.startsWith('math-concept-')))&&!(q.subject==='英文'&&['Literary bookshelf','Authors and works'].includes(q.theme))&&!(q.subject==='數學'&&['數學史與解謎','數學史','典籍考古'].includes(q.theme))&&!(q.subject==='音樂'&&['歌詞選字','歌手點名','emoji猜歌','歌名謎語'].includes(q.theme));}
+function active(q){return !(q.difficulty>2&&(q.subject==='英文'||q.subject==='數學'&&!q.id.startsWith('advanced-match-')&&!q.id.startsWith('math-concept-')&&!q.id.startsWith('match-bank-math-')))&&!(q.subject==='英文'&&['Literary bookshelf','Authors and works'].includes(q.theme))&&!(q.subject==='數學'&&['數學史與解謎','數學史','典籍考古'].includes(q.theme))&&!(q.subject==='音樂'&&['歌詞選字','歌手點名','emoji猜歌','歌名謎語'].includes(q.theme));}
 const norm=s=>String(s).normalize('NFKC').trim().toLowerCase().replace(/\s+/g,'');
 function songKey(q){
  if(q.subject!=='音樂')return '';
@@ -75,16 +75,33 @@ class Engine {
  constructor(data){this.data=data;this.questions=new Map(data.questions.map(q=>[q.id,q]));this.programs=new Map(data.programs.map(p=>[p.id,p]));}
  request(path,f){switch(path){case 'enroll':return this.enroll(f);case 'paper':return this.paper(f);case 'grade':return this.grade(f);case 'answer':return this.reviewAnswer(f,labels(f),f.id,f.label,f.answer,f.ms);case 'admission':return this.admission(f);default:throw Error('找不到這個API。');}}
  enroll(f){if(!['male','female'].includes(f.gender)||!['公立','私立'].includes(f.schoolType))throw Error('請選擇性別與公私立偏好。');const r=new JavaRandom(seed(f)),all=this.data.schools.filter(s=>s.type===f.schoolType&&(s.gender==='all'||s.gender===f.gender));let draw=r.nextInt(all.reduce((a,s)=>a+s.weight,0)),school=all[0];for(const s of all){draw-=s.weight;if(draw<0){school=s;break;}}const attrs=[],aptitude=[];for(const b of school.base){attrs.push(Math.max(0,Math.min(100,b+r.nextInt(7)-3)));aptitude.push(Math.max(20,Math.min(85,b+8+(school.tier-3)*2+r.nextInt(11)-5)));}const {weight,...publicSchool}=school;return {school:publicSchool,attrs,aptitude};}
- pick(label,type,level,used,seen,current,facts,categories,r,theme,advanced,term,termCounts,paperSeed){
+ pick(label,type,level,used,seen,current,facts,categories,r,theme,term,termCounts,paperSeed){
   let candidates=this.data.questions.filter(q=>sources(label).includes(q.subject)&&q.type===type&&active(q)&&(!term||(
     (paperSeed%6===0||!q.theme.includes('麻將'))&&
     (paperSeed%4!==1||!q.theme.includes('柯南')&&!q.text.includes('柯南'))&&
     (paperSeed%4!==2||termCategory(q)!=='棒球')))
    &&!used.has(q.id)&&!current.has(questionPrompt(q))&&!questionFingerprints(q).some(key=>facts.has(key))&&!used.has(songKey(q)));
   if(!candidates.length)throw Error('本科題庫不足，無法再抽出未作答的題目。');
-  const focus=label.startsWith('數學')?'math-concept-':label==='國文'&&type==='match'&&paperSeed%4!==0?'chinese-modern-':'';
-  const preferred=candidates.filter(q=>focus?q.id.startsWith(focus):q.id.startsWith('advanced-match-')===advanced);
-  if(preferred.length)candidates=preferred;
+  if(type==='match'&&label.startsWith('數學')){
+   const tier=candidates.filter(q=>level===3?q.difficulty===3:q.id.startsWith('match-bank-math-b-'));
+   if(tier.length)candidates=tier;
+  }
+  if(type==='match'){
+   // Prefer the oldest question only after every candidate has appeared recently.
+   const recency=new Map([...seen].map((id,i)=>[id,i]));
+   const fresh=candidates.filter(q=>!recency.has(q.id));
+   if(fresh.length)candidates=fresh;
+   else{
+    const oldest=Math.min(...candidates.map(q=>recency.get(q.id)));
+    candidates=candidates.filter(q=>recency.get(q.id)===oldest);
+   }
+  }
+  const focus=label.startsWith('數學')&&type!=='match'?'math-concept-':
+   label==='國文'&&type==='match'&&paperSeed%4!==0?'chinese-modern-':'';
+  if(focus){
+   const preferred=candidates.filter(q=>q.id.startsWith(focus)||focus==='chinese-modern-'&&q.id.startsWith('match-bank-chinese-'));
+   if(preferred.length)candidates=preferred;
+  }
   if(term){
    const local=new Map();
    for(const id of used){
@@ -101,9 +118,11 @@ class Engine {
    candidates=candidates.filter(q=>(termCounts.get(termCategory(q))||0)===recent);
   }
   const leastUsed=Math.min(...candidates.map(q=>categories.get(questionCategory(q))||0));
-  if(!term&&!theme)candidates=candidates.filter(q=>(categories.get(questionCategory(q))||0)===leastUsed);
-  const fresh=candidates.filter(q=>!seen.has(q.id));
-  if(fresh.length)candidates=fresh;
+  if(!term&&!theme&&type!=='match')candidates=candidates.filter(q=>(categories.get(questionCategory(q))||0)===leastUsed);
+  if(type!=='match'){
+   const fresh=candidates.filter(q=>!seen.has(q.id));
+   if(fresh.length)candidates=fresh;
+  }
   const themed=candidates.filter(q=>q.theme===theme);
   if(themed.length)candidates=themed;
   const difficultyGap=q=>Math.abs(q.difficulty-(term&&q.theme==='柯南案卷'?2:level));
@@ -128,7 +147,7 @@ class Engine {
   }
   const paperSeed=seed(f);
   const r=new JavaRandom(BigInt(paperSeed)^BigInt(hash(f.mode))^BigInt(hash(String(f.round??'0')))^BigInt(hash('['+subjects.join(', ')+']')));const questions=[],per=f.mode==='term'?1:3;
-  for(const label of subjects)for(let j=0;j<per;j++){const type=f.mode==='term'?'choice':j===0?'choice':j===1?'match':label==='英文'?'choice':'fill';const a=attrs[ability(label)];let level=f.mode==='term'?(a<45&&Number(f.round)<2?2:3):j===0?2:3;if(a>=75||['數學A','數學甲'].includes(label))level=3;if(label==='英文')level=2;if(label.startsWith('數學'))level=['數學A','數學甲'].includes(label)?3:2;const theme=label==='英文'?(j===1?(r.nextBoolean()?'Screen matching':'Grammar matching'):j===0?'Movie clues':'Grammar practice'):label.startsWith('數學')?(type==='choice'&&r.nextBoolean()?'數學家點名':''):'';questions.push(this.pick(label,type,level,used,seen,current,facts,categories,r,theme,f.mode==='gsat'&&type==='match'&&label!=='英文',f.mode==='term',termCounts,paperSeed));}
+  for(const label of subjects)for(let j=0;j<per;j++){const type=f.mode==='term'?'choice':j===0?'choice':j===1?'match':label==='英文'?'choice':'fill';const a=attrs[ability(label)];let level=f.mode==='term'?(a<45&&Number(f.round)<2?2:3):j===0?2:3;if(a>=75||['數學A','數學甲'].includes(label))level=3;if(label==='英文')level=2;if(label.startsWith('數學'))level=['數學A','數學甲'].includes(label)?3:2;const theme=label==='英文'?(j===1?(r.nextBoolean()?'Screen matching':'Grammar matching'):j===0?'Movie clues':'Grammar practice'):label.startsWith('數學')?(type==='choice'&&r.nextBoolean()?'數學家點名':''):'';questions.push(this.pick(label,type,level,used,seen,current,facts,categories,r,theme,f.mode==='term',termCounts,paperSeed));}
   return {mode:f.mode,questions};
  }
  fraction(q,a){if(q.type==='choice')return int(a,0,q.options.length-1)===Number(q.key)?1:0;if(q.type==='fill'){if(!String(a??'').trim()||String(a).length>80)throw Error('請完成短填答（最多80字元）。');return q.key.split('/').some(k=>norm(k)===norm(a))?1:0;}const parts=String(a??'').split(',');if(parts.length!==q.left.length)throw Error('請完成所有配對。');const indices=parts.map(v=>int(v,0,q.options.length-1));if(new Set(indices).size!==parts.length)throw Error('配對選項不可重複。');const keys=q.key.split(',').map(Number);return indices.filter((v,i)=>v===keys[i]).length/parts.length;}

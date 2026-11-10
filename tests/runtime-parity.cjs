@@ -101,7 +101,7 @@ function gradeForm(p,subjects,round,wrong=false){const form={mode:p.mode,subject
  const weaker=await parity('admission',{...base,phase:'final',interview:60});
  assert.equal(better.score-weaker.score,9);
  const aptitudePaper=await parity('paper',{mode:'gsat',subjects:'國文',round:4});
- assert(aptitudePaper.questions.some(q=>q.id.startsWith('chinese-modern-')));
+ assert(aptitudePaper.questions.some(q=>q.id.startsWith('chinese-modern-')||q.id.startsWith('match-bank-chinese-')));
  const aptitudeGrade=gradeForm(aptitudePaper,'國文',4);
  const modest=await parity('grade',{...aptitudeGrade,aptitude:'50,45,50,50,50',attrs:'50,60,50,50,50'});
  assert.equal(modest.rawScores.國文,15);assert.equal(modest.scores.國文,14);
@@ -132,6 +132,22 @@ function gradeForm(p,subjects,round,wrong=false){const form={mode:p.mode,subject
  for(const [i,q] of answerPaper.questions.entries()){
   const single=await parity('answer',{...answerGrade,id:q.id,label:q.examSubject,answer:answerGrade['a'+i],ms:answerGrade['ms'+i]??''});
   assert.deepEqual(single,batch.review[i]);
+ }
+ // With every original match already seen, draw from the expanded bank for every section.
+ const oldMatches=data.questions.filter(q=>q.type==='match'&&!q.id.startsWith('match-bank-')).map(q=>q.id);
+ for(const [mode,subjects] of [['gsat','國文,英文,數學A,數學B,自然,社會'],['split','數學甲,數學乙,物理,化學,生物,歷史,地理,公民與社會']]){
+  const newMatches=[];
+  const form={mode,subjects,round:5,seed:17,previousRoute:'apply'};
+  for(let i=0;i<3;i++){
+   const paper=await parity('paper',{...form,seen:[...oldMatches,...newMatches].join(',')});
+   for(const q of paper.questions.filter(q=>q.type==='match')){
+    assert(q.id.startsWith('match-bank-'),q.id);
+    assert(!newMatches.includes(q.id),q.id);
+    if(['數學A','數學甲'].includes(q.examSubject))assert.equal(q.difficulty,3);
+    if(['數學B','數學乙'].includes(q.examSubject))assert.equal(q.difficulty,2);
+    newMatches.push(q.id);
+   }
+  }
  }
  await parity('paper',{mode:'split',subjects:'物理'});await parity('enroll',{seed:5,gender:'other',schoolType:'公立'});
  console.log('PASS:',count,'Java/browser runtime parity cases, including seed boundaries, grading, selected subjects, admission.');

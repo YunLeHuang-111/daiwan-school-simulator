@@ -39,18 +39,24 @@ for(const theme of ['campus','retro','hongkong']){
 assert.equal(diceColors.size,3);
 await p.reload();await click(p,'resume');assert.equal(await p.locator('html').getAttribute('data-theme'),'hongkong');
 const orders=await p.evaluate(()=>{
- const history=miniHistory,base=miniBank.map(g=>g.id),result=[];
+ const previous=state.history,history=miniHistory,seed=state.seed,result=[];
  miniHistory=[];
- for(let i=0;i<5;i++){
-  const order=variedMiniOrder(base).slice(0,6);
-  result.push({ids:order,types:order.map(miniType)});
-  miniHistory=[...miniHistory,...order].slice(-36);
+ for(let i=0;i<8;i++){
+  state.history=[];
+  const ids=[];
+  for(let round=0;round<6;round++){
+   const game=drawMiniGame();
+   ids.push(game.id);
+   state.history.push({gameId:game.id});
+   miniHistory=[...miniHistory,game.id].slice(-36);
+  }
+  result.push({ids,types:ids.map(miniType)});
  }
- miniHistory=history;
+ state.history=previous;miniHistory=history;state.seed=seed;
  return result;
 });
 assert(orders.every(({types})=>new Set(types).size===6));
-assert(orders.slice(1).every(({ids},i)=>ids.some(id=>!orders[i].ids.includes(id))));
+assert(new Set(orders.map(({types})=>types[0])).size>=4);
 assert.equal(new Set(orders.flatMap(({types})=>types)).size,8);
 await p.screenshot({path:'/tmp/daiwan-compact-dice.png'});
 await p.setViewportSize({width:390,height:844});
