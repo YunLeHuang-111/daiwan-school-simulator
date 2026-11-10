@@ -47,10 +47,12 @@ async function win(p){if(await p.locator('[data-action="memory-ready"]').count()
  await p.screenshot({path:'/tmp/daiwan-v6-report.png',fullPage:true});
  const routeState=await p.evaluate(()=>structuredClone(state));
  // All nineteen mini-game themes: exercise real generation and handlers against a saved run.
+ const priorSong=await p.evaluate(()=>{const song=songs[0];state.used.push(song.questionIds[0]);return song.artist+'《'+song.title+'》';});
+ const songPrompts=new Set([priorSong]);
  for(const source of await p.evaluate(()=>miniBank)){
   await p.evaluate(id=>{state.stage='dice';state.round=0;state.game=null;state.gameOrder[0]=id;state.dice=[1];state.dieIndex=1;state.assignments=[{attr:0,added:1}];render();},source.id);await click(p,'start-game');
   if(source.type==='swatch'){assert.equal(await p.locator('.brand-palette').count(),4);assert.equal(await p.locator('.brand-palette i').count()>3,true);await p.screenshot({path:'/tmp/daiwan-v6-brand.png',fullPage:true});}
-  if(['lyrics','singer','lyric-singer'].includes(source.type)){const items=await p.evaluate(()=>state.game.items);assert(items.every(x=>x.options.length===4&&new Set(x.options).size===4));assert(!items.some(x=>x.prompt.includes('＿')));if(source.type==='lyric-singer')assert(items.every(x=>!x.prompt.includes('歌手：')));await p.screenshot({path:'/tmp/daiwan-v6-lyrics.png',fullPage:true});}
+  if(['lyrics','singer','lyric-singer'].includes(source.type)){const items=await p.evaluate(()=>state.game.items);assert(items.every(x=>x.options.length===4&&new Set(x.options).size===4));for(const item of items){assert(!songPrompts.has(item.note),'same song across mini-game formats');songPrompts.add(item.note);}assert(!items.some(x=>x.prompt.includes('＿')));if(source.type==='lyric-singer')assert(items.every(x=>!x.prompt.includes('歌手：')));await p.screenshot({path:'/tmp/daiwan-v6-lyrics.png',fullPage:true});}
   const gameStart=await p.evaluate(()=>structuredClone(state));await win(p);
   await p.evaluate(s=>{state=s;go('game');},gameStart);
   if(source.type==='memory')await click(p,'memory-ready');
@@ -81,7 +83,7 @@ async function win(p){if(await p.locator('[data-action="memory-ready"]').count()
  const mixed=await p.evaluate(()=>({penalties:state.lastRound.penalties,rewards:state.lastRound.rewards,attrs:state.attrs}));assert.equal(mixed.rewards.reduce((a,b)=>a+b,0),2);assert.equal(mixed.penalties.reduce((a,b)=>a+b,0),3);assert.deepEqual(mixed.attrs,mixedBefore.map((n,i)=>n-mixed.penalties[i]+mixed.rewards[i]));assert(await p.locator('.reward-notice').isVisible());assert(await p.locator('.penalty-notice').isVisible());
  const mixedSaved=await p.evaluate(()=>JSON.stringify([state.attrs,state.lastRound]));await resume(p);assert.equal(await p.evaluate(()=>JSON.stringify([state.attrs,state.lastRound])),mixedSaved);
  await p.evaluate(s=>{state=s;go('routes');},routeState);
- await p.locator('[data-route="star"]').click();assert.equal(await p.locator('.university-choice').count(),25);const starRates=(await p.locator('.school-chance').allTextContents()).map(t=>Number(t.match(/[\d.]+/)[0]));assert(starRates.every((n,i)=>!i||n<=starRates[i-1]));
+ await p.locator('[data-route="star"]').click();assert.equal(await p.locator('.university-choice').count(),25);assert(!/[A-Za-z]/.test((await p.locator('.university-choice h3, .university-choice > span').allTextContents()).join('')));const starRates=(await p.locator('.school-chance').allTextContents()).map(t=>Number(t.match(/[\d.]+/)[0]));assert(starRates.every((n,i)=>!i||n<=starRates[i-1]));
  await p.locator('[data-select-wrap="sort"] .select-trigger').click();await p.locator('[data-select-wrap="sort"] [data-value="chance-asc"]').click();await mobile(p,'star school sort');await p.locator('[data-action="star-school"][data-id="ntu"]').click();assert.equal(await p.locator('[data-action="add"]').count(),0);
  await p.locator('[data-action="star-group"][data-id="1"]').click();assert((await p.evaluate(()=>[...new Set(programs.filter(x=>x.university===state.starSchool&&x.group===state.starGroup).map(x=>x.group))])).length===1);
  for(let i=0;i<3;i++)await p.locator('[data-action="add"]:not(:disabled)').first().click();assert.equal(await p.locator('[data-action="add"]:not(:disabled)').count(),0);assert.equal(await p.evaluate(()=>state.preferences.length),3);

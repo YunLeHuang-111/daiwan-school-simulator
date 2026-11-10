@@ -20,13 +20,42 @@ function sources(s){return ({'流行文化':['影視','動漫','體育','時事'
 function ability(s){if(['國文','英文'].includes(s))return 1;if(['歷史','地理','公民','公民與社會','社會','流行文化'].includes(s))return 2;return s==='藝術'?3:s==='音樂'?4:0;}
 function active(q){return !(['英文','數學'].includes(q.subject)&&q.difficulty>2)&&!(q.subject==='英文'&&['Literary bookshelf','Authors and works'].includes(q.theme))&&!(q.subject==='數學'&&['數學史與解謎','數學史','典籍考古'].includes(q.theme))&&!(q.subject==='音樂'&&['歌詞選字','歌手點名','emoji猜歌','歌名謎語'].includes(q.theme));}
 const norm=s=>String(s).normalize('NFKC').trim().toLowerCase().replace(/\s+/g,'');
+function songKey(q){
+ if(q.subject!=='音樂')return '';
+ const title=q.theme==='歌詞猜歌名'?q.options[Number(q.key)]:q.text.match(/《([^》]+)》/)?.[1];
+ return title?'song:'+title:'';
+}
 class Engine {
  constructor(data){this.data=data;this.questions=new Map(data.questions.map(q=>[q.id,q]));this.programs=new Map(data.programs.map(p=>[p.id,p]));}
  request(path,f){switch(path){case 'enroll':return this.enroll(f);case 'paper':return this.paper(f);case 'grade':return this.grade(f);case 'admission':return this.admission(f);default:throw Error('找不到這個API。');}}
  enroll(f){if(!['male','female'].includes(f.gender)||!['公立','私立'].includes(f.schoolType))throw Error('請選擇性別與公私立偏好。');const r=new JavaRandom(seed(f)),all=this.data.schools.filter(s=>s.type===f.schoolType&&(s.gender==='all'||s.gender===f.gender));let draw=r.nextInt(all.reduce((a,s)=>a+s.weight,0)),school=all[0];for(const s of all){draw-=s.weight;if(draw<0){school=s;break;}}const attrs=[],aptitude=[];for(const b of school.base){attrs.push(Math.max(0,Math.min(100,b+r.nextInt(7)-3)));aptitude.push(Math.max(20,Math.min(85,b+8+r.nextInt(11)-5)));}const {weight,...publicSchool}=school;return {school:publicSchool,attrs,aptitude};}
- pick(label,type,level,used,current,r,theme){let a=this.data.questions.filter(q=>sources(label).includes(q.subject)&&!current.has(q.id)&&active(q));const typed=a.filter(q=>q.type===type);if(typed.length)a=typed;const themed=a.filter(q=>!theme||q.theme===theme);if(themed.length)a=themed;const fresh=a.filter(q=>!used.has(q.id));if(fresh.length)a=fresh;if(!a.length)throw Error('本科題庫不足。');const distance=Math.min(...a.map(q=>Math.abs(q.difficulty-level)));a=a.filter(q=>Math.abs(q.difficulty-level)===distance);const q=a[r.nextInt(a.length)];current.add(q.id);const {key,explanation,...question}=q;return {...question,examSubject:label};}
- paper(f){const subjects=labels(f);if(f.mode==='split'&&!['star','apply'].includes(f.previousRoute))throw Error('先完成繁星或個申放榜，再參加分科。');const attrs=vector(f.attrs??'40,40,40,40,40'),used=new Set(String(f.used??'').split(',')),current=new Set();const r=new JavaRandom(BigInt(seed(f))^BigInt(hash(f.mode))^BigInt(hash(String(f.round??'0')))^BigInt(hash('['+subjects.join(', ')+']')));const questions=[],per=f.mode==='term'?1:3;
-  for(const label of subjects)for(let j=0;j<per;j++){const type=f.mode==='term'?'choice':j===0?'choice':j===1?'match':label==='英文'?'choice':'fill';const a=attrs[ability(label)];let level=f.mode==='term'?(a<45&&Number(f.round)<2?2:3):j===0?2:3;if(a>=75||['數學A','數學甲'].includes(label))level=3;if(label==='英文')level=2;if(label.startsWith('數學'))level=['數學A','數學甲'].includes(label)||a>=75?2:1;const theme=label==='英文'?(j===1?(r.nextBoolean()?'Screen matching':'Grammar matching'):j===0?'Movie clues':'Grammar practice'):label.startsWith('數學')?(type==='choice'&&r.nextBoolean()?'數學家點名':''):'';questions.push(this.pick(label,type,level,used,current,r,theme));}
+ pick(label,type,level,used,seen,current,r,theme){
+  let candidates=this.data.questions.filter(q=>sources(label).includes(q.subject)&&q.type===type&&active(q)
+   &&!used.has(q.id)&&!current.has(norm(q.text))&&!used.has(songKey(q)));
+  if(!candidates.length)throw Error('本科題庫不足，無法再抽出未作答的題目。');
+  const fresh=candidates.filter(q=>!seen.has(q.id));
+  if(fresh.length)candidates=fresh;
+  const themed=candidates.filter(q=>q.theme===theme);
+  if(themed.length)candidates=themed;
+  const distance=Math.min(...candidates.map(q=>Math.abs(q.difficulty-level)));
+  const nearest=candidates.filter(q=>Math.abs(q.difficulty-level)===distance);
+  const q=nearest[r.nextInt(nearest.length)];
+  current.add(norm(q.text));
+  const song=songKey(q);
+  if(song)used.add(song);
+  const {key,explanation,...question}=q;
+  return {...question,examSubject:label};
+ }
+ paper(f){const subjects=labels(f);if(f.mode==='split'&&!['star','apply'].includes(f.previousRoute))throw Error('先完成繁星或個申放榜，再參加分科。');const attrs=vector(f.attrs??'40,40,40,40,40'),used=new Set(String(f.used??'').split(',').filter(Boolean)),seen=new Set(String(f.seen??'').split(',')),current=new Set();
+  for(const id of [...used]){
+   const q=this.questions.get(id);
+   if(!q)continue;
+   current.add(norm(q.text));
+   const song=songKey(q);
+   if(song)used.add(song);
+  }
+  const r=new JavaRandom(BigInt(seed(f))^BigInt(hash(f.mode))^BigInt(hash(String(f.round??'0')))^BigInt(hash('['+subjects.join(', ')+']')));const questions=[],per=f.mode==='term'?1:3;
+  for(const label of subjects)for(let j=0;j<per;j++){const type=f.mode==='term'?'choice':j===0?'choice':j===1?'match':label==='英文'?'choice':'fill';const a=attrs[ability(label)];let level=f.mode==='term'?(a<45&&Number(f.round)<2?2:3):j===0?2:3;if(a>=75||['數學A','數學甲'].includes(label))level=3;if(label==='英文')level=2;if(label.startsWith('數學'))level=['數學A','數學甲'].includes(label)||a>=75?2:1;const theme=label==='英文'?(j===1?(r.nextBoolean()?'Screen matching':'Grammar matching'):j===0?'Movie clues':'Grammar practice'):label.startsWith('數學')?(type==='choice'&&r.nextBoolean()?'數學家點名':''):'';questions.push(this.pick(label,type,level,used,seen,current,r,theme));}
   return {mode:f.mode,questions};
  }
  fraction(q,a){if(q.type==='choice')return int(a,0,q.options.length-1)===Number(q.key)?1:0;if(q.type==='fill'){if(!String(a??'').trim()||String(a).length>80)throw Error('請完成短填答（最多80字元）。');return q.key.split('/').some(k=>norm(k)===norm(a))?1:0;}const parts=String(a??'').split(',');if(parts.length!==q.left.length)throw Error('請完成所有配對。');const indices=parts.map(v=>int(v,0,q.options.length-1));if(new Set(indices).size!==parts.length)throw Error('配對選項不可重複。');const keys=q.key.split(',').map(Number);return indices.filter((v,i)=>v===keys[i]).length/parts.length;}
@@ -43,6 +72,6 @@ class Engine {
  }
 }
 let ready;
-async function request(path,f){if(!ready)ready=fetch(new URL('runtime-data.json',document.baseURI)).then(r=>{if(!r.ok)throw Error('遊戲資料讀取失敗。');return r.json();}).then(d=>new Engine(d));return (await ready).request(path,f);}
+async function request(path,f){if(!ready)ready=fetch(new URL('runtime-data.json',document.baseURI),{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('遊戲資料讀取失敗。');return r.json();}).then(d=>new Engine(d));return (await ready).request(path,f);}
 const api={Engine,JavaRandom,request};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.DaiwanRuntime=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

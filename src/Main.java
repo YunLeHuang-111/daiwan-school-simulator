@@ -119,18 +119,27 @@ public class Main {
             &&!(q.subject.equals("英文")&&List.of("Literary bookshelf","Authors and works").contains(q.theme))
             &&!(q.subject.equals("數學")&&List.of("數學史與解謎","數學史","典籍考古").contains(q.theme));
     }
-    static Question pick(String label,String type,int level,Set<String> used,Set<String> current,Random random,String preferredTheme) {
-        List<Question> candidates=QUESTIONS.stream().filter(q->sources(label).contains(q.subject)&&!current.contains(q.id)&&active(q)).toList();
-        List<Question> typed=candidates.stream().filter(q->q.type.equals(type)).toList();
-        if(!typed.isEmpty())candidates=typed;
-        List<Question> themed=candidates.stream().filter(q->preferredTheme.isEmpty()||q.theme.equals(preferredTheme)).toList();
-        if(!themed.isEmpty())candidates=themed;
-        List<Question> fresh=candidates.stream().filter(q->!used.contains(q.id)).toList();
+    static String songKey(Question q) {
+        if (!q.subject.equals("音樂")) return "";
+        if(q.theme.equals("歌詞猜歌名"))return "song:"+q.options.get(Integer.parseInt(q.key));
+        int start=q.text.indexOf('《'), end=q.text.indexOf('》',start+1);
+        return start>=0&&end>start+1?"song:"+q.text.substring(start+1,end):"";
+    }
+    static Question pick(String label,String type,int level,Set<String> used,Set<String> seen,Set<String> current,Random random,String preferredTheme) {
+        List<Question> candidates=QUESTIONS.stream().filter(q->sources(label).contains(q.subject)&&q.type.equals(type)&&active(q)
+            &&!used.contains(q.id)&&!current.contains(normalized(q.text))&&!used.contains(songKey(q))).toList();
+        if(candidates.isEmpty())throw new IllegalArgumentException("本科題庫不足，無法再抽出未作答的題目。");
+        List<Question> fresh=candidates.stream().filter(q->!seen.contains(q.id)).toList();
         if(!fresh.isEmpty())candidates=fresh;
-        if(candidates.isEmpty())throw new IllegalArgumentException("本科題庫不足。");
-        int distance=candidates.stream().mapToInt(q->Math.abs(q.difficulty-level)).min().orElse(0);
+        List<Question> themed=candidates.stream().filter(q->q.theme.equals(preferredTheme)).toList();
+        if(!themed.isEmpty())candidates=themed;
+        int distance=candidates.stream().mapToInt(q->Math.abs(q.difficulty-level)).min().orElseThrow();
         List<Question> nearest=candidates.stream().filter(q->Math.abs(q.difficulty-level)==distance).toList();
-        Question q=nearest.get(random.nextInt(nearest.size()));current.add(q.id);return q;
+        Question q=nearest.get(random.nextInt(nearest.size()));
+        current.add(normalized(q.text));
+        String song=songKey(q);
+        if(!song.isEmpty())used.add(song);
+        return q;
     }
     static void paper(HttpExchange ex,Map<String,String> f)throws IOException {
         String mode=f.getOrDefault("mode","");List<String> subjects=labels(f,mode);
@@ -139,6 +148,13 @@ public class Main {
         if(parts.length!=5)throw new IllegalArgumentException("需要五項能力值。");
         double[] attrs=Arrays.stream(parts).mapToDouble(x->number(x,0,100)).toArray();
         Set<String> used=new HashSet<>(List.of(f.getOrDefault("used","").split(","))),current=new HashSet<>();
+        Set<String> seen=new HashSet<>(List.of(f.getOrDefault("seen","").split(",")));
+        used.remove("");
+        for(Question q:QUESTIONS)if(used.contains(q.id)){
+            current.add(normalized(q.text));
+            String song=songKey(q);
+            if(!song.isEmpty())used.add(song);
+        }
         List<Object> result=new ArrayList<>();
         Random r=new Random(seed(f)^mode.hashCode()^f.getOrDefault("round","0").hashCode()^subjects.toString().hashCode());
         int per=mode.equals("term")?1:3;
@@ -151,7 +167,7 @@ public class Main {
                 if(label.equals("英文"))level=2;
                 if(label.startsWith("數學"))level=List.of("數學A","數學甲").contains(label)||ability>=75?2:1;
                 String theme=label.equals("英文")?(j==1?(r.nextBoolean()?"Screen matching":"Grammar matching"):j==0?"Movie clues":"Grammar practice"):label.startsWith("數學")?(type.equals("choice")&&r.nextBoolean()?"數學家點名":""):"";
-                Question q=pick(label,type,level,used,current,r,theme);result.add(q.publicData(label));
+                Question q=pick(label,type,level,used,seen,current,r,theme);result.add(q.publicData(label));
             }
         }
         json(ex,200,Map.of("mode",mode,"questions",result));
