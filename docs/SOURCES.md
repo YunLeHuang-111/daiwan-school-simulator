@@ -107,3 +107,12 @@
 - 其他系組的來源依逐筆表記錄，包含各校官方單位目錄及教育部大專校院一覽表。這份核對僅確認本科系組的設置與名稱，不將遊戲選填流程宣稱為現實招生規則。
 - 分享版歌曲題取消填空；舊填空、舊歌手選項、emoji歌名與文字歌名謎語停抽，保留供舊試卷批改。新增32題同類型歌手干擾選項，現有661題資料中509題可供新試卷抽選。
 - 學生證移除學校英文縮寫，保留通用的姓名／學號欄位與紀念標示。
+
+## 歌詞題勘誤
+
+- 王力宏《唯一》用字依[台灣索尼音樂官方 MV](https://www.youtube.com/watch?v=fZF4P7EHoJY)。
+- 八三夭《想見你想見你想見你》用字依[樂團官方 MV](https://www.youtube.com/watch?v=4iRupuNet3Q)。
+- 茄子蛋《浪流連》用字依[樂團官方 MV](https://www.youtube.com/watch?v=3Y0Ut5ozaKs)。
+- 曹格《世界唯一的妳》題名及用字依[滾石唱片官方 MV](https://www.youtube.com/watch?v=r_1FKAbbO7A)。
+- 韋禮安《如果可以》用字依[歌手官方 MV](https://www.youtube.com/watch?v=8MG--WuNW1Y)。
+- 伍佰與 China Blue《挪威的森林》用字依[滾石唱片官方 MV](https://www.youtube.com/watch?v=gPpZJlE0Ca8)。

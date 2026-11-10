@@ -1,6 +1,15 @@
 // Compare the browser-only runtime with the Java API before publication.
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const {Engine}=require('../web/runtime.js');const data=JSON.parse(fs.readFileSync(path.join(__dirname,'../dist/runtime-data.json'),'utf8'));const e=new Engine(data),bank=new Map(data.questions.map(q=>[q.id,q]));
+function termCategory(q){
+ if(q.subject==='校園趣聞')return q.theme==='銀幕世界'?'影視':q.theme;
+ if(q.subject==='地理')return '臺灣旅行';
+ if(q.subject==='常識')return '麻將';
+ if(q.subject==='時事')return q.theme.includes('中職')||q.text.includes('台灣大賽')?'棒球':'其他運動';
+ if(q.subject==='音樂')return q.theme.startsWith('K-pop')?'韓流':'歌曲';
+ if(q.subject==='體育')return /棒球|職棒|投手|打者|壘/.test(q.text)?'棒球':'其他運動';
+ return q.subject;
+}
 const BASE=process.env.TEST_JAVA_URL||'http://localhost:8080';let count=0;
 async function parity(route,form){const res=await fetch(BASE+'/api/'+route,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(form)});const expected=await res.json();if(!res.ok){assert.throws(()=>e.request(route,form));}else assert.deepEqual(e.request(route,form),expected,route+': '+JSON.stringify(form));count++;return expected;}
 function gradeForm(p,subjects,round,wrong=false){const form={mode:p.mode,subjects,round,ids:p.questions.map(q=>q.id).join(',')};p.questions.forEach((q,i)=>{const key=bank.get(q.id).key;form['label'+i]=q.examSubject;form['a'+i]=q.type==='fill'?(wrong?'錯誤':key.split('/')[0]):q.type==='choice'?(wrong?(Number(key)+1)%4:key):(wrong?key.split(',').map(n=>(Number(n)+1)%q.options.length).join(','):key);});return form;}
@@ -23,11 +32,23 @@ function gradeForm(p,subjects,round,wrong=false){const form={mode:p.mode,subject
    assert(!used.includes(q.id)&&!prompts.has(prompt),q.id);
    used.push(q.id);prompts.add(prompt);
    if(exam.mode==='term'){
-    assert.equal(q.subject,'校園趣聞');assert(!termCategories.has(q.theme));termCategories.add(q.theme);
+    const category=termCategory(q);assert(!termCategories.has(category),category);termCategories.add(category);
    }
   }
  }
  assert.equal(used.length,54);assert.equal(termCategories.size,12);
+ const termHistory=[],sets=[];
+ for(const seed of [160,161,162,163]){
+  const ids=[],categories=new Set();
+  for(let round=0;round<6;round++){
+   const paper=await parity('paper',{mode:'term',seed,round,used:ids.join(','),seen:termHistory.join(','),termHistory:termHistory.join(',')});
+   for(const q of paper.questions){ids.push(q.id);categories.add(termCategory(q));}
+  }
+  assert.equal(categories.size,12);
+  termHistory.push(...ids);sets.push(categories);
+ }
+ assert(new Set(sets.flatMap(s=>[...s])).size>=17,'several journeys cover more topics than a single run');
+ assert(sets.slice(1).every((s,i)=>[...s].some(topic=>!sets[i].has(topic))),'consecutive runs rotate topic mix');
  for(const seed of [0,42,4294967295])for(const route of ['star','apply','distribution'])for(const p of data.programs.filter((_,i)=>i%23===0)){const form={seed,route,program:p.id,preferences:p.id,attrs:'80,80,75,65,55',aptitude:'60,65,65,60,60',portfolio:90,rank:5};for(const s of route==='distribution'?p.split:p.subjects)form['s.'+s]=route==='distribution'?56:14;await parity('admission',form);}
  for(const university of ['ntua','tnua','tnnua']){
   for(const route of ['star','apply','distribution']){

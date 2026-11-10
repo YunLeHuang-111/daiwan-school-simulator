@@ -8,8 +8,8 @@
  <link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script>
 </head>
 <body>
- <header class="topbar"><a class="brand" href="/"><span class="brand-mark">呆</span><span>呆丸升學模擬<small>CLASSROOM EDITION / 同學，上課了。</small></span></a><div class="header-actions"><span id="save-status" role="status">你的座位，留好了。</span><button id="collection-button" class="text-button">校系圖鑑</button><button id="achievement-button" class="text-button">成就收藏</button><button id="theme-button" class="text-button" aria-haspopup="dialog">風格</button><button id="help-button" class="text-button">課程說明</button><button id="restart-button" class="text-button" hidden>重新開始</button></div></header>
- <main id="app" tabindex="-1"><div class="boot-error">正在準備教室與考卷…</div></main>
+ <header class="topbar"><a class="brand" href="/"><span class="brand-mark">呆</span><span>呆丸升學模擬<small>CLASSROOM EDITION / 同學，上課了。</small></span></a><div class="header-actions"><span id="save-status" role="status">存檔保存在此瀏覽器</span><button id="collection-button" class="text-button">校系圖鑑</button><button id="achievement-button" class="text-button">成就收藏</button><button id="theme-button" class="text-button" aria-haspopup="dialog">風格</button><button id="help-button" class="text-button">玩法</button><button id="restart-button" class="text-button" hidden>重新開始</button></div></header>
+ <main id="app" tabindex="-1"><div class="boot-error">正在載入遊戲…</div></main>
  <footer><span>考卷有答案，人生有很多種走法。</span><span>諧音校名 · 遊戲模擬招生 · 本機存檔</span></footer>
  <dialog id="theme-dialog" aria-labelledby="theme-title"><div class="dialog-content">
   <span class="eyebrow">挑一個你喜歡的教室</span><h2 id="theme-title">遊戲風格</h2>
@@ -20,9 +20,20 @@
   </div>
   <button id="close-themes" class="primary" type="button">完成</button>
  </div></dialog>
- <dialog id="help-dialog"><div class="dialog-content"><span class="eyebrow">本學期課程表</span><h2>同學，帶著好奇心就好。</h2><p>填上名字，收下隨機高中的入學通知。選擇角色性別與公私立偏好，學校按稀有度分配，各校有不同起始能力。</p><p>六個學期，每學期兩題問答 → 突發事件 → 成長骰子 → 一個小遊戲。能力上限100，學期問答答對每題加2點、答錯每題扣3點；一對一錯同時加扣，全錯只有扣分。小遊戲一次失誤會降低獎勵，兩次失誤即結束，失敗或跳過扣4點能力。</p><p>高三上參加學測，高三下後選繁星或個申。學測與分科每個選考科目各三題；英文只有選擇與配對，其他科含短填答。選擇題按「下一題」或「交卷」才停止計時，答對按速度給 1–5 分；數學限時 60 秒，其餘限時 30 秒。交過的題目不能返回，大考答錯不扣能力。學測各科級分依資質和能力最多調整 1 級分。</p><p>繁星限一所大學、一類組、最多三系；個申最多三系；放榜後可挑戰分科，分發最多十系。考試、在校排名與科系資質會影響機會。個申先按學測篩選，再答三題面試，最終按學測40%、資質30%、面試30%計算。個申落榜後可考分科或選擇重考。藝術大學的科系資質採藝術與音樂。</p><p>50所諧音大學、538個實際設系對照。採計、類組與錄取率為遊戲設定。錄取可領取學生證、上傳頭貼，並下載紀念卡。歌曲小遊戲只有猜歌名與猜歌手，不用填空。</p><p>選校可依錄取率高低排序。300種成就隱藏在不同旅程裡。旅程、照片與成就只保存在此瀏覽器。作者 LeleHuang。</p><button id="close-help" class="primary">好，開始上課！</button></div></dialog>
+ <dialog id="help-dialog" aria-labelledby="help-title"><div class="dialog-content">
+  <h2 id="help-title">遊戲怎麼玩？</h2>
+  <ol class="help-steps">
+   <li><b>建立角色</b><p>填名字、選性別與高中類型，系統會分配一所高中。</p></li>
+   <li><b>度過六個學期</b><p>每學期先答兩題，再處理突發事件、分配骰子點數，最後玩一個小遊戲。</p></li>
+   <li><b>參加學測</b><p>高三上選考科，每科三題。限時選擇題要按「下一題」或「交卷」才送出。</p></li>
+   <li><b>填大學志願</b><p>繁星和個申最多三系。個申一階通過後玩三關面試。放榜後可改考分科，最多填十系。</p></li>
+   <li><b>查看結局</b><p>錄取後可下載學生證。存檔、成就和校系圖鑑會留在此瀏覽器。</p></li>
+  </ol>
+  <details><summary>看計分規則</summary><p>學期問答答對加 2 點，答錯扣 3 點。小遊戲失誤一次會降低獎勵，失誤兩次就結束。考試選擇題數學限時 60 秒，其餘 30 秒，按作答速度得分。學測各科依資質與能力最多加減 1 級分。個申最終錄取依學測 40%、資質 30%、面試 30% 計算。</p></details>
+  <button id="close-help" class="primary">關閉說明</button>
+ </div></dialog>
  <dialog id="confirm-dialog"><div class="dialog-content"><h2 id="confirm-title"></h2><p id="confirm-text"></p><div class="button-row"><button id="confirm-cancel" class="secondary">再想想</button><button id="confirm-ok" class="primary">確定</button></div></div></dialog>
- <dialog id="achievement-dialog"><div class="dialog-content"><div id="achievement-content"></div><button id="close-achievements" class="primary">收好收藏</button></div></dialog>
+ <dialog id="achievement-dialog"><div class="dialog-content"><div id="achievement-content"></div><button id="close-achievements" class="primary">關閉成就</button></div></dialog>
  <input id="photo-input" type="file" accept="image/jpeg,image/png,image/webp" hidden>
  <div id="toast" role="status" aria-live="polite"></div>
 </body>

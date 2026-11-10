@@ -154,6 +154,21 @@ public class Main {
         if(q.theme.contains("麻將"))return "麻將";
         return q.subject+"："+q.theme;
     }
+    static String termCategory(Question q){
+        return switch(q.subject){
+            case "校園趣聞" -> q.theme.equals("銀幕世界")?"影視":q.theme;
+            case "地理" -> "臺灣旅行";
+            case "常識" -> "麻將";
+            case "時事" -> q.theme.contains("中職")||q.text.contains("台灣大賽")?"棒球":"其他運動";
+            case "音樂" -> q.theme.startsWith("K-pop")?"韓流":"歌曲";
+            case "體育" -> questionCategory(q).equals("棒球")?"棒球":"其他運動";
+            default -> q.subject;
+        };
+    }
+    static boolean termQuestion(Question q){
+        return List.of("校園趣聞","影視","動漫","體育","音樂","時事").contains(q.subject)
+            ||q.theme.equals("臺灣走走")||q.theme.contains("麻將");
+    }
     static void rememberQuestion(Question q,Set<String> used,Set<String> current,Set<String> facts,Map<String,Integer> categories){
         used.add(q.id);
         current.add(questionPrompt(q));
@@ -162,15 +177,24 @@ public class Main {
         if(!song.isEmpty())used.add(song);
         categories.merge(questionCategory(q),1,Integer::sum);
     }
-    static Question pick(String label,String type,int level,Set<String> used,Set<String> seen,Set<String> current,Set<String> facts,Map<String,Integer> categories,Random random,String preferredTheme,boolean advanced) {
+    static Question pick(String label,String type,int level,Set<String> used,Set<String> seen,Set<String> current,Set<String> facts,Map<String,Integer> categories,Random random,String preferredTheme,boolean advanced,boolean term,Map<String,Integer> termCounts) {
         List<Question> candidates=QUESTIONS.stream().filter(q->sources(label).contains(q.subject)&&q.type.equals(type)&&active(q)
             &&!used.contains(q.id)&&!current.contains(questionPrompt(q))&&questionFingerprints(q).stream().noneMatch(facts::contains)&&!used.contains(songKey(q))).toList();
         if(candidates.isEmpty())throw new IllegalArgumentException("本科題庫不足，無法再抽出未作答的題目。");
         List<Question> preferred=candidates.stream().filter(q->q.id.startsWith("advanced-match-")==advanced).toList();
         if(!preferred.isEmpty())candidates=preferred;
-        List<Question> trivia=candidates.stream().filter(q->q.subject.equals("校園趣聞")).toList();
-        if(!trivia.isEmpty())candidates=trivia;
-        if(preferredTheme.isEmpty()){
+        if(term){
+            Map<String,Integer> local=new HashMap<>();
+            for(Question q:QUESTIONS){
+                if(used.contains(q.id)&&q.type.equals("choice")&&termQuestion(q))local.merge(termCategory(q),1,Integer::sum);
+            }
+            List<Question> leisure=candidates.stream().filter(Main::termQuestion).toList();
+            if(!leisure.isEmpty())candidates=leisure;
+            int least=candidates.stream().mapToInt(q->local.getOrDefault(termCategory(q),0)).min().orElseThrow();
+            candidates=candidates.stream().filter(q->local.getOrDefault(termCategory(q),0)==least).toList();
+            int recent=candidates.stream().mapToInt(q->termCounts.getOrDefault(termCategory(q),0)).min().orElseThrow();
+            candidates=candidates.stream().filter(q->termCounts.getOrDefault(termCategory(q),0)==recent).toList();
+        }else if(preferredTheme.isEmpty()){
             int least=candidates.stream().mapToInt(q->categories.getOrDefault(questionCategory(q),0)).min().orElseThrow();
             candidates=candidates.stream().filter(q->categories.getOrDefault(questionCategory(q),0)==least).toList();
         }
@@ -196,6 +220,13 @@ public class Main {
         Set<String> facts=new HashSet<>();
         Map<String,Integer> categories=new HashMap<>();
         for(Question q:QUESTIONS)if(used.contains(q.id))rememberQuestion(q,used,current,facts,categories);
+        Map<String,Integer> termCounts=new HashMap<>();
+        String[] termHistory=f.getOrDefault("termHistory","").split(",");
+        for(int i=Math.max(0,termHistory.length-72);i<termHistory.length;i++){
+            String id=termHistory[i];
+            Question q=QUESTIONS.stream().filter(row->row.id.equals(id)).findFirst().orElse(null);
+            if(q!=null&&q.type.equals("choice")&&termQuestion(q))termCounts.merge(termCategory(q),1,Integer::sum);
+        }
         List<Object> result=new ArrayList<>();
         Random r=new Random(seed(f)^mode.hashCode()^f.getOrDefault("round","0").hashCode()^subjects.toString().hashCode());
         int per=mode.equals("term")?1:3;
@@ -208,7 +239,7 @@ public class Main {
                 if(label.equals("英文"))level=2;
                 if(label.startsWith("數學"))level=List.of("數學A","數學甲").contains(label)||ability>=75?2:1;
                 String theme=label.equals("英文")?(j==1?(r.nextBoolean()?"Screen matching":"Grammar matching"):j==0?"Movie clues":"Grammar practice"):label.startsWith("數學")?(type.equals("choice")&&r.nextBoolean()?"數學家點名":""):"";
-                Question q=pick(label,type,level,used,seen,current,facts,categories,r,theme,mode.equals("gsat")&&type.equals("match"));result.add(q.publicData(label));
+                Question q=pick(label,type,level,used,seen,current,facts,categories,r,theme,mode.equals("gsat")&&type.equals("match"),mode.equals("term"),termCounts);result.add(q.publicData(label));
             }
         }
         json(ex,200,Map.of("mode",mode,"questions",result));

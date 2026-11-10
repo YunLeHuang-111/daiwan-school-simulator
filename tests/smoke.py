@@ -115,7 +115,7 @@ for song in json.loads((ROOT/'web/songs.json').read_text()):assert song['group']
 assert any(p[3]=='文言小紙條' for p in rows)
 assert any('臣妾做不到' in p[5] for p in rows)
 assert any('常住人口' in p[5] for p in rows)
-assert len(json.loads((ROOT/'web/minigames.json').read_text()))==19
+assert len(json.loads((ROOT/'web/minigames.json').read_text()))==22
 for u in catalog['universities']:assert '<text' not in (ROOT/'web'/u['crest'].lstrip('/')).read_text()
 for g in json.loads((ROOT/'web/minigames.json').read_text()):
  if g['type'] in ['match','swatch']:assert len(g['pairs'])>=4

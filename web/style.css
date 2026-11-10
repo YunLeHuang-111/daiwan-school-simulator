@@ -239,3 +239,34 @@
  .theme-options{gap:7px}
  .theme-options button{padding:6px}
 }
+
+.action-arrow{display:inline-block;font-weight:900;margin-inline:2px}
+.answer-help{color:var(--muted);font-size:13px;margin:4px 0 10px}
+.puzzle-grid{display:grid;gap:6px;margin:10px auto;max-width:300px}
+.puzzle-grid button{min-width:0;min-height:40px;padding:4px;font-size:1.15rem}
+.puzzle-grid .chosen{background:var(--theme-soft);outline:2px solid var(--green);opacity:1}
+.pattern-grid{grid-template-columns:repeat(4,1fr)}
+.sum-grid{grid-template-columns:repeat(3,1fr)}
+.maze-grid{grid-template-columns:repeat(5,1fr);max-width:248px}
+.maze-cell{border:1px solid var(--line);border-radius:6px;background:var(--sheet);color:var(--ink)}
+.maze-cell:not(:disabled){border:2px solid var(--green)}
+.maze-cell:disabled{opacity:1}
+.maze-cell.wall{background:var(--theme-soft);color:var(--muted)}
+.maze-cell.position{color:white;background:var(--green)}
+.puzzle-sequence,.puzzle-progress,.puzzle-result{margin:8px 0;text-align:center}
+.puzzle-sequence{font-size:1.25rem;overflow-wrap:anywhere}
+.puzzle-progress strong{font-size:1.35em}
+.puzzle-result{display:grid;gap:5px;padding:16px;background:var(--theme-soft);border-radius:8px}
+.puzzle-result strong{font-size:1.2rem}
+.interview-paper>.primary,.game-panel>[data-action=puzzle-ready]{display:block;margin:10px auto}
+[data-theme=campus] .dice-tray .die{background:#fff4d2;border:1px solid #bb985d;box-shadow:0 3px 0 #ae8b55,inset 0 0 0 2px #fff9ec}
+[data-theme=campus] .dice-tray .pip{background:#285345}
+[data-theme=retro] .dice-tray .die{background:#f7aa75;border:2px solid #7a3222;box-shadow:0 3px 0 #7a3222;border-radius:50%}
+[data-theme=retro] .dice-tray .pip{background:#482418;border-radius:1px;transform:rotate(45deg) scale(.85)}
+[data-theme=hongkong] .dice-tray .die{background:#174d50;border:1px solid #f3b976;box-shadow:0 0 5px #f3b976,0 3px 0 #173e46;border-radius:3px}
+[data-theme=hongkong] .dice-tray .pip{background:#ffe0a5;box-shadow:0 0 3px #f3b976}
+.answer-help:empty{display:none}
+.help-steps{padding-inline-start:1.4rem;margin:12px 0}
+.help-steps li{margin-bottom:10px}
+.help-steps p{margin:2px 0}
+#help-dialog details{margin-bottom:14px}

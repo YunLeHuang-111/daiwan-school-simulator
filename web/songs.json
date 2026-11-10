@@ -146,7 +146,7 @@
     "id": "song13",
     "title": "如果可以",
     "artist": "韋禮安",
-    "excerpt": "你的聲音",
+    "excerpt": "妳的聲音",
     "group": "male",
     "questionIds": [
       "v5q176",
@@ -157,7 +157,7 @@
     "id": "song14",
     "title": "想見你想見你想見你",
     "artist": "八三夭",
-    "excerpt": "當愛情遺忘成遺跡",
+    "excerpt": "當愛情遺落成遺跡",
     "group": "band",
     "questionIds": [
       "v5q178",
@@ -190,7 +190,7 @@
     "id": "song17",
     "title": "唯一",
     "artist": "王力宏",
-    "excerpt": "我的天空多麼的清晰",
+    "excerpt": "我的天空多麼的清新",
     "year": 2001,
     "group": "male",
     "questionIds": [
@@ -323,7 +323,7 @@
     "id": "song29",
     "title": "挪威的森林",
     "artist": "伍佰",
-    "excerpt": "讓我將你心兒摘下",
+    "excerpt": "讓我將妳心兒摘下",
     "group": "band",
     "questionIds": [
       "v5q195",
@@ -433,7 +433,7 @@
     "id": "new-song-39",
     "title": "浪流連",
     "artist": "茄子蛋",
-    "excerpt": "這風風雨雨的日子",
+    "excerpt": "這個風風雨雨的社會",
     "group": "band",
     "year": 2018,
     "questionIds": [
@@ -530,9 +530,9 @@
   },
   {
     "id": "new-song-48",
-    "title": "世界唯一的你",
+    "title": "世界唯一的妳",
     "artist": "曹格",
-    "excerpt": "是你第一眼我就認出來",
+    "excerpt": "是你 一眼我就認出來",
     "group": "male",
     "year": 2006,
     "questionIds": [

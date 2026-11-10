@@ -48,6 +48,19 @@ function questionCategory(q){
  if(q.theme.includes('麻將'))return '麻將';
  return q.subject+'：'+q.theme;
 }
+function termCategory(q){
+ if(q.subject==='校園趣聞')return q.theme==='銀幕世界'?'影視':q.theme;
+ if(q.subject==='地理')return '臺灣旅行';
+ if(q.subject==='常識')return '麻將';
+ if(q.subject==='時事')return q.theme.includes('中職')||q.text.includes('台灣大賽')?'棒球':'其他運動';
+ if(q.subject==='音樂')return q.theme.startsWith('K-pop')?'韓流':'歌曲';
+ if(q.subject==='體育')return questionCategory(q)==='棒球'?'棒球':'其他運動';
+ return q.subject;
+}
+function termQuestion(q){
+ return ['校園趣聞','影視','動漫','體育','音樂','時事'].includes(q.subject)
+  ||q.theme==='臺灣走走'||q.theme.includes('麻將');
+}
 function rememberQuestion(q,used,prompts,facts,categories){
  used.add(q.id);
  prompts.add(questionPrompt(q));
@@ -61,16 +74,29 @@ class Engine {
  constructor(data){this.data=data;this.questions=new Map(data.questions.map(q=>[q.id,q]));this.programs=new Map(data.programs.map(p=>[p.id,p]));}
  request(path,f){switch(path){case 'enroll':return this.enroll(f);case 'paper':return this.paper(f);case 'grade':return this.grade(f);case 'admission':return this.admission(f);default:throw Error('找不到這個API。');}}
  enroll(f){if(!['male','female'].includes(f.gender)||!['公立','私立'].includes(f.schoolType))throw Error('請選擇性別與公私立偏好。');const r=new JavaRandom(seed(f)),all=this.data.schools.filter(s=>s.type===f.schoolType&&(s.gender==='all'||s.gender===f.gender));let draw=r.nextInt(all.reduce((a,s)=>a+s.weight,0)),school=all[0];for(const s of all){draw-=s.weight;if(draw<0){school=s;break;}}const attrs=[],aptitude=[];for(const b of school.base){attrs.push(Math.max(0,Math.min(100,b+r.nextInt(7)-3)));aptitude.push(Math.max(20,Math.min(85,b+8+(school.tier-3)*2+r.nextInt(11)-5)));}const {weight,...publicSchool}=school;return {school:publicSchool,attrs,aptitude};}
- pick(label,type,level,used,seen,current,facts,categories,r,theme,advanced){
+ pick(label,type,level,used,seen,current,facts,categories,r,theme,advanced,term,termCounts){
   let candidates=this.data.questions.filter(q=>sources(label).includes(q.subject)&&q.type===type&&active(q)
    &&!used.has(q.id)&&!current.has(questionPrompt(q))&&!questionFingerprints(q).some(key=>facts.has(key))&&!used.has(songKey(q)));
   if(!candidates.length)throw Error('本科題庫不足，無法再抽出未作答的題目。');
   const preferred=candidates.filter(q=>q.id.startsWith('advanced-match-')===advanced);
   if(preferred.length)candidates=preferred;
-  const trivia=candidates.filter(q=>q.subject==='校園趣聞');
-  if(trivia.length)candidates=trivia;
+  if(term){
+   const local=new Map();
+   for(const id of used){
+    const q=this.questions.get(id);
+    if(q&&q.type==='choice'&&termQuestion(q)){
+     const k=termCategory(q);local.set(k,(local.get(k)||0)+1);
+    }
+   }
+   const leisure=candidates.filter(termQuestion);
+   if(leisure.length)candidates=leisure;
+   const least=Math.min(...candidates.map(q=>local.get(termCategory(q))||0));
+   candidates=candidates.filter(q=>(local.get(termCategory(q))||0)===least);
+   const recent=Math.min(...candidates.map(q=>termCounts.get(termCategory(q))||0));
+   candidates=candidates.filter(q=>(termCounts.get(termCategory(q))||0)===recent);
+  }
   const leastUsed=Math.min(...candidates.map(q=>categories.get(questionCategory(q))||0));
-  if(!theme)candidates=candidates.filter(q=>(categories.get(questionCategory(q))||0)===leastUsed);
+  if(!term&&!theme)candidates=candidates.filter(q=>(categories.get(questionCategory(q))||0)===leastUsed);
   const fresh=candidates.filter(q=>!seen.has(q.id));
   if(fresh.length)candidates=fresh;
   const themed=candidates.filter(q=>q.theme===theme);
@@ -88,8 +114,14 @@ class Engine {
    if(!q)continue;
    rememberQuestion(q,used,current,facts,categories);
   }
+  const termCounts=new Map();
+  for(const id of String(f.termHistory??'').split(',').slice(-72)){
+   const q=this.questions.get(id);
+   if(!q||q.type!=='choice'||!termQuestion(q))continue;
+   const k=termCategory(q);termCounts.set(k,(termCounts.get(k)||0)+1);
+  }
   const r=new JavaRandom(BigInt(seed(f))^BigInt(hash(f.mode))^BigInt(hash(String(f.round??'0')))^BigInt(hash('['+subjects.join(', ')+']')));const questions=[],per=f.mode==='term'?1:3;
-  for(const label of subjects)for(let j=0;j<per;j++){const type=f.mode==='term'?'choice':j===0?'choice':j===1?'match':label==='英文'?'choice':'fill';const a=attrs[ability(label)];let level=f.mode==='term'?(a<45&&Number(f.round)<2?2:3):j===0?2:3;if(a>=75||['數學A','數學甲'].includes(label))level=3;if(label==='英文')level=2;if(label.startsWith('數學'))level=['數學A','數學甲'].includes(label)||a>=75?2:1;const theme=label==='英文'?(j===1?(r.nextBoolean()?'Screen matching':'Grammar matching'):j===0?'Movie clues':'Grammar practice'):label.startsWith('數學')?(type==='choice'&&r.nextBoolean()?'數學家點名':''):'';questions.push(this.pick(label,type,level,used,seen,current,facts,categories,r,theme,f.mode==='gsat'&&type==='match'));}
+  for(const label of subjects)for(let j=0;j<per;j++){const type=f.mode==='term'?'choice':j===0?'choice':j===1?'match':label==='英文'?'choice':'fill';const a=attrs[ability(label)];let level=f.mode==='term'?(a<45&&Number(f.round)<2?2:3):j===0?2:3;if(a>=75||['數學A','數學甲'].includes(label))level=3;if(label==='英文')level=2;if(label.startsWith('數學'))level=['數學A','數學甲'].includes(label)||a>=75?2:1;const theme=label==='英文'?(j===1?(r.nextBoolean()?'Screen matching':'Grammar matching'):j===0?'Movie clues':'Grammar practice'):label.startsWith('數學')?(type==='choice'&&r.nextBoolean()?'數學家點名':''):'';questions.push(this.pick(label,type,level,used,seen,current,facts,categories,r,theme,f.mode==='gsat'&&type==='match',f.mode==='term',termCounts));}
   return {mode:f.mode,questions};
  }
  fraction(q,a){if(q.type==='choice')return int(a,0,q.options.length-1)===Number(q.key)?1:0;if(q.type==='fill'){if(!String(a??'').trim()||String(a).length>80)throw Error('請完成短填答（最多80字元）。');return q.key.split('/').some(k=>norm(k)===norm(a))?1:0;}const parts=String(a??'').split(',');if(parts.length!==q.left.length)throw Error('請完成所有配對。');const indices=parts.map(v=>int(v,0,q.options.length-1));if(new Set(indices).size!==parts.length)throw Error('配對選項不可重複。');const keys=q.key.split(',').map(Number);return indices.filter((v,i)=>v===keys[i]).length/parts.length;}

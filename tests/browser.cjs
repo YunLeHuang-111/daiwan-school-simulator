@@ -4,15 +4,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
 const BASE=process.env.TEST_URL||'http://localhost:8080';
 const BANK=Object.fromEntries(fs.readFileSync(path.join(__dirname,'../data/questions.tsv'),'utf8').split('\n').filter(s=>s&&!s.startsWith('#')).map(s=>{const a=s.split('|');return[a[0],a];}));
 const click=(p,a)=>p.locator(`[data-action="${a}"]`).click();
-async function interview(p){
- await p.locator('[data-action="enter-interview"]').waitFor();
- const ids=await p.evaluate(()=>state.interview.questions.map(q=>q.id));
- assert.equal(new Set(ids).size,3);
- await click(p,'enter-interview');
- for(let i=0;i<3;i++){
-  await p.locator('[data-action="interview-answer"]').first().click();
- }
-}
+const {interview,solvePuzzle,missPuzzle}=require('./puzzles.cjs');
 
 async function answer(p){const q=await p.evaluate(()=>state.paper.questions[state.paper.index]),key=BANK[q.id][8];
  if(q.type==='choice')await p.locator(`[data-action="answer"][data-id="${key}"]`).click();
@@ -28,6 +20,7 @@ async function win(p){if(await p.locator('[data-action="memory-ready"]').count()
  else if(g.type==='memory'){for(const s of [...new Set(g.cards)])for(const i of g.cards.flatMap((v,i)=>v===s?[i]:[]))await p.locator(`[data-action="memory-card"][data-id="${i}"]`).click();}
  else if(g.type==='order')for(const item of [...g.items].sort((a,b)=>a[1]-b[1]))await p.locator(`[data-action="order-tile"][data-id="${g.tiles.findIndex(t=>t[0]===item[0])}"]`).click();
  else if(g.type==='spot')for(let i=0;i<3;i++){const odd=await p.evaluate(()=>state.game.odd);await p.locator(`[data-action="spot-tile"][data-id="${odd}"]`).click();}
+ else if(g.puzzle)await solvePuzzle(p,g.puzzle);
  else assert.fail('Unexpected minigame: '+g.type);
  assert.equal(await p.evaluate(()=>state.game.score),100,g.type);
 }
@@ -62,7 +55,7 @@ async function win(p){if(await p.locator('[data-action="memory-ready"]').count()
  assert.equal(await p.evaluate(()=>state.history.length),6);assert(await p.locator('.report-summary').isVisible());assert.equal(await p.locator('.subject-grid>div').count(),6);await mobile(p,'routes');
  await p.screenshot({path:'/tmp/daiwan-v6-report.png',fullPage:true});
  const routeState=await p.evaluate(()=>structuredClone(state));
- // All nineteen mini-game themes: exercise real generation and handlers against a saved run.
+ // All mini-game themes: exercise real generation and handlers against a saved run.
 
  for(const source of await p.evaluate(()=>miniBank)){
   await p.evaluate(id=>{state.stage='dice';state.round=0;state.game=null;state.gameOrder[0]=id;state.dice=[1];state.dieIndex=1;state.assignments=[{attr:0,added:1}];render();},source.id);await click(p,'start-game');
@@ -77,6 +70,7 @@ async function win(p){if(await p.locator('[data-action="memory-ready"]').count()
   const gameStart=await p.evaluate(()=>structuredClone(state));await win(p);
   await p.evaluate(s=>{state=s;go('game');},gameStart);
   if(source.type==='memory')await click(p,'memory-ready');
+  if(source.type==='pattern')await click(p,'puzzle-ready');
   const beforeFailure=await p.evaluate(()=>state.attrs[state.game.attr]);
   for(let strike=0;strike<2;strike++){
    const g=await p.evaluate(()=>state.game);
@@ -84,6 +78,7 @@ async function win(p){if(await p.locator('[data-action="memory-ready"]').count()
    else if(g.type==='spot')await p.locator(`[data-action="spot-tile"][data-id="${(g.odd+1)%25}"]`).click();
    else if(g.type==='order'){const latest=g.tiles.findIndex(t=>t[1]===Math.max(...g.tiles.map(x=>x[1])));await p.locator(`[data-action="order-tile"][data-id="${latest}"]`).click();}
    else if(g.type==='memory'){if(strike)await click(p,'memory-again');await p.locator('[data-action="memory-card"][data-id="0"]').click();await p.locator(`[data-action="memory-card"][data-id="${g.cards.findIndex(v=>v!==g.cards[0])}"]`).click();}
+   else if(g.puzzle)await missPuzzle(p,g.puzzle);
    else assert.fail('Unexpected minigame: '+g.type);
    assert.equal(await p.evaluate(()=>state.game.mistakes),strike+1,source.id);
   }
@@ -116,7 +111,7 @@ async function win(p){if(await p.locator('[data-action="memory-ready"]').count()
  for(let i=0;i<3;i++)await p.locator('[data-action="add"]:not(:disabled)').first().click();assert.equal(await p.locator('[data-action="add"]:not(:disabled)').count(),0);
  // Pick a program that clears screening and is admitted even at the lowest possible interview score.
  const chosen=await p.evaluate(async()=>{for(const p of programs){if(!eligibility(p))continue;const d={route:'apply',program:p.id,preferences:p.id,attrs:state.attrs.join(','),aptitude:state.aptitude.join(','),portfolio:state.portfolio,rank:state.rank,seed:state.originSeed};Object.entries(state.gsat).forEach(([s,v])=>d['s.'+s]=v);const screening=await api('admission',{...d,phase:'screen'});if(!screening.accepted)continue;const final=await api('admission',{...d,phase:'final',interview:74});if(final.accepted){const preview=await api('admission',d);if(Math.abs(admissionEstimate(p)-preview.chance)>.01)throw Error('chance parity');return p.id;}}throw Error('No accepted program');});
- await p.evaluate(id=>{state.preferences=[];filter.search=programs.find(p=>p.id===id).universityName;render();},chosen);await p.locator(`[data-action="add"][data-id="${chosen}"]`).click();await click(p,'submit-universities');await interview(p);await p.waitForSelector('[data-action="accept"]');await click(p,'accept');
+ await p.evaluate(id=>{state.preferences=[];filter.search=programs.find(p=>p.id===id).universityName;render();},chosen);await p.locator(`[data-action="add"][data-id="${chosen}"]`).click();await click(p,'submit-universities');await interview(p,{reload:true});await p.waitForSelector('[data-action="accept"]');await click(p,'accept');
  assert((await p.locator('.card-portrait').getAttribute('src')).endsWith('/assets/avatar-female.svg'));assert(await p.locator('.card-crest').isVisible());const abbr=await p.evaluate(()=>university(admittedProgram().university).abbr);assert(!(await p.locator('.card-school').innerText()).includes(abbr));assert.equal(await p.locator('.unlocked-banner').count(),1);await mobile(p,'student card');
  await p.screenshot({path:'/tmp/daiwan-v6-card.png',fullPage:true});
  let dl=p.waitForEvent('download');await click(p,'download-card');let file=await dl;await file.saveAs('/tmp/daiwan-v6-card-export.png');let buf=fs.readFileSync('/tmp/daiwan-v6-card-export.png');assert.equal(buf.readUInt32BE(16),1520);assert.equal(buf.readUInt32BE(20),960);
@@ -143,5 +138,5 @@ async function win(p){if(await p.locator('[data-action="memory-ready"]').count()
  await p.evaluate(s=>{state=structuredClone(s);go('routes');},routeState);assert.equal(await p.locator('[data-action="prepare-split"]').count(),0);await p.locator('[data-route="apply"]').click();await p.evaluate(id=>{state.preferences=[id];save();render();},chosen);await click(p,'submit-universities');await interview(p);await p.waitForSelector('[data-action="prepare-split"]');await click(p,'prepare-split');if(await p.locator('#confirm-dialog').isVisible())await p.locator('#confirm-ok').click();for(const c of await p.locator('[name="exam-subject"]').all())await c.check();await click(p,'start-split');await p.waitForSelector('[data-action="answer"]');assert.equal(await p.evaluate(()=>state.paper.questions.length),24);await paper(p,24);await p.waitForSelector('[data-action="open-distribution"]');await click(p,'open-distribution');
  for(let i=0;i<10;i++)await p.locator('[data-action="add"]:not(:disabled)').first().click();assert.equal(await p.evaluate(()=>state.preferences.length),10);assert.equal(await p.locator('[data-action="add"]:not(:disabled)').count(),0);await click(p,'submit-universities');await p.waitForSelector('[data-action="retake"]');await click(p,'retake');await p.locator('#confirm-ok').click();assert.equal(await p.evaluate(()=>state.ending),'retake');assert(await p.locator('.retake-illustration').isVisible());assert(await p.evaluate(()=>!!achievements.retake));
  await click(p,'restart');await p.locator('#confirm-ok').click();assert.equal(await p.evaluate(()=>state),null);assert(await p.evaluate(()=>!!readStore(ACH_KEY,{}).first));await p.locator('#player-name').fill('男生試玩');await p.locator('[name="gender"][value="male"]').check();await p.locator('[name="schoolType"][value="私立"]').check();await p.locator('#start-form button').click();await p.waitForSelector('[data-action="enter-school"]');assert((await p.evaluate(()=>defaultPortrait())).endsWith('/assets/avatar-male.svg'));assert.equal(await p.evaluate(()=>state.school.type),'私立');assert(['all','male'].includes(await p.evaluate(()=>state.school.gender)));const bounds=await p.evaluate(()=>{const saved=[...state.attrs];state.attrs=[100,0,100,0,100];const p={mode:'term',questions:[{subject:'數學'},{subject:'英文'}]},r={review:[{fraction:1},{fraction:0}]};const loss=applyQuizPenalty(p,r);const result={attrs:state.attrs,loss,rewards:r.rewards};state.attrs=saved;return result;});assert.deepEqual(bounds.attrs,[100,0,100,0,100]);assert.equal(bounds.loss.reduce((a,b)=>a+b,0),0);assert.equal(bounds.rewards.reduce((a,b)=>a+b,0),0);assert.deepEqual(errors,[]);
- console.log('PASS: six semesters, 19 mini-game themes, event/dice persistence, 18-question GSAT / 24-question split, admission limits, custom dropdown keyboard, photos/PNG, achievements, both endings, mobile layouts.');
+ console.log('PASS: six semesters, 22 mini-game themes, event/dice persistence, 18-question GSAT / 24-question split, admission limits, custom dropdown keyboard, photos/PNG, achievements, both endings, mobile layouts.');
 }finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

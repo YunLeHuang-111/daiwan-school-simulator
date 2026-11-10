@@ -1177,5 +1177,8 @@
         "絕命律師"
       ]
     ]
-  }
+  },
+  {"id": "pattern", "name": "記憶接力", "type": "pattern", "attr": 4, "image": "stage"},
+  {"id": "maze", "name": "校園迷宮", "type": "maze", "attr": 2, "image": "library"},
+  {"id": "sum", "name": "湊數挑戰", "type": "sum", "attr": 0, "image": "lab"}
 ]

@@ -1,15 +1,7 @@
 const {chromium}=require('playwright'),assert=require('node:assert/strict');
 const BASE=process.env.TEST_URL||'http://localhost:8090/dist/';
 const click=(p,a)=>p.locator(`[data-action="${a}"]`).click();
-async function interview(p){
- await p.locator('[data-action="enter-interview"]').waitFor();
- const ids=await p.evaluate(()=>state.interview.questions.map(q=>q.id));
- assert.equal(new Set(ids).size,3);
- await click(p,'enter-interview');
- for(let i=0;i<3;i++){
-  await p.locator('[data-action="interview-answer"]').first().click();
- }
-}
+const {interview}=require('./puzzles.cjs');
 
 async function choose(p,key,value){await p.locator(`[data-select-wrap="${key}"] .select-trigger`).click();await p.locator(`[data-select-wrap="${key}"] [data-value="${value}"]`).click();}
 async function noOverflow(p){assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));}
@@ -31,6 +23,30 @@ for(const target of await p.locator('.allocate-card').all()){
  const box=await target.boundingBox();
  assert(box.y>=0&&box.y+box.height<=568,'allocation target visible without scrolling');
 }
+const diceColors=new Set();
+for(const theme of ['campus','retro','hongkong']){
+ await p.locator('#theme-button').click();await p.locator(`[data-theme-choice="${theme}"]`).click();await p.locator('#close-themes').click();
+ assert.equal(await p.locator('.dice-tray .die').count(),6);
+ assert.deepEqual(await p.locator('.dice-tray .die').evaluateAll(ds=>ds.map(d=>d.querySelectorAll('.pip').length)),[1,2,3,4,5,6]);
+ diceColors.add(await p.locator('.dice-tray .die').first().evaluate(d=>getComputedStyle(d).backgroundColor));
+ await noOverflow(p);
+}
+assert.equal(diceColors.size,3);
+await p.reload();await click(p,'resume');assert.equal(await p.locator('html').getAttribute('data-theme'),'hongkong');
+const orders=await p.evaluate(()=>{
+ const history=miniHistory,base=miniBank.map(g=>g.id),result=[];
+ miniHistory=[];
+ for(let i=0;i<5;i++){
+  const order=variedMiniOrder(base).slice(0,6);
+  result.push({ids:order,types:order.map(miniType)});
+  miniHistory=[...miniHistory,...order].slice(-36);
+ }
+ miniHistory=history;
+ return result;
+});
+assert(orders.every(({types})=>new Set(types).size===6));
+assert(orders.slice(1).every(({ids},i)=>ids.some(id=>!orders[i].ids.includes(id))));
+assert.equal(new Set(orders.flatMap(({types})=>types)).size,7);
 await p.screenshot({path:'/tmp/daiwan-compact-dice.png'});
 await p.setViewportSize({width:390,height:844});
 await p.evaluate(()=>{state.route='apply';state.rank=5;state.round=5;state.attrs=[85,85,85,85,85];state.aptitude=[75,75,75,75,75];state.portfolio=90;state.gsat=Object.fromEntries(GSAT.map(s=>[s,15]));state.history=TERMS.map(term=>({term,total:90,correct:2,gameScore:100}));state.preferences=['tku-0','fcu-0','fju-0'];welcome=false;resetFilters();go('universities');});

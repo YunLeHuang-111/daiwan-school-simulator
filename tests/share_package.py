@@ -16,8 +16,14 @@ assert all(p.get('verifiedOn') and p.get('source','').startswith('https://') for
 m=json.loads((OUT/'minigames.json').read_text());assert all(g['type']!='lyric-fill' for g in m)
 assert {g['type'] for g in m if g['id'] in ['lyrics','singer','lyric-artist']}=={'lyrics','singer','lyric-singer'}
 assert "u.abbr+' / STUDENT ID'" not in app and '${u.abbr} / STUDENT ID' not in app
-interviews=json.loads((OUT/'interviews.json').read_text())
-assert len(interviews)==len({q['prompt'] for q in interviews})==150
-assert all({o['style'] for o in q['options']}==set(range(4)) and len(q['options'])==4 for q in interviews)
+assert {g['type'] for g in m}>={'pattern','maze','sum','memory','order','spot'}
+assert not (OUT/'interviews.json').exists()
+assert "'interview-answer'" not in app
+questions={q['id']:q for q in json.loads((OUT/'runtime-data.json').read_text())['questions']}
+for song in json.loads((OUT/'songs.json').read_text()):
+ for qid in song.get('questionIds',[]):
+  q=questions[qid]
+  if q['theme']=='歌詞猜歌名':
+   assert song['excerpt'] in q['text'] and song['title']==q['options'][int(q['key'])],qid
 assert (OUT/'.nojekyll').is_file()
 print('PASS: static release, relative paths, verified programs, music modes, student card, asset hashes.')
