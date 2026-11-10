@@ -1179,7 +1179,7 @@
     ]
   },
   {"id": "stack", "name": "房子疊疊樂", "type": "stack", "attr": 3, "image": "stage"},
-  {"id": "football", "name": "足球攻防", "type": "football", "attr": 0, "image": "baseball"},
+  {"id": "relay", "name": "記憶接力・限時版", "type": "relay", "attr": 0, "image": "stage"},
   {"id": "recycle", "name": "校園垃圾分類", "type": "recycle", "attr": 2, "image": "lab"},
   {"id": "luck", "name": "校慶幸運袋", "type": "luck", "attr": 4, "image": "stage"}
 ]

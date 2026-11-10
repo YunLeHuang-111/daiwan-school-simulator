@@ -303,16 +303,21 @@
 .answer-result small{color:var(--muted)}
 .event-changes{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}
 .event-changes span,.school-perk{background:var(--theme-soft);padding:4px 8px;border-radius:5px;font-weight:700}
-.stack-board{position:relative;height:126px;max-width:360px;margin:10px auto;background:var(--theme-soft);border-bottom:4px solid var(--green);border-radius:9px}
+.stack-board{position:relative;height:146px;max-width:360px;margin:10px auto;background:var(--theme-soft);border-bottom:4px solid var(--green);border-radius:9px}
 .stack-floor{position:absolute;transform:translateX(-50%);width:24%;height:18px;background:repeating-linear-gradient(90deg,#c6754c 0 10px,#ffcf92 10px 17px);border:1px solid #854225;border-radius:4px}
 .stack-slider{background:repeating-linear-gradient(90deg,#397d70 0 10px,#9bddc5 10px 17px);border-color:#214a42}
-.football-field{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;background:#deead6;border:2px solid #96b484;padding:8px;border-radius:10px}
-.football-field button{padding:6px;min-width:0;display:grid;justify-items:center;line-height:1.3}
-.football-field b,.puzzle-item span{font-size:1.6rem}
-.football-field span{font-size:.8rem}
+.puzzle-item span{font-size:1.6rem}
 .puzzle-item{text-align:center;font-weight:800;margin:4px}
 .recycle-grid,.luck-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 @media(max-width:760px){
  .stage-dice .dice-tray[data-seven=true]{grid-template-columns:repeat(7,minmax(0,1fr))}
  .stage-dice .dice-tray[data-seven=true] .die{width:28px;height:28px}
 }
+
+.stack-guide{position:absolute;inset-block:4px 0;border-left:1px dashed var(--muted);opacity:.6}
+.relay-clock,.relay-feedback{text-align:center;font-weight:700;margin:6px 0}
+.relay-clock strong{font-size:1.25em;font-variant-numeric:tabular-nums}
+.relay-feedback{color:#a84137}
+.relay-sequence{display:flex;justify-content:center;gap:clamp(4px,2vw,10px);margin:12px 0}
+.relay-sequence b{display:grid;place-items:center;min-width:0;width:2.2em;aspect-ratio:1;border:1px solid var(--line);border-radius:7px;background:var(--theme-soft)}
+.relay-grid{grid-template-columns:repeat(3,minmax(0,1fr))}

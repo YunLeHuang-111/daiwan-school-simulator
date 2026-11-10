@@ -4,7 +4,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
 const BASE=process.env.TEST_URL||'http://localhost:8080';
 const BANK=Object.fromEntries(fs.readFileSync(path.join(__dirname,'../data/questions.tsv'),'utf8').split('\n').filter(s=>s&&!s.startsWith('#')).map(s=>{const a=s.split('|');return[a[0],a];}));
 const click=(p,a)=>p.locator(`[data-action="${a}"]`).click();
-const {interview,solvePuzzle,missPuzzle}=require('./puzzles.cjs');
+const {interview,solvePuzzle,missPuzzle,beginRelay,expireRelay}=require('./puzzles.cjs');
 
 async function answer(p){const q=await p.evaluate(()=>state.paper.questions[state.paper.index]),key=BANK[q.id][8];
  if(q.type==='choice')await p.locator(`[data-action="answer"][data-id="${key}"]`).click();
@@ -91,6 +91,31 @@ async function win(p){if(await p.locator('[data-action="memory-ready"]').count()
    assert.equal(await p.locator('[data-action=mini-answer]').count(),0);
   }
   const gameStart=await p.evaluate(()=>structuredClone(state));await win(p);
+  if(source.type==='stack'){
+   const board=await p.evaluate(()=>state.game.puzzle);
+   assert.equal(board.floors.length,6);
+   assert(await p.evaluate(()=>stackWidth(5)<stackWidth(1)&&stackTolerance(4)<stackTolerance(0)));
+  }
+  if(source.type==='relay'){
+   await p.evaluate(s=>{state=structuredClone(s);go('game');},gameStart);
+   await click(p,'puzzle-start');
+   assert.equal(await p.locator('.relay-sequence b').count(),4);
+   const deadline=await p.evaluate(()=>state.game.puzzle.deadline);
+   await resume(p);
+   assert.equal(await p.evaluate(()=>state.game.puzzle.deadline),deadline);
+   await beginRelay(p);
+   await expireRelay(p);
+   assert.equal(await p.evaluate(()=>state.game.mistakes),1);
+   assert.equal(await p.evaluate(()=>state.game.puzzle.steps),0);
+   // A pre-update football save should resume on the same semester's dice page.
+   await p.evaluate(s=>{
+    state=structuredClone(s);state.gameOrder[0]='football';state.game={id:'football',type:'football',done:false};save();
+   },gameStart);
+   await resume(p);
+   assert.equal(await p.evaluate(()=>state.stage),'dice');
+   await click(p,'start-game');
+   assert.equal(await p.evaluate(()=>state.game.type),'relay');
+  }
   if(source.type==='luck'){
    await p.evaluate(s=>{state=s;go('game');},gameStart);
    await p.locator(`[data-action="puzzle-tile"][data-id="${gameStart.game.puzzle.prizes.indexOf(60)}"]`).click();
