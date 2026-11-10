@@ -38,11 +38,15 @@ function gradeForm(p,subjects,round,wrong=false){const form={mode:p.mode,subject
  }
  assert.equal(used.length,54);assert.equal(termCategories.size,12);
  const termHistory=[],sets=[];
- for(const seed of [160,161,162,163]){
+ for(const seed of [160,161,162,163,164,165]){
   const ids=[],categories=new Set();
   for(let round=0;round<6;round++){
    const paper=await parity('paper',{mode:'term',seed,round,used:ids.join(','),seen:termHistory.join(','),termHistory:termHistory.join(',')});
-   for(const q of paper.questions){ids.push(q.id);categories.add(termCategory(q));}
+   for(const q of paper.questions){
+    if(q.theme.includes('麻將'))assert.equal(seed%6,0);
+    if(q.theme==='柯南案卷')assert.equal(q.difficulty,2);
+    ids.push(q.id);categories.add(termCategory(q));
+   }
   }
   assert.equal(categories.size,12);
   termHistory.push(...ids);sets.push(categories);

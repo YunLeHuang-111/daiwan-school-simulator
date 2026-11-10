@@ -261,12 +261,49 @@
 .interview-paper>.primary,.game-panel>[data-action=puzzle-ready]{display:block;margin:10px auto}
 [data-theme=campus] .dice-tray .die{background:#fff4d2;border:1px solid #bb985d;box-shadow:0 3px 0 #ae8b55,inset 0 0 0 2px #fff9ec}
 [data-theme=campus] .dice-tray .pip{background:#285345}
-[data-theme=retro] .dice-tray .die{background:#f7aa75;border:2px solid #7a3222;box-shadow:0 3px 0 #7a3222;border-radius:50%}
-[data-theme=retro] .dice-tray .pip{background:#482418;border-radius:1px;transform:rotate(45deg) scale(.85)}
-[data-theme=hongkong] .dice-tray .die{background:#174d50;border:1px solid #f3b976;box-shadow:0 0 5px #f3b976,0 3px 0 #173e46;border-radius:3px}
-[data-theme=hongkong] .dice-tray .pip{background:#ffe0a5;box-shadow:0 0 3px #f3b976}
+[data-theme=retro] .dice-tray .die{
+ position:relative;display:grid;place-items:center;grid-template:none;padding:0;border-radius:50%;
+ background:repeating-conic-gradient(#f8d29c 0 15deg,#9f402b 15deg 45deg);
+ border:1px solid #793220;box-shadow:0 3px 0 #793220;
+}
+.chip-value{display:none}
+[data-theme=retro] .dice-tray .die i{display:none}
+[data-theme=retro] .dice-tray .chip-value{
+ display:grid;place-items:center;width:72%;height:72%;border-radius:50%;font-size:1em;
+ color:#6b2c22;background:#fff1d4;border:1px solid #a44935;line-height:1;
+}
+[data-theme=hongkong] .dice-tray .die{background:#fff;border:1px solid #a5a5a5;border-radius:7px;box-shadow:0 3px 0 #a3a3a3,inset 0 0 0 1px #f2f2f2}
+[data-theme=hongkong] .dice-tray .pip{background:#232323;box-shadow:none}
 .answer-help:empty{display:none}
 .help-steps{padding-inline-start:1.4rem;margin:12px 0}
 .help-steps li{margin-bottom:10px}
 .help-steps p{margin:2px 0}
 #help-dialog details{margin-bottom:14px}
+
+
+.school-progress{
+ display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;margin:0 0 14px;padding:7px 11px;
+ color:var(--theme-ink);background:var(--theme-soft);border-left:4px solid var(--green);border-radius:5px;
+}
+.school-progress strong{font-size:1.05rem}
+.school-progress span{font-size:.95rem;font-weight:700}
+.resume .school-progress{margin:0}
+.preference-hint{font-size:13px;margin:7px 0 0;color:var(--theme-ink)}
+.preferences li[data-preference-id]{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center}
+.preferences li .preference-controls{display:flex;flex-direction:column;align-items:center;margin:0;gap:2px}
+.preferences .preference-controls .preference-handle{
+ touch-action:none;user-select:none;cursor:grab;font-size:22px;line-height:1;
+ width:38px;min-height:36px;border:1px solid var(--line);background:var(--sheet);color:var(--theme-ink);
+}
+.preferences .preference-dragging{outline:2px solid var(--green);background:var(--theme-soft);cursor:grabbing}
+.preference-dragging .preference-handle{cursor:grabbing}
+@media(max-width:760px){
+ .school-progress{margin-bottom:8px;padding:4px 8px}
+ .school-progress strong{font-size:1rem}
+ .school-progress span{font-size:.875rem}
+}
+@media(max-width:760px){
+ .stage-dice .round-label{display:none}
+ .stage-dice .allocate-card small:not(.allocation-limit){display:none}
+ .stage-dice .allocate-card{padding-block:6px;line-height:1.35}
+}

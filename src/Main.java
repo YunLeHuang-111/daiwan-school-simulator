@@ -115,7 +115,7 @@ public class Main {
     // Retired questions remain available only to grade already-saved papers.
     static boolean active(Question q){
         return !(q.subject.equals("音樂")&&List.of("歌詞選字","歌手點名","emoji猜歌","歌名謎語").contains(q.theme))
-            &&!(List.of("英文","數學").contains(q.subject)&&q.difficulty>2&&!q.id.startsWith("advanced-match-"))
+            &&!(q.difficulty>2&&(q.subject.equals("英文")||q.subject.equals("數學")&&!q.id.startsWith("advanced-match-")))
             &&!(q.subject.equals("英文")&&List.of("Literary bookshelf","Authors and works").contains(q.theme))
             &&!(q.subject.equals("數學")&&List.of("數學史與解謎","數學史","典籍考古").contains(q.theme));
     }
@@ -177,8 +177,8 @@ public class Main {
         if(!song.isEmpty())used.add(song);
         categories.merge(questionCategory(q),1,Integer::sum);
     }
-    static Question pick(String label,String type,int level,Set<String> used,Set<String> seen,Set<String> current,Set<String> facts,Map<String,Integer> categories,Random random,String preferredTheme,boolean advanced,boolean term,Map<String,Integer> termCounts) {
-        List<Question> candidates=QUESTIONS.stream().filter(q->sources(label).contains(q.subject)&&q.type.equals(type)&&active(q)
+    static Question pick(String label,String type,int level,Set<String> used,Set<String> seen,Set<String> current,Set<String> facts,Map<String,Integer> categories,Random random,String preferredTheme,boolean advanced,boolean term,Map<String,Integer> termCounts,boolean allowMahjong) {
+        List<Question> candidates=QUESTIONS.stream().filter(q->sources(label).contains(q.subject)&&q.type.equals(type)&&active(q)&&(!term||allowMahjong||!q.theme.contains("麻將"))
             &&!used.contains(q.id)&&!current.contains(questionPrompt(q))&&questionFingerprints(q).stream().noneMatch(facts::contains)&&!used.contains(songKey(q))).toList();
         if(candidates.isEmpty())throw new IllegalArgumentException("本科題庫不足，無法再抽出未作答的題目。");
         List<Question> preferred=candidates.stream().filter(q->q.id.startsWith("advanced-match-")==advanced).toList();
@@ -202,8 +202,8 @@ public class Main {
         if(!fresh.isEmpty())candidates=fresh;
         List<Question> themed=candidates.stream().filter(q->q.theme.equals(preferredTheme)).toList();
         if(!themed.isEmpty())candidates=themed;
-        int distance=candidates.stream().mapToInt(q->Math.abs(q.difficulty-level)).min().orElseThrow();
-        List<Question> nearest=candidates.stream().filter(q->Math.abs(q.difficulty-level)==distance).toList();
+        int distance=candidates.stream().mapToInt(q->Math.abs(q.difficulty-(term&&q.theme.equals("柯南案卷")?2:level))).min().orElseThrow();
+        List<Question> nearest=candidates.stream().filter(q->Math.abs(q.difficulty-(term&&q.theme.equals("柯南案卷")?2:level))==distance).toList();
         Question q=nearest.get(random.nextInt(nearest.size()));
         rememberQuestion(q,used,current,facts,categories);
         return q;
@@ -228,7 +228,8 @@ public class Main {
             if(q!=null&&q.type.equals("choice")&&termQuestion(q))termCounts.merge(termCategory(q),1,Integer::sum);
         }
         List<Object> result=new ArrayList<>();
-        Random r=new Random(seed(f)^mode.hashCode()^f.getOrDefault("round","0").hashCode()^subjects.toString().hashCode());
+        long paperSeed=seed(f);
+        Random r=new Random(paperSeed^mode.hashCode()^f.getOrDefault("round","0").hashCode()^subjects.toString().hashCode());
         int per=mode.equals("term")?1:3;
         for(String label:subjects){
             for(int j=0;j<per;j++){
@@ -239,7 +240,7 @@ public class Main {
                 if(label.equals("英文"))level=2;
                 if(label.startsWith("數學"))level=List.of("數學A","數學甲").contains(label)||ability>=75?2:1;
                 String theme=label.equals("英文")?(j==1?(r.nextBoolean()?"Screen matching":"Grammar matching"):j==0?"Movie clues":"Grammar practice"):label.startsWith("數學")?(type.equals("choice")&&r.nextBoolean()?"數學家點名":""):"";
-                Question q=pick(label,type,level,used,seen,current,facts,categories,r,theme,mode.equals("gsat")&&type.equals("match"),mode.equals("term"),termCounts);result.add(q.publicData(label));
+                Question q=pick(label,type,level,used,seen,current,facts,categories,r,theme,mode.equals("gsat")&&type.equals("match")&&!label.equals("英文"),mode.equals("term"),termCounts,paperSeed%6==0);result.add(q.publicData(label));
             }
         }
         json(ex,200,Map.of("mode",mode,"questions",result));

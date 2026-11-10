@@ -6,7 +6,7 @@ const {interview}=require('./puzzles.cjs');
 async function choose(p,key,value){await p.locator(`[data-select-wrap="${key}"] .select-trigger`).click();await p.locator(`[data-select-wrap="${key}"] [data-value="${value}"]`).click();}
 async function noOverflow(p){assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));}
 (async()=>{const b=await chromium.launch({channel:'chrome',headless:true});try{
-const p=await b.newPage({viewport:{width:390,height:844},reducedMotion:'reduce'}),errors=[];p.on('pageerror',e=>errors.push(e.message));
+const p=await b.newPage({viewport:{width:390,height:844},hasTouch:true,reducedMotion:'reduce'}),errors=[];p.on('pageerror',e=>errors.push(e.message));
 await p.goto(BASE+'#collection');await p.waitForSelector('.collection-page');assert.equal(await p.locator('.collection-school').count(),50);assert.equal(await p.locator('.collection-school[open]').count(),0);assert((await p.locator('.collection-summary').innerText()).includes('0 / 538'));await noOverflow(p);
 await p.locator('[data-university=nccu] summary').click();
 assert.equal(await p.locator('.collection-school[open] li.locked:visible').count(),36);
@@ -19,6 +19,7 @@ await p.locator('#player-name').fill('圖鑑試玩');await p.locator('#seed-inpu
 await p.setViewportSize({width:320,height:568});
 await p.evaluate(()=>{state.dice=[1,2,3,4,5,6];go('dice');});
 await noOverflow(p);
+assert.match(await p.locator('.school-progress').innerText(),/高一上學期/);
 for(const target of await p.locator('.allocate-card').all()){
  const box=await target.boundingBox();
  assert(box.y>=0&&box.y+box.height<=568,'allocation target visible without scrolling');
@@ -28,6 +29,10 @@ for(const theme of ['campus','retro','hongkong']){
  await p.locator('#theme-button').click();await p.locator(`[data-theme-choice="${theme}"]`).click();await p.locator('#close-themes').click();
  assert.equal(await p.locator('.dice-tray .die').count(),6);
  assert.deepEqual(await p.locator('.dice-tray .die').evaluateAll(ds=>ds.map(d=>d.querySelectorAll('.pip').length)),[1,2,3,4,5,6]);
+ if(theme==='retro'){
+  assert.deepEqual(await p.locator('.chip-value:visible').allTextContents(),['1','2','3','4','5','6']);
+  assert.equal(await p.locator('.dice-tray .pip:visible').count(),0);
+ }else assert.equal(await p.locator('.dice-tray .pip:visible').count(),21);
  diceColors.add(await p.locator('.dice-tray .die').first().evaluate(d=>getComputedStyle(d).backgroundColor));
  await noOverflow(p);
 }
@@ -76,6 +81,33 @@ assert.equal(await p.locator('.school-card h3').first().textContent(),'苔北大
 await p.locator('#catalog-search').fill('');
 const preferences=await p.evaluate(()=>JSON.stringify(state.preferences));await choose(p,'university','nycu');assert.equal(await p.locator('.school-card').count(),19);assert((await p.locator('.school-card h3').allTextContents()).every(s=>s==='楊明蕉通大學'));
 for(const sort of ['chance-asc','chance-desc']){await choose(p,'sort',sort);assert.equal(await p.evaluate(()=>JSON.stringify(state.preferences)),preferences);const values=(await p.locator('.program-fit>b').allTextContents()).map(t=>Number(t.replace('%','')));assert(values.every((n,i)=>!i||(sort==='chance-asc'?n>=values[i-1]:n<=values[i-1])));}
+assert.match(await p.locator('.school-progress').innerText(),/高三下學期/);
+const rows=p.locator('#preference-order li');
+const readOrder=()=>rows.evaluateAll(nodes=>nodes.map(row=>row.dataset.preferenceId));
+const initialOrder=await readOrder();
+await p.locator('#preferences-panel').evaluate(panel=>panel.scrollIntoView({block:'start',behavior:'instant'}));
+const firstHandle=await rows.first().locator('.preference-handle').boundingBox();
+const lastRow=await rows.last().boundingBox();
+const x=Math.round(firstHandle.x+firstHandle.width/2),startY=Math.round(firstHandle.y+firstHandle.height/2);
+const endY=Math.round(lastRow.y+lastRow.height-5);
+const cdp=await p.context().newCDPSession(p);
+await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y:startY}]});
+for(let i=1;i<=8;i++)await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:Math.round(startY+(endY-startY)*i/8)}]});
+await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+const rotated=[initialOrder[1],initialOrder[2],initialOrder[0]];
+assert.deepEqual(await readOrder(),rotated);
+assert.deepEqual(await p.evaluate(()=>JSON.parse(localStorage.getItem(KEY)).preferences),rotated);
+await rows.last().locator('.preference-handle').press('Home');
+assert.deepEqual(await readOrder(),initialOrder);
+// Mouse drag and keyboard ordering use the same persisted preference list.
+const lastHandle=await rows.last().locator('.preference-handle').boundingBox();
+const firstRow=await rows.first().boundingBox();
+await p.mouse.move(lastHandle.x+12,lastHandle.y+12);
+await p.mouse.down();
+await p.mouse.move(lastHandle.x+12,firstRow.y+4,{steps:8});
+await p.mouse.up();
+assert.deepEqual(await readOrder(),[initialOrder[2],initialOrder[0],initialOrder[1]]);
+assert.deepEqual(await p.evaluate(()=>state.preferences),await readOrder());
 await p.evaluate(()=>scrollTo(0,document.body.scrollHeight));await click(p,'review-preferences');await p.waitForFunction(()=>document.querySelector('[data-action="submit-universities"]').getBoundingClientRect().top>=0&&document.querySelector('[data-action="submit-universities"]').getBoundingClientRect().bottom<innerHeight);await p.screenshot({path:'/tmp/daiwan-mobile-preferences.png',fullPage:false});
 const current=await p.evaluate(()=>JSON.stringify(state));await p.locator('#collection-button').click();assert.equal(await p.locator('.collection-school').count(),50);assert.equal(await p.locator('.collection-school[open]').count(),0);await click(p,'close-collection');assert.equal(await p.evaluate(()=>JSON.stringify(state)),current);
 await p.setViewportSize({width:1440,height:1000});panel=await p.locator('#preferences-panel').boundingBox();list=await p.locator('.school-list').boundingBox();assert(panel.x>list.x,'desktop preferences remain on the right');
@@ -122,5 +154,5 @@ assert(await p.locator('[data-action=prepare-split]').isVisible());
 assert(await p.locator('[data-action=retake]').isVisible());
 await p.evaluate(()=>setRoute('apply'));
 assert.equal(await p.evaluate(()=>state.stage),'admissionResult');
-console.log('PASS: mobile submit placement/jump, desktop columns, university + rate filters, all-school collection with visible locked/unlocked departments, acceptance-only unlocks, persistence, backfill and deduplication, Chinese home labels.');
+console.log('PASS: touch, mouse and keyboard preference order, themed dice, school/grade banner, mobile submit placement/jump, desktop columns, university + rate filters, all-school collection with visible locked/unlocked departments, acceptance-only unlocks, persistence, backfill and deduplication, Chinese home labels.');
 }finally{await b.close();}})().catch(e=>{console.error(e);process.exitCode=1;});
