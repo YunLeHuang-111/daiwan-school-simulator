@@ -1,6 +1,207 @@
 {
   "checked": "2026-11-10",
-  "highSchools": [{"id":"hs0","name":"劍國中學"},{"id":"hs1","name":"北衣女中"},{"id":"hs2","name":"盅山女高"},{"id":"hs3","name":"苔盅女中"},{"id":"hs4","name":"獅大附中"},{"id":"hs5","name":"慈修高中"},{"id":"hs6","name":"言平中學"},{"id":"hs7","name":"筱銘女中"},{"id":"hs8","name":"雄盅中學"},{"id":"hs9","name":"南一中學"},{"id":"hs10","name":"竹盅中學"},{"id":"hs11","name":"武零高中"},{"id":"hs12","name":"松衫高中"},{"id":"hs13","name":"苔南女中"},{"id":"hs14","name":"薇歌中學"},{"id":"hs15","name":"港都中學"},{"id":"hs16","name":"苔盅一中"},{"id":"hs17","name":"彰花中學"},{"id":"hs18","name":"彰花女中"},{"id":"hs19","name":"嘉邑中學"},{"id":"hs20","name":"嘉邑女中"},{"id":"hs21","name":"新筑女中"},{"id":"hs22","name":"雄女中學"},{"id":"hs23","name":"城功高中"},{"id":"hs24","name":"北城高中"},{"id":"hs25","name":"海杉高中"},{"id":"hs26","name":"中侖中學"},{"id":"hs27","name":"永萍高中"},{"id":"hs28","name":"新甸高中"},{"id":"hs29","name":"竹柏中學"},{"id":"hs30","name":"豐園高中"},{"id":"hs31","name":"屏冬高中"},{"id":"hs32","name":"花連中學"},{"id":"hs33","name":"花連女中"},{"id":"hs34","name":"宜藍高中"},{"id":"hs35","name":"蘭楊女中"},{"id":"hs36","name":"復心中學"},{"id":"hs37","name":"再心中學"},{"id":"hs38","name":"華心中學"},{"id":"hs39","name":"金靈女中"},{"id":"hs40","name":"聖芯女中"},{"id":"hs41","name":"靜莘高中"},{"id":"hs42","name":"曉星女中"},{"id":"hs43","name":"衛稻中學"},{"id":"hs44","name":"普苔高中"},{"id":"hs45","name":"杏國中學"},{"id":"hs46","name":"道名中學"},{"id":"hs47","name":"聖公女中"},{"id":"hs48","name":"南杉高中"},{"id":"hs49","name":"曙光中學"}],
+  "highSchools": [
+    {
+      "id": "hs0",
+      "name": "劍國中學"
+    },
+    {
+      "id": "hs1",
+      "name": "北衣女中"
+    },
+    {
+      "id": "hs2",
+      "name": "盅山女高"
+    },
+    {
+      "id": "hs3",
+      "name": "苔盅女中"
+    },
+    {
+      "id": "hs4",
+      "name": "獅大附中"
+    },
+    {
+      "id": "hs5",
+      "name": "慈修高中"
+    },
+    {
+      "id": "hs6",
+      "name": "言平中學"
+    },
+    {
+      "id": "hs7",
+      "name": "筱銘女中"
+    },
+    {
+      "id": "hs8",
+      "name": "雄盅中學"
+    },
+    {
+      "id": "hs9",
+      "name": "南一中學"
+    },
+    {
+      "id": "hs10",
+      "name": "竹盅中學"
+    },
+    {
+      "id": "hs11",
+      "name": "武零高中"
+    },
+    {
+      "id": "hs12",
+      "name": "松衫高中"
+    },
+    {
+      "id": "hs13",
+      "name": "苔南女中"
+    },
+    {
+      "id": "hs14",
+      "name": "薇歌中學"
+    },
+    {
+      "id": "hs15",
+      "name": "港都中學"
+    },
+    {
+      "id": "hs16",
+      "name": "苔盅一中"
+    },
+    {
+      "id": "hs17",
+      "name": "彰花中學"
+    },
+    {
+      "id": "hs18",
+      "name": "彰花女中"
+    },
+    {
+      "id": "hs19",
+      "name": "嘉邑中學"
+    },
+    {
+      "id": "hs20",
+      "name": "嘉邑女中"
+    },
+    {
+      "id": "hs21",
+      "name": "新筑女中"
+    },
+    {
+      "id": "hs22",
+      "name": "雄女中學"
+    },
+    {
+      "id": "hs23",
+      "name": "城功高中"
+    },
+    {
+      "id": "hs24",
+      "name": "北城高中"
+    },
+    {
+      "id": "hs25",
+      "name": "海杉高中"
+    },
+    {
+      "id": "hs26",
+      "name": "中侖中學"
+    },
+    {
+      "id": "hs27",
+      "name": "永萍高中"
+    },
+    {
+      "id": "hs28",
+      "name": "新甸高中"
+    },
+    {
+      "id": "hs29",
+      "name": "竹柏中學"
+    },
+    {
+      "id": "hs30",
+      "name": "豐園高中"
+    },
+    {
+      "id": "hs31",
+      "name": "屏冬高中"
+    },
+    {
+      "id": "hs32",
+      "name": "花連中學"
+    },
+    {
+      "id": "hs33",
+      "name": "花連女中"
+    },
+    {
+      "id": "hs34",
+      "name": "宜藍高中"
+    },
+    {
+      "id": "hs35",
+      "name": "蘭楊女中"
+    },
+    {
+      "id": "hs36",
+      "name": "復心中學"
+    },
+    {
+      "id": "hs37",
+      "name": "再心中學"
+    },
+    {
+      "id": "hs38",
+      "name": "華心中學"
+    },
+    {
+      "id": "hs39",
+      "name": "金靈女中"
+    },
+    {
+      "id": "hs40",
+      "name": "聖芯女中"
+    },
+    {
+      "id": "hs41",
+      "name": "靜莘高中"
+    },
+    {
+      "id": "hs42",
+      "name": "曉星女中"
+    },
+    {
+      "id": "hs43",
+      "name": "衛稻中學"
+    },
+    {
+      "id": "hs44",
+      "name": "普苔高中"
+    },
+    {
+      "id": "hs45",
+      "name": "杏國中學"
+    },
+    {
+      "id": "hs46",
+      "name": "道名中學"
+    },
+    {
+      "id": "hs47",
+      "name": "聖公女中"
+    },
+    {
+      "id": "hs48",
+      "name": "南杉高中"
+    },
+    {
+      "id": "hs49",
+      "name": "曙光中學"
+    }
+  ],
   "universities": [
     {
       "id": "ntu",
@@ -1343,6 +1544,11 @@
         "exampleCode": "0001",
         "exampleScore": 265.5,
         "exampleMaximum": 300.0
+      },
+      "applyFloor": 77.8,
+      "applyReference": {
+        "source": "https://www.cac.edu.tw/CacLink/apply115/115Apply_sievE_Result_querY_615JG8Wgh9d/html_sieve_result_115_Zx57f1dW/Standard/report/001.htm",
+        "note": "社會10、英文10、國文15"
       }
     },
     {
@@ -1672,6 +1878,11 @@
         "exampleCode": "0032",
         "exampleScore": 210.0,
         "exampleMaximum": 240.0
+      },
+      "applyFloor": 96.7,
+      "applyReference": {
+        "source": "https://www.cac.edu.tw/CacLink/apply115/115Apply_sievE_Result_querY_615JG8Wgh9d/html_sieve_result_115_Zx57f1dW/Standard/report/001.htm",
+        "note": "國英數A自58"
       }
     },
     {
@@ -2325,6 +2536,11 @@
         "exampleCode": "0731",
         "exampleScore": 279.0,
         "exampleMaximum": 300.0
+      },
+      "applyFloor": 96.7,
+      "applyReference": {
+        "source": "https://www.cac.edu.tw/CacLink/apply115/115Apply_sievE_Result_querY_615JG8Wgh9d/html_sieve_result_115_Zx57f1dW/Standard/report/013.htm",
+        "note": "醫師組國英數A自58"
       }
     },
     {
@@ -2490,6 +2706,11 @@
         "exampleCode": "0230",
         "exampleScore": 168.5,
         "exampleMaximum": 210.0
+      },
+      "applyFloor": 84.4,
+      "applyReference": {
+        "source": "https://www.cac.edu.tw/CacLink/apply115/115Apply_sievE_Result_querY_615JG8Wgh9d/html_sieve_result_115_Zx57f1dW/Standard/report/004.htm",
+        "note": "英文＋社會24、國文14"
       }
     },
     {
@@ -2900,6 +3121,11 @@
         "exampleCode": "0344",
         "exampleScore": 234.75,
         "exampleMaximum": 285.0
+      },
+      "applyFloor": 82.2,
+      "applyReference": {
+        "source": "https://www.cac.edu.tw/CacLink/apply115/115Apply_sievE_Result_querY_615JG8Wgh9d/html_sieve_result_115_Zx57f1dW/Standard/report/006.htm",
+        "note": "社會12、英文11、國文14"
       }
     },
     {
@@ -3147,6 +3373,11 @@
         "exampleCode": "0414",
         "exampleScore": 306.0,
         "exampleMaximum": 360.0
+      },
+      "applyFloor": 88.3,
+      "applyReference": {
+        "source": "https://www.cac.edu.tw/CacLink/apply115/115Apply_sievE_Result_querY_615JG8Wgh9d/html_sieve_result_115_Zx57f1dW/Standard/report/006.htm",
+        "note": "國英數B社53"
       }
     },
     {
@@ -3189,6 +3420,11 @@
         "exampleCode": "0366",
         "exampleScore": 328.0,
         "exampleMaximum": 390.0
+      },
+      "applyFloor": 85.0,
+      "applyReference": {
+        "source": "https://www.cac.edu.tw/CacLink/apply115/115Apply_sievE_Result_querY_615JG8Wgh9d/html_sieve_result_115_Zx57f1dW/Standard/report/006.htm",
+        "note": "國英數A社51"
       }
     },
     {
@@ -5404,6 +5640,11 @@
         "exampleCode": "2221",
         "exampleScore": 235.25,
         "exampleMaximum": 315.0
+      },
+      "applyFloor": 66.7,
+      "applyReference": {
+        "source": "https://www.cac.edu.tw/CacLink/apply115/115Apply_sievE_Result_querY_615JG8Wgh9d/html_sieve_result_115_Zx57f1dW/Standard/report/041.htm",
+        "note": "英文6、社會11、國文13"
       }
     },
     {
@@ -5609,6 +5850,11 @@
         "exampleCode": "2251",
         "exampleScore": 243.0,
         "exampleMaximum": 345.0
+      },
+      "applyFloor": 82.2,
+      "applyReference": {
+        "source": "https://www.cac.edu.tw/CacLink/apply115/115Apply_sievE_Result_querY_615JG8Wgh9d/html_sieve_result_115_Zx57f1dW/Standard/report/041.htm",
+        "note": "英數A自37"
       }
     },
     {
@@ -5650,6 +5896,11 @@
         "exampleCode": "2252",
         "exampleScore": 239.0,
         "exampleMaximum": 300.0
+      },
+      "applyFloor": 85.0,
+      "applyReference": {
+        "source": "https://www.cac.edu.tw/CacLink/apply115/115Apply_sievE_Result_querY_615JG8Wgh9d/html_sieve_result_115_Zx57f1dW/Standard/report/041.htm",
+        "note": "國英數A自51"
       }
     },
     {
@@ -6267,6 +6518,11 @@
         "exampleCode": "3137",
         "exampleScore": 273.0,
         "exampleMaximum": 300.0
+      },
+      "applyFloor": 88.3,
+      "applyReference": {
+        "source": "https://www.cac.edu.tw/CacLink/apply115/115Apply_sievE_Result_querY_615JG8Wgh9d/html_sieve_result_115_Zx57f1dW/Standard/report/109.htm",
+        "note": "國文12、數學A12、自然14、英文15"
       }
     },
     {
@@ -6308,6 +6564,11 @@
         "exampleCode": "3140",
         "exampleScore": 364.5,
         "exampleMaximum": 420.0
+      },
+      "applyFloor": 82.2,
+      "applyReference": {
+        "source": "https://www.cac.edu.tw/CacLink/apply115/115Apply_sievE_Result_querY_615JG8Wgh9d/html_sieve_result_115_Zx57f1dW/Standard/report/109.htm",
+        "note": "藥學組：數學A10、英文13、自然14"
       }
     },
     {
@@ -6804,6 +7065,11 @@
         "exampleCode": "0421",
         "exampleScore": 266.0,
         "exampleMaximum": 300.0
+      },
+      "applyFloor": 95.0,
+      "applyReference": {
+        "source": "https://www.cac.edu.tw/CacLink/apply115/115Apply_sievE_Result_querY_615JG8Wgh9d/html_sieve_result_115_Zx57f1dW/Standard/report/007.htm",
+        "note": "國英數A自57"
       }
     },
     {
@@ -6887,6 +7153,11 @@
         "exampleCode": "0426",
         "exampleScore": 280.5,
         "exampleMaximum": 330.0
+      },
+      "applyFloor": 90.0,
+      "applyReference": {
+        "source": "https://www.cac.edu.tw/CacLink/apply115/115Apply_sievE_Result_querY_615JG8Wgh9d/html_sieve_result_115_Zx57f1dW/Standard/report/007.htm",
+        "note": "英文13、自然14"
       }
     },
     {
@@ -11119,6 +11390,11 @@
         "exampleCode": "0033",
         "exampleScore": 280.0,
         "exampleMaximum": 300.0
+      },
+      "applyFloor": 98.3,
+      "applyReference": {
+        "source": "https://www.cac.edu.tw/CacLink/apply115/115Apply_sievE_Result_querY_615JG8Wgh9d/html_sieve_result_115_Zx57f1dW/Standard/report/001.htm",
+        "note": "國英數A自59"
       }
     },
     {
@@ -12141,6 +12417,11 @@
         "exampleCode": "0265",
         "exampleScore": 258.0,
         "exampleMaximum": 300.0
+      },
+      "applyFloor": 96.7,
+      "applyReference": {
+        "source": "https://www.cac.edu.tw/CacLink/apply115/115Apply_sievE_Result_querY_615JG8Wgh9d/html_sieve_result_115_Zx57f1dW/Standard/report/004.htm",
+        "note": "國英數A自58"
       }
     },
     {
@@ -12183,6 +12464,11 @@
         "exampleCode": "0266",
         "exampleScore": 270.0,
         "exampleMaximum": 300.0
+      },
+      "applyFloor": 98.3,
+      "applyReference": {
+        "source": "https://www.cac.edu.tw/CacLink/apply115/115Apply_sievE_Result_querY_615JG8Wgh9d/html_sieve_result_115_Zx57f1dW/Standard/report/004.htm",
+        "note": "國英數A自59"
       }
     },
     {
@@ -12388,6 +12674,11 @@
         "exampleCode": "0262",
         "exampleScore": 246.0,
         "exampleMaximum": 300.0
+      },
+      "applyFloor": 76.7,
+      "applyReference": {
+        "source": "https://www.cac.edu.tw/CacLink/apply115/115Apply_sievE_Result_querY_615JG8Wgh9d/html_sieve_result_115_Zx57f1dW/Standard/report/004.htm",
+        "note": "國英數A社46"
       }
     },
     {
@@ -15908,7 +16199,12 @@
       "examFloor": 71,
       "talentFloor": 49,
       "maxRank": 40,
-      "selectivity": "public"
+      "selectivity": "public",
+      "applyFloor": 78.3,
+      "applyReference": {
+        "source": "https://www.cac.edu.tw/CacLink/apply115/115Apply_sievE_Result_querY_615JG8Wgh9d/html_sieve_result_115_Zx57f1dW/Standard/report/099.htm",
+        "note": "國英數A社47"
+      }
     },
     {
       "id": "ntpu-moe-02311004",
@@ -15994,7 +16290,12 @@
       "examFloor": 71,
       "talentFloor": 49,
       "maxRank": 40,
-      "selectivity": "public"
+      "selectivity": "public",
+      "applyFloor": 83.3,
+      "applyReference": {
+        "source": "https://www.cac.edu.tw/CacLink/apply115/115Apply_sievE_Result_querY_615JG8Wgh9d/html_sieve_result_115_Zx57f1dW/Standard/report/099.htm",
+        "note": "法學組國英數B社50"
+      }
     },
     {
       "id": "ntpu-moe-02221005",
@@ -16080,7 +16381,12 @@
       "examFloor": 70,
       "talentFloor": 48,
       "maxRank": 40,
-      "selectivity": "public"
+      "selectivity": "public",
+      "applyFloor": 65.0,
+      "applyReference": {
+        "source": "https://www.cac.edu.tw/CacLink/apply115/115Apply_sievE_Result_querY_615JG8Wgh9d/html_sieve_result_115_Zx57f1dW/Standard/report/099.htm",
+        "note": "國英數A社39"
+      }
     },
     {
       "id": "ntpu-moe-05421033",

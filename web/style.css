@@ -131,3 +131,19 @@
 .achievement-filters{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 16px}
 .achievement-filters button{padding:5px 10px;min-height:34px;font-size:12px}
 .achievement-filters button[aria-pressed="true"]{background:#2869c6;border-color:#2869c6;color:#fff}
+
+.exam-clock{
+ display:flex;align-items:center;justify-content:space-between;gap:10px;
+ margin:0 0 10px;padding:6px 10px;border-radius:8px;background:#fff2d6;color:#75491a
+}
+.exam-clock small{font-size:11px}
+.stage-interview .answer{text-align:left}
+@media(max-width:760px){
+ .stage-interview,.stage-applyScreen{padding:12px 14px 26px}
+ .stage-interview .sidebar,.stage-applyScreen .sidebar{display:none}
+ .stage-interview .heading,.stage-applyScreen .heading{margin-bottom:10px}
+ .stage-interview .exam-paper{padding:12px}
+ .stage-interview .exam-paper h2{font-size:17px;line-height:1.5;margin:8px 0 12px}
+ .stage-interview .answers{gap:6px}
+ .stage-interview .answer{min-height:44px;padding:8px}
+}

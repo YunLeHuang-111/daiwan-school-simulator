@@ -189,30 +189,52 @@ public class Main {
         String mode=f.getOrDefault("mode","");List<String> subjects=labels(f,mode);
         String[] ids=f.getOrDefault("ids","").split(",");int count=mode.equals("term")?2:subjects.size()*3;
         if(ids.length!=count||new HashSet<>(List.of(ids)).size()!=count)throw new IllegalArgumentException("試卷題數不符或題號重複。");
-        Map<String,Double> earned=new LinkedHashMap<>(),possible=new LinkedHashMap<>();Map<String,Integer> counts=new HashMap<>();
+        boolean timed=!mode.equals("term")&&"1".equals(f.get("timed"));
+        Map<String,Double> earned=new LinkedHashMap<>(),possible=new LinkedHashMap<>();
+        Map<String,Integer> counts=new HashMap<>(),points=new HashMap<>(),choices=new HashMap<>();
         List<Object> review=new ArrayList<>();int correct=0;double sum=0,weight=0;
         for(int i=0;i<count;i++){
             final String id=ids[i];Question q=QUESTIONS.stream().filter(x->x.id.equals(id)).findFirst().orElseThrow(()->new IllegalArgumentException("題目不存在。"));
             String label=f.getOrDefault("label"+i,"");
             if(label.equals("英文")&&q.type.equals("fill"))throw new IllegalArgumentException("英文不使用填答題。");
             if(!subjects.contains(label)||!sources(label).contains(q.subject))throw new IllegalArgumentException("試題不屬於所選科目。");
-            double score=fraction(q,f.getOrDefault("a"+i,""));if(score==1)correct++;
-            double w=q.difficulty;earned.merge(label,score*w,Double::sum);possible.merge(label,w,Double::sum);counts.merge(label,1,Integer::sum);
-            sum+=score*w;weight+=w;review.add(Map.of("id",id,"fraction",score,"correct",score==1,"answer",q.key,"explanation",q.explanation));
+            boolean choice=timed&&q.type.equals("choice"),math=label.startsWith("數學");
+            int limit=math?60000:30000,ms=choice?integer(f.get("ms"+i),0,limit):0;
+            double score=choice&&ms>=limit?0:fraction(q,f.getOrDefault("a"+i,""));
+            if(score==1)correct++;
+            counts.merge(label,1,Integer::sum);
+            double w=q.difficulty;
+            sum+=score*w;weight+=w;
+            Map<String,Object> row=new LinkedHashMap<>(Map.of("id",id,"fraction",score,"correct",score==1,"answer",q.key,"explanation",q.explanation));
+            if(choice){
+                int[] edges=math?new int[]{8000,15000,20000,30000}:new int[]{5000,8000,10000,15000};
+                int value=score==1?5-(int)Arrays.stream(edges).filter(edge->ms>edge).count():0;
+                points.merge(label,value,Integer::sum);
+                choices.merge(label,1,Integer::sum);
+                row.put("points",value);
+            }else{
+                earned.merge(label,score*w,Double::sum);
+                possible.merge(label,w,Double::sum);
+            }
+            review.add(row);
         }
         int per=mode.equals("term")?1:3;
         if(subjects.stream().anyMatch(label->counts.getOrDefault(label,0)!=per))throw new IllegalArgumentException("各科題數不符。");
         if(mode.equals("term")){json(ex,200,Map.of("correct",correct,"exam",Math.round(sum/weight*100),"review",review));return;}
         Map<String,Integer> scores=new LinkedHashMap<>();int max=mode.equals("gsat")?15:60;
-        for(String label:subjects)scores.put(label,(int)Math.round(earned.get(label)/possible.get(label)*max));
+        for(String label:subjects){
+            double total=possible.getOrDefault(label,0.0);
+            double value=points.getOrDefault(label,0)+(total>0?earned.get(label)/total*(15-5*choices.getOrDefault(label,0)):0);
+            scores.put(label,(int)Math.round(value*(max/15)));
+        }
         json(ex,200,Map.of("scores",scores,"correct",correct,"review",review));
     }
-    record Program(String id,String university,int group,double threshold,int maxRank,List<String> gsat,List<String> split,double[] weights,double examFloor,double talentFloor,String selectivity){}
+    record Program(String id,String university,int group,double threshold,int maxRank,List<String> gsat,List<String> split,double[] weights,double examFloor,double talentFloor,String selectivity,Double applyFloor){}
     static final Map<String,Program> PROGRAMS=new HashMap<>();
     static{
         try{for(String line:Files.readAllLines(Path.of("data/programs.tsv"),StandardCharsets.UTF_8)){
             if(line.isBlank()||line.startsWith("#"))continue;String[] p=line.split("\\|",-1);
-            PROGRAMS.put(p[0],new Program(p[0],p[1],Integer.parseInt(p[2]),Double.parseDouble(p[3]),Integer.parseInt(p[4]),List.of(p[5].split(",")),List.of(p[6].split(",")),Arrays.stream(p[7].split(",")).mapToDouble(Double::parseDouble).toArray(),Double.parseDouble(p[8]),Double.parseDouble(p[9]),p[10]));
+            PROGRAMS.put(p[0],new Program(p[0],p[1],Integer.parseInt(p[2]),Double.parseDouble(p[3]),Integer.parseInt(p[4]),List.of(p[5].split(",")),List.of(p[6].split(",")),Arrays.stream(p[7].split(",")).mapToDouble(Double::parseDouble).toArray(),Double.parseDouble(p[8]),Double.parseDouble(p[9]),p[10],p.length>11?Double.parseDouble(p[11]):null));
         }}catch(IOException e){throw new ExceptionInInitializerError("找不到data/programs.tsv。");}
     }
     static double[] vector(String value){String[] p=value.split(",");if(p.length!=5)throw new IllegalArgumentException("需要五項能力。");return Arrays.stream(p).mapToDouble(x->number(x,0,100)).toArray();}
@@ -230,24 +252,31 @@ public class Main {
         double exam=sum/(subjects.size()+1)/(split?60:15)*100,talent=0;
         for(int i=0;i<5;i++)talent+=(attrs[i]*.65+apt[i]*.35)*p.weights[i];
         boolean art=List.of("ntua","tnua","tnnua").contains(p.university);
-        double score=art?switch(route){
-            case "star" -> exam*.2+(100-rank)*.15+talent*.65;
-            case "apply" -> exam*.2+talent*.65+portfolio*.15;
-            default -> exam*.25+talent*.75;
-        }:switch(route){
-            case "star" -> exam*.5+(100-rank)*.25+talent*.25;
-            case "apply" -> exam*.5+talent*.35+portfolio*.15;
-            default -> exam*.7+talent*.3;
+        boolean apply=route.equals("apply");
+        double examFloor=apply?(p.applyFloor!=null?p.applyFloor:art?55:Math.min(p.examFloor,94)):art?Math.min(p.examFloor,55):p.examFloor;
+        if(apply&&"screen".equals(f.get("phase"))){
+            boolean passed=exam>=examFloor;
+            json(ex,200,Map.of("accepted",passed,"score",Math.round(exam*10)/10.0,"floor",examFloor,
+                "chance",passed?100:0,"reason",passed?"通過一階":"未達一階學測門檻"));
+            return;
+        }
+        double interview=apply?number(f.getOrDefault("interview","75"),0,100):0;
+        double score=switch(route){
+            case "apply" -> exam*.4+talent*.3+interview*.3;
+            case "star" -> art?exam*.2+(100-rank)*.15+talent*.65:exam*.5+(100-rank)*.25+talent*.25;
+            default -> art?exam*.25+talent*.75:exam*.7+talent*.3;
         };
-        double examFloor=art?Math.min(p.examFloor,55):p.examFloor;
-        double talentFloor=art?Math.max(p.talentFloor,58):p.talentFloor;
+        double talentFloor=art?Math.max(p.talentFloor,58):apply?0:p.talentFloor;
         boolean qualified=!route.equals("star")||rank<=p.maxRank;
         boolean screened=exam>=examFloor&&talent>=talentFloor;
-        double chance=qualified&&screened?Math.max(0.5,Math.min(switch(p.selectivity){case "medical"->18;case "pharmacy"->25;case "top"->35;case "midTech"->46;case "midOther"->57;case "public"->70;case "privateTech"->83;default->98;},100/(1+Math.exp((p.threshold-score)/5)))):0;
+        boolean safety=apply&&"1".equals(f.get("safety"))&&screened&&exam>=100
+            &&List.of("public","privateTech","private").contains(p.selectivity);
+        int cap=switch(p.selectivity){case "medical"->18;case "pharmacy"->25;case "top"->35;case "midTech"->46;case "midOther"->57;case "public"->70;case "privateTech"->83;default->98;};
+        double chance=safety?100:qualified&&screened?Math.max(.5,Math.min(cap,100/(1+Math.exp((p.threshold-score)/5)))):0;
         double draw=new Random(seed(f)*6364136223846793005L^p.id.hashCode()^route.hashCode()).nextDouble()*100;
         boolean accepted=draw<chance;
         json(ex,200,Map.of("accepted",accepted,"score",Math.round(score*10)/10.0,"chance",Math.round(chance*10)/10.0,
-            "reason",!qualified?"在校排名未達門檻":!screened?exam<examFloor?"考試門檻未達標":"科系資質未達標":accepted?"錄取":"本輪未錄取"));
+            "reason",safety?"滿級分備用錄取":!qualified?"在校排名未達門檻":!screened?exam<examFloor?"考試門檻未達標":"科系資質未達標":accepted?"錄取":"本輪未錄取"));
     }
     static Map<String, String> form(HttpExchange ex) throws IOException {
         String contentType = ex.getRequestHeaders().getFirst("Content-Type");

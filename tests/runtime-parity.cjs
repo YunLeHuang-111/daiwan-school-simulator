@@ -38,11 +38,39 @@ function gradeForm(p,subjects,round,wrong=false){const form={mode:p.mode,subject
    const scoreFirst={...form,attrs:'50,50,50,75,75',aptitude:'50,50,50,65,70'};
    for(const s of subjects)scoreFirst['s.'+s]=max;
    const higherExam=await parity('admission',scoreFirst);
-   assert(artFirst.score>higherExam.score&&artFirst.chance>=higherExam.chance);
+   if(route!=='apply')assert(artFirst.score>higherExam.score&&artFirst.chance>=higherExam.chance);
+   else assert(higherExam.score>artFirst.score);
    const weak=await parity('admission',{...scoreFirst,attrs:'100,100,100,35,35',aptitude:'100,100,100,35,35'});
    assert.equal(weak.chance,0);
   }
  }
+ for(const [subject,mode,edges,limit] of [
+  ['英文','gsat',[5000,8000,10000,15000],30000],
+  ['數學A','gsat',[8000,15000,20000,30000],60000],
+  ['物理','split',[5000,8000,10000,15000],30000],
+ ]){
+  const form={mode,subjects:subject,round:4,previousRoute:'apply'};
+  const paper=await parity('paper',form);
+  const graded={...gradeForm(paper,subject,4),timed:'1'};
+  const choiceIndices=paper.questions.flatMap((q,i)=>q.type==='choice'?[i]:[]);
+  for(const i of choiceIndices)graded['ms'+i]=0;
+  const index=choiceIndices[0];
+  for(const [ms,points] of [...edges.flatMap((edge,i)=>[[edge,5-i],[edge+1,4-i]]),[limit,0]]){
+   const scores=await parity('grade',{...graded,['ms'+index]:ms});
+   assert.equal(scores.review[index].points,points);
+   assert.equal(scores.scores[subject],(10+points)*(mode==='split'?4:1));
+  }
+  const missed=await parity('grade',{...graded,['ms'+index]:limit,['a'+index]:'null'});
+  assert.equal(missed.review[index].fraction,0);
+ }
+ const option=data.programs.find(p=>p.id==='ntu-8');
+ const base={route:'apply',program:option.id,preferences:option.id,attrs:'80,80,80,80,80',aptitude:'80,80,80,80,80',portfolio:80,rank:5,seed:42};
+ for(const s of option.subjects)base['s.'+s]=15;
+ const screen=await parity('admission',{...base,phase:'screen'});
+ assert(screen.accepted&&screen.floor===option.applyFloor);
+ const better=await parity('admission',{...base,phase:'final',interview:90});
+ const weaker=await parity('admission',{...base,phase:'final',interview:60});
+ assert.equal(better.score-weaker.score,9);
  await parity('paper',{mode:'split',subjects:'物理'});await parity('enroll',{seed:5,gender:'other',schoolType:'公立'});
  console.log('PASS:',count,'Java/browser runtime parity cases, including seed boundaries, grading, selected subjects, admission.');
 })().catch(err=>{console.error(err);process.exitCode=1;});

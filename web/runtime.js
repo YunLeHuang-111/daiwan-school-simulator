@@ -59,24 +59,65 @@ class Engine {
   return {mode:f.mode,questions};
  }
  fraction(q,a){if(q.type==='choice')return int(a,0,q.options.length-1)===Number(q.key)?1:0;if(q.type==='fill'){if(!String(a??'').trim()||String(a).length>80)throw Error('請完成短填答（最多80字元）。');return q.key.split('/').some(k=>norm(k)===norm(a))?1:0;}const parts=String(a??'').split(',');if(parts.length!==q.left.length)throw Error('請完成所有配對。');const indices=parts.map(v=>int(v,0,q.options.length-1));if(new Set(indices).size!==parts.length)throw Error('配對選項不可重複。');const keys=q.key.split(',').map(Number);return indices.filter((v,i)=>v===keys[i]).length/parts.length;}
- grade(f){const subjects=labels(f),ids=String(f.ids??'').split(','),count=f.mode==='term'?2:subjects.length*3;if(ids.length!==count||new Set(ids).size!==count)throw Error('試卷題數不符或題號重複。');const earned={},possible={},counts={},review=[];let correct=0,sum=0,weight=0;
-  ids.forEach((id,i)=>{const q=this.questions.get(id),label=f['label'+i];if(!q)throw Error('題目不存在。');if(label==='英文'&&q.type==='fill')throw Error('英文不使用填答題。');if(!subjects.includes(label)||!sources(label).includes(q.subject))throw Error('試題不屬於所選科目。');const fraction=this.fraction(q,f['a'+i]);if(fraction===1)correct++;earned[label]=(earned[label]||0)+fraction*q.difficulty;possible[label]=(possible[label]||0)+q.difficulty;counts[label]=(counts[label]||0)+1;sum+=fraction*q.difficulty;weight+=q.difficulty;review.push({id,fraction,correct:fraction===1,answer:q.key,explanation:q.explanation});});
-  if(subjects.some(s=>counts[s]!== (f.mode==='term'?1:3)))throw Error('各科題數不符。');if(f.mode==='term')return {correct,exam:Math.round(sum/weight*100),review};const max=f.mode==='gsat'?15:60;return {scores:Object.fromEntries(subjects.map(s=>[s,Math.round(earned[s]/possible[s]*max)])),correct,review};
+ grade(f){
+  const subjects=labels(f),ids=String(f.ids??'').split(','),term=f.mode==='term',timed=!term&&f.timed==='1';
+  if(ids.length!==(term?2:subjects.length*3)||new Set(ids).size!==ids.length)throw Error('試卷題數不符或題號重複。');
+  const grades=new Map(subjects.map(s=>[s,{earned:0,weight:0,points:0,choices:0,count:0}]));
+  let correct=0,sum=0,weight=0;
+  const review=ids.map((id,i)=>{
+   const q=this.questions.get(id),label=f['label'+i],grade=grades.get(label);
+   if(!q)throw Error('題目不存在。');
+   if(label==='英文'&&q.type==='fill')throw Error('英文不使用填答題。');
+   if(!grade||!sources(label).includes(q.subject))throw Error('試題不屬於所選科目。');
+   const limit=label.startsWith('數學')?60000:30000,choice=timed&&q.type==='choice';
+   const ms=choice?int(f['ms'+i],0,limit):0;
+   const fraction=choice&&ms>=limit?0:this.fraction(q,f['a'+i]);
+   const result={id,fraction,correct:fraction===1,answer:q.key,explanation:q.explanation};
+   if(fraction===1)correct++;
+   grade.count++;
+   if(choice){
+    const edges=limit===60000?[8000,15000,20000,30000]:[5000,8000,10000,15000];
+    const points=fraction===1?5-edges.filter(edge=>ms>edge).length:0;
+    result.points=points;
+    grade.choices++;
+    grade.points+=points;
+   }else{
+    grade.earned+=fraction*q.difficulty;
+    grade.weight+=q.difficulty;
+   }
+   sum+=fraction*q.difficulty;weight+=q.difficulty;
+   return result;
+  });
+  if([...grades.values()].some(g=>g.count!==(term?1:3)))throw Error('各科題數不符。');
+  if(term)return {correct,exam:Math.round(sum/weight*100),review};
+  const multiplier=f.mode==='gsat'?1:4;
+  const scores=Object.fromEntries([...grades].map(([label,g])=>[
+   label,Math.round(multiplier*(g.points+(g.weight?g.earned/g.weight*(15-g.choices*5):0)))
+  ]));
+  return {scores,correct,review};
  }
  admission(f){const route=f.route;if(!['star','apply','distribution'].includes(route))throw Error('未知升學管道。');const ids=String(f.preferences??'').split(','),limit=route==='distribution'?10:3;if(ids.length>limit||!ids.length||new Set(ids).size!==ids.length)throw Error('志願數量不符。');const choices=ids.map(id=>this.programs.get(id));if(choices.some(p=>!p))throw Error('校系不存在。');if(route==='star'&&(new Set(choices.map(p=>p.university)).size!==1||new Set(choices.map(p=>p.group)).size!==1))throw Error('繁星僅能選一校、一類組，至多三系。');const p=this.programs.get(f.program);if(!p||!ids.includes(p.id))throw Error('校系不在志願內。');const attrs=vector(f.attrs),apt=vector(f.aptitude),portfolio=num(f.portfolio,0,100),rank=num(f.rank,1,100),split=route==='distribution',subjects=split?p.split:p.subjects;
   const sum=subjects.reduce((n,s,i)=>n+num(f['s.'+s],0,split?60:15)*(i===0?2:1),0),exam=sum/(subjects.length+1)/(split?60:15)*100,talent=p.weights.reduce((n,w,i)=>n+(attrs[i]*.65+apt[i]*.35)*w,0);
   const art=['ntua','tnua','tnnua'].includes(p.university);
-  const score=art
-   ? route==='star'?exam*.2+(100-rank)*.15+talent*.65
-    : route==='apply'?exam*.2+talent*.65+portfolio*.15:exam*.25+talent*.75
-   : route==='star'?exam*.5+(100-rank)*.25+talent*.25
-    : route==='apply'?exam*.5+talent*.35+portfolio*.15:exam*.7+talent*.3;
-  const examFloor=art?Math.min(p.examFloor,55):p.examFloor;
-  const talentFloor=art?Math.max(p.talentFloor,58):p.talentFloor;
+  const apply=route==='apply';
+  const examFloor=apply?(p.applyFloor??(art?55:Math.min(p.examFloor,94))):art?Math.min(p.examFloor,55):p.examFloor;
+  if(apply&&f.phase==='screen'){
+   const accepted=exam>=examFloor;
+   return {accepted,score:Math.round(exam*10)/10,floor:examFloor,chance:accepted?100:0,
+    reason:accepted?'通過一階':'未達一階學測門檻'};
+  }
+  const interview=apply?num(f.interview??75,0,100):0;
+  let score;
+  if(apply)score=exam*.4+talent*.3+interview*.3;
+  else if(route==='star')score=art?exam*.2+(100-rank)*.15+talent*.65:exam*.5+(100-rank)*.25+talent*.25;
+  else score=art?exam*.25+talent*.75:exam*.7+talent*.3;
+  const talentFloor=art?Math.max(p.talentFloor,58):apply?0:p.talentFloor;
   const qualified=route!=='star'||rank<=p.maxRank,screened=exam>=examFloor&&talent>=talentFloor;
-  const chance=qualified&&screened?Math.max(.5,Math.min(({medical:18,pharmacy:25,top:35,midTech:46,midOther:57,public:70,privateTech:83}[p.selectivity]??98),100/(1+Math.exp((p.threshold-score)/5)))):0;
+  const safety=apply&&f.safety==='1'&&screened&&exam>=100&&['public','privateTech','private'].includes(p.selectivity);
+  const cap={medical:18,pharmacy:25,top:35,midTech:46,midOther:57,public:70,privateTech:83}[p.selectivity]??98;
+  const chance=safety?100:qualified&&screened?Math.max(.5,Math.min(cap,100/(1+Math.exp((p.threshold-score)/5)))):0;
   const draw=new JavaRandom(BigInt.asIntN(64,BigInt(seed(f))*6364136223846793005n)^BigInt(hash(p.id))^BigInt(hash(route))).nextDouble()*100,accepted=draw<chance;
-  return {accepted,score:Math.round(score*10)/10,chance:Math.round(chance*10)/10,reason:!qualified?'在校排名未達門檻':!screened?(exam<examFloor?'考試門檻未達標':'科系資質未達標'):accepted?'錄取':'本輪未錄取'};
+  return {accepted,score:Math.round(score*10)/10,chance:Math.round(chance*10)/10,reason:safety?'滿級分備用錄取':!qualified?'在校排名未達門檻':!screened?(exam<examFloor?'考試門檻未達標':'科系資質未達標'):accepted?'錄取':'本輪未錄取'};
  }
 }
 let ready;

@@ -1,6 +1,16 @@
 const {chromium}=require('playwright'),assert=require('node:assert/strict');
 const BASE=process.env.TEST_URL||'http://localhost:8090/dist/';
 const click=(p,a)=>p.locator(`[data-action="${a}"]`).click();
+async function interview(p){
+ await p.locator('[data-action="enter-interview"]').waitFor();
+ const ids=await p.evaluate(()=>state.interview.questions.map(q=>q.id));
+ assert.equal(new Set(ids).size,3);
+ await click(p,'enter-interview');
+ for(let i=0;i<3;i++){
+  await p.locator('[data-action="interview-answer"]').first().click();
+ }
+}
+
 async function choose(p,key,value){await p.locator(`[data-select-wrap="${key}"] .select-trigger`).click();await p.locator(`[data-select-wrap="${key}"] [data-value="${value}"]`).click();}
 async function noOverflow(p){assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));}
 (async()=>{const b=await chromium.launch({channel:'chrome',headless:true});try{
@@ -55,7 +65,7 @@ const current=await p.evaluate(()=>JSON.stringify(state));await p.locator('#coll
 await p.setViewportSize({width:1440,height:1000});panel=await p.locator('#preferences-panel').boundingBox();list=await p.locator('.school-list').boundingBox();assert(panel.x>list.x,'desktop preferences remain on the right');
 // Use an actual successful admission result; an unaccepted offer must not unlock the collection.
 const chosen=await p.evaluate(async()=>{for(const q of programs){if(!eligibility(q))continue;const f={route:'apply',program:q.id,preferences:q.id,attrs:state.attrs.join(','),aptitude:state.aptitude.join(','),portfolio:state.portfolio,rank:state.rank,seed:state.originSeed};Object.entries(state.gsat).forEach(([s,v])=>f['s.'+s]=v);const r=await api('admission',f);if(r.accepted){state.preferences=[q.id];resetFilters();save();render();return q.id;}}});assert(chosen);
-await click(p,'submit-universities');await p.waitForSelector('[data-action="accept"]');assert.equal(await p.evaluate(()=>Object.keys(collection.programs).length),0);await click(p,'accept');assert.equal(await p.evaluate(()=>Object.keys(collection.programs).length),1);assert.equal(await p.evaluate(()=>state.newAchievements.length),5);
+await click(p,'submit-universities');await interview(p);await p.waitForSelector('[data-action="accept"]');assert.equal(await p.evaluate(()=>Object.keys(collection.programs).length),0);await click(p,'accept');assert.equal(await p.evaluate(()=>Object.keys(collection.programs).length),1);assert.equal(await p.evaluate(()=>state.newAchievements.length),5);
 assert.equal(await p.locator('.unlocked-banner b').count(),5);
 const accepted=await p.evaluate(()=>structuredClone(state)),first=await p.evaluate(()=>JSON.stringify(collection));
 await p.evaluate(()=>recordCollection());assert.equal(await p.evaluate(()=>JSON.stringify(collection)),first);
