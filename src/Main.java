@@ -98,8 +98,8 @@ public class Main {
     }
     static List<String> sources(String label) {
         return switch(label){
-            case "流行文化" -> List.of("影視","動漫","體育","時事","音樂");
-            case "生活推理" -> List.of("國文","英文","數學","自然","歷史","地理","公民","藝術","常識");
+            case "流行文化" -> List.of("校園趣聞","影視","動漫","體育","時事","音樂");
+            case "生活推理" -> List.of("校園趣聞","國文","英文","數學","自然","歷史","地理","公民","藝術","常識");
             case "數學A","數學B","數學甲","數學乙" -> List.of("數學");
             case "自然" -> List.of("自然","物理","化學","生物");
             case "社會" -> List.of("歷史","地理","公民");
@@ -125,10 +125,53 @@ public class Main {
         int start=q.text.indexOf('《'), end=q.text.indexOf('》',start+1);
         return start>=0&&end>start+1?"song:"+q.text.substring(start+1,end):"";
     }
-    static Question pick(String label,String type,int level,Set<String> used,Set<String> seen,Set<String> current,Random random,String preferredTheme) {
+    static String questionPrompt(Question q){
+        return normalized(q.text).replaceAll("[\\p{P}\\p{S}]","");
+    }
+    static List<String> questionFingerprints(Question q){
+        List<String> parts=new ArrayList<>();
+        if(q.type.equals("match")){
+            String[] keys=q.key.split(",");
+            for(int i=0;i<keys.length;i++)parts.add(normalized(q.left.get(i))+"="+normalized(q.options.get(Integer.parseInt(keys[i]))));
+            Collections.sort(parts);
+            return List.of("pairs:"+String.join("|",parts));
+        }
+        if(q.type.equals("choice")){
+            String answer=normalized(q.options.get(Integer.parseInt(q.key)));
+            if(answer.matches("(?s).*\\p{L}{2}.*")){
+                List<String> distractors=q.options.stream().map(Main::normalized).filter(option->!option.equals(answer)).sorted().toList();
+                for(int i=0;i<distractors.size();i++){
+                    for(int j=i+1;j<distractors.size();j++)parts.add("options:"+answer+"|"+distractors.get(i)+"|"+distractors.get(j));
+                }
+                return parts;
+            }
+        }
+        return List.of();
+    }
+    static String questionCategory(Question q){
+        if(q.subject.equals("校園趣聞"))return q.theme;
+        if(q.subject.equals("體育")&&q.text.matches("(?s).*(棒球|職棒|投手|打者|壘).*"))return "棒球";
+        if(q.theme.contains("麻將"))return "麻將";
+        return q.subject+"："+q.theme;
+    }
+    static void rememberQuestion(Question q,Set<String> used,Set<String> current,Set<String> facts,Map<String,Integer> categories){
+        used.add(q.id);
+        current.add(questionPrompt(q));
+        facts.addAll(questionFingerprints(q));
+        String song=songKey(q);
+        if(!song.isEmpty())used.add(song);
+        categories.merge(questionCategory(q),1,Integer::sum);
+    }
+    static Question pick(String label,String type,int level,Set<String> used,Set<String> seen,Set<String> current,Set<String> facts,Map<String,Integer> categories,Random random,String preferredTheme) {
         List<Question> candidates=QUESTIONS.stream().filter(q->sources(label).contains(q.subject)&&q.type.equals(type)&&active(q)
-            &&!used.contains(q.id)&&!current.contains(normalized(q.text))&&!used.contains(songKey(q))).toList();
+            &&!used.contains(q.id)&&!current.contains(questionPrompt(q))&&questionFingerprints(q).stream().noneMatch(facts::contains)&&!used.contains(songKey(q))).toList();
         if(candidates.isEmpty())throw new IllegalArgumentException("本科題庫不足，無法再抽出未作答的題目。");
+        List<Question> trivia=candidates.stream().filter(q->q.subject.equals("校園趣聞")).toList();
+        if(!trivia.isEmpty())candidates=trivia;
+        if(preferredTheme.isEmpty()){
+            int least=candidates.stream().mapToInt(q->categories.getOrDefault(questionCategory(q),0)).min().orElseThrow();
+            candidates=candidates.stream().filter(q->categories.getOrDefault(questionCategory(q),0)==least).toList();
+        }
         List<Question> fresh=candidates.stream().filter(q->!seen.contains(q.id)).toList();
         if(!fresh.isEmpty())candidates=fresh;
         List<Question> themed=candidates.stream().filter(q->q.theme.equals(preferredTheme)).toList();
@@ -136,9 +179,7 @@ public class Main {
         int distance=candidates.stream().mapToInt(q->Math.abs(q.difficulty-level)).min().orElseThrow();
         List<Question> nearest=candidates.stream().filter(q->Math.abs(q.difficulty-level)==distance).toList();
         Question q=nearest.get(random.nextInt(nearest.size()));
-        current.add(normalized(q.text));
-        String song=songKey(q);
-        if(!song.isEmpty())used.add(song);
+        rememberQuestion(q,used,current,facts,categories);
         return q;
     }
     static void paper(HttpExchange ex,Map<String,String> f)throws IOException {
@@ -150,11 +191,9 @@ public class Main {
         Set<String> used=new HashSet<>(List.of(f.getOrDefault("used","").split(","))),current=new HashSet<>();
         Set<String> seen=new HashSet<>(List.of(f.getOrDefault("seen","").split(",")));
         used.remove("");
-        for(Question q:QUESTIONS)if(used.contains(q.id)){
-            current.add(normalized(q.text));
-            String song=songKey(q);
-            if(!song.isEmpty())used.add(song);
-        }
+        Set<String> facts=new HashSet<>();
+        Map<String,Integer> categories=new HashMap<>();
+        for(Question q:QUESTIONS)if(used.contains(q.id))rememberQuestion(q,used,current,facts,categories);
         List<Object> result=new ArrayList<>();
         Random r=new Random(seed(f)^mode.hashCode()^f.getOrDefault("round","0").hashCode()^subjects.toString().hashCode());
         int per=mode.equals("term")?1:3;
@@ -167,7 +206,7 @@ public class Main {
                 if(label.equals("英文"))level=2;
                 if(label.startsWith("數學"))level=List.of("數學A","數學甲").contains(label)||ability>=75?2:1;
                 String theme=label.equals("英文")?(j==1?(r.nextBoolean()?"Screen matching":"Grammar matching"):j==0?"Movie clues":"Grammar practice"):label.startsWith("數學")?(type.equals("choice")&&r.nextBoolean()?"數學家點名":""):"";
-                Question q=pick(label,type,level,used,seen,current,r,theme);result.add(q.publicData(label));
+                Question q=pick(label,type,level,used,seen,current,facts,categories,r,theme);result.add(q.publicData(label));
             }
         }
         json(ex,200,Map.of("mode",mode,"questions",result));

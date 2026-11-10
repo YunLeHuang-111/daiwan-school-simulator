@@ -8,7 +8,7 @@ BASE=sys.argv[1] if len(sys.argv)>1 else 'http://localhost:8080'
 ROOT=Path(__file__).resolve().parents[1]
 rows=[s.split('|') for s in (ROOT/'data/questions.tsv').read_text().splitlines() if s and not s.startswith('#')]
 BANK={p[0]:p for p in rows}
-assert len(BANK)==len(rows)==803
+assert len(BANK)==len(rows)==851
 for row in rows:
  assert len(row)==10
  assert not(row[1]=='英文' and row[4]=='fill')
@@ -137,4 +137,4 @@ assert req('/api/admission',low)['chance']==0
 strong=dict(low,attrs='100,100,100,100,100',aptitude='100,100,100,100,100',**{'s.'+s:15 for s in ['國文','英文','數學A','數學B','自然','社會']})
 assert req('/api/admission',strong)['chance']<=18
 assert req('/api/admission',dict(a,attrs='100,100,100,100,100',aptitude='100,100,100,100,100'))['chance']<=35
-print('PASS: 803 questions; weighted/gender-restricted 50 high schools; 6 x 2 questions; GSAT/split 3 per selected subject; grading/validation; 100 universities / 827 programs; four-pair questions, no English fill, elite/medical gates.')
+print('PASS: 851 questions; weighted/gender-restricted 50 high schools; 6 x 2 questions; GSAT/split 3 per selected subject; grading/validation; 100 universities / 827 programs; four-pair questions, no English fill, elite/medical gates.')

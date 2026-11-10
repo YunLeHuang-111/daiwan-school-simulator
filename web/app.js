@@ -160,7 +160,30 @@ function searchKey(value){
 }
 function filtered(list){const query=searchKey(filter.search);return sortedOptions(list.filter(p=>(filter.university==='全部'||p.university===filter.university)&&(filter.type==='全部'||p.type===filter.type)&&(filter.area==='全部'||p.area===filter.area)&&(filter.group==='全部'||String(p.group)===filter.group)&&searchKey(p.name+p.universityName+p.realName+p.abbr).includes(query)),admissionEstimate);}
 function resetRound(){state.dice=[];state.dieIndex=0;state.assignments=[];state.game=null;state.event=null;}
-async function startRun(name,seedText,gender,schoolType){const previous=state;const text=seedText.trim()||randomSeed();const originSeed=hashSeed(text);try{const d=await api('enroll',{seed:originSeed,gender,schoolType});state={version:5,name,gender,schoolType,stage:'enrolled',seedText:text,originSeed,seed:originSeed||1234567,school:d.school,attrs:d.attrs,initialAttrs:[...d.attrs],aptitude:d.aptitude,portfolio:0,round:0,history:[],used:[],miniUsed:[],rank:null};state.eventOrder=shuffle(events.map(e=>e.id));state.gameOrder=shuffle(miniBank.map(g=>g.id));const base=66;state.peers=Array.from({length:99},()=>clamp(base+(rng()+rng()+rng()-1.5)*28,25,96));resetRound();pendingSeed=randomSeed();welcome=false;go('enrolled');}catch(e){state=previous;throw e;}}
+const MINI_FAMILY={
+ lyrics:'music',singer:'music','lyric-artist':'music',kpop:'music',
+ anime:'anime','conan-unit':'anime','conan-order':'anime',
+ drama:'screen',series:'screen',emoji:'screen',potter:'screen',
+ brand:'swatches',flags:'swatches',colors:'swatches',
+};
+function variedMiniOrder(order,past=[]){
+ const first=[],later=[],used=new Set(past.map(id=>MINI_FAMILY[id]||id));
+ for(const id of order){
+  const category=MINI_FAMILY[id]||id;
+  if(used.has(category))later.push(id);
+  else{used.add(category);first.push(id);}
+ }
+ return [...first,...later];
+}
+function refreshMiniOrder(){
+ if(state.miniVariety||!state.gameOrder)return;
+ const committed=state.round+(state.game?1:0);
+ const past=state.gameOrder.slice(0,committed);
+ const future=state.gameOrder.slice(committed);
+ state.gameOrder=[...past,...variedMiniOrder(future,past)];
+ state.miniVariety=true;
+}
+async function startRun(name,seedText,gender,schoolType){const previous=state;const text=seedText.trim()||randomSeed();const originSeed=hashSeed(text);try{const d=await api('enroll',{seed:originSeed,gender,schoolType});state={version:5,name,gender,schoolType,stage:'enrolled',seedText:text,originSeed,seed:originSeed||1234567,school:d.school,attrs:d.attrs,initialAttrs:[...d.attrs],aptitude:d.aptitude,portfolio:0,round:0,history:[],used:[],miniUsed:[],rank:null};state.eventOrder=shuffle(events.map(e=>e.id));state.gameOrder=variedMiniOrder(shuffle(miniBank.map(g=>g.id)));state.miniVariety=true;const base=66;state.peers=Array.from({length:99},()=>clamp(base+(rng()+rng()+rng()-1.5)*28,25,96));resetRound();pendingSeed=randomSeed();welcome=false;go('enrolled');}catch(e){state=previous;throw e;}}
 async function startPaper(mode,subjects=[]){
  const used=[...state.used,...(state.miniUsed||[]).filter(key=>key.startsWith('song:'))];
  const data=await api('paper',{mode,subjects:subjects.join(','),attrs:state.attrs.join(','),
@@ -202,7 +225,11 @@ function resolveEvent(i){const e=state.event;if(e.done||!e.choices[i])return;con
 function roll(){if(!state.event?.done)return;if(!state.dice.length){state.dice=Array.from({length:1+Math.floor(rng()*6)},()=>1+Math.floor(rng()*6));state.dieIndex=0;state.assignments=[];}go('dice');}
 function assign(i){if(!Number.isInteger(i)||i<0||i>4||state.attrs[i]>=100||state.dieIndex>=state.dice.length)return;const n=Math.min(state.dice[state.dieIndex],100-state.attrs[i]);state.attrs[i]+=n;state.assignments.push({attr:i,added:n});state.allocatedAttrs=[...new Set([...(state.allocatedAttrs||[]),i])];state.dieIndex++;save();render();}
 function defaultPortrait(){return state.gender==='female'?'/assets/avatar-female.svg':'/assets/avatar-male.svg';}
-function questionAttr(q){if(q.subject==='音樂')return 4;if(q.subject==='藝術')return 3;if(['國文','英文'].includes(q.subject))return 1;if(['數學','自然','物理','化學','生物','體育'].includes(q.subject))return 0;return 2;}
+function questionAttr(q){
+ if(q.subject==='校園趣聞'){
+  return ({'臺灣夜市':2,'臺灣旅行':2,'臺灣鐵道':0,'臺灣風物':2,'世界地標':2,'城市漫遊':1,
+   '企業故事':2,'國家象徵':1,'美術館':3,'銀幕世界':3,'食物旅行':1,'生活發明':0})[q.theme]??2;
+ }if(q.subject==='音樂')return 4;if(q.subject==='藝術')return 3;if(['國文','英文'].includes(q.subject))return 1;if(['數學','自然','物理','化學','生物','體育'].includes(q.subject))return 0;return 2;}
 function applyQuizPenalty(p,result){const penalties=[0,0,0,0,0];if(p.mode!=='term')return penalties;p.questions.forEach((q,i)=>{if(result.review[i].fraction<1){const j=questionAttr(q),loss=Math.min(state.attrs[j],Math.ceil((1-result.review[i].fraction)*3));state.attrs[j]-=loss;penalties[j]+=loss;}});result.rewards=[0,0,0,0,0];if(p.mode==='term')p.questions.forEach((q,i)=>{if(result.review[i].fraction===1){const j=questionAttr(q),gain=Math.min(2,100-state.attrs[j]);state.attrs[j]+=gain;result.rewards[j]+=gain;}});return penalties;}
 function rewardNotice(rewards){return rewards?.some(n=>n)?`<div class="reward-notice" role="status">答對獎勵：${rewards.map((n,i)=>n?ATTR[i]+' ＋'+n:'').filter(Boolean).join(' · ')}</div>`:'';}
 function penaltyNotice(penalties){return penalties?.some(n=>n)?`<div class="penalty-notice" role="status">這次答錯／未全對：${penalties.map((n,i)=>n?ATTR[i]+' −'+n:'').filter(Boolean).join(' · ')}</div>`:'';}
@@ -378,9 +405,14 @@ function interviewScore(program){
   1:[82,94,76,86],2:[95,74,85,89],3:[94,90,75,84],4:[77,82,96,88],
   5:[76,85,96,83],6:[76,85,96,88],7:[81,87,79,95],8:[93,96,74,87],
  };
- const scores=preferences[program.group]||preferences[1];
+ const department=preferences[program.group]||preferences[1];
+ const campusStyles=[[96,76,88,84],[83,96,75,88],[82,86,96,76],[88,82,78,96]];
+ const campus=campusStyles[(hashSeed(program.university)>>>28)%campusStyles.length];
  const {questions,answers}=state.interview;
- return Math.round(answers.reduce((sum,answer,i)=>sum+scores[questions[i].options[answer].style],0)/3);
+ return Math.round(answers.reduce((sum,answer,i)=>{
+  const style=questions[i].options[answer].style;
+  return sum+department[style]*.7+campus[style]*.3;
+ },0)/3);
 }
 function finishAdmission(results,admitted){
  state.lastAdmissionRoute=state.route;
@@ -591,8 +623,8 @@ function paperView(){const p=state.paper,q=p.questions[p.index],a=p.answers[p.in
  if(timed&&!locked&&!p.clockStart){p.clockStart=Date.now();save();}
  const countdown=timed?(locked
   ? `<p class="exam-clock">${a===null?'時間到，本題 0 分':'答案已鎖定'}</p>`
-  : `<p class="exam-clock"><strong id="question-clock">剩 ${Math.max(0,Math.ceil((p.clockStart+choiceLimit(q)-Date.now())/1000))} 秒</strong><small>點選即鎖定答案</small></p>`):'';
- let body='';if(q.type==='choice')body=`<div class="answers">${q.options.map((s,i)=>`<button class="answer ${a===i?'selected':''}" data-action="answer" data-id="${i}" aria-pressed="${a===i}" ${locked?'disabled':''}><b>${'ABCD'[i]}</b><span>${esc(s)}</span><i>${a===i?'✓':'○'}</i></button>`).join('')}</div>`;else if(q.type==='fill')body=`<div class="fill-task"><label for="short-answer">你的答案</label><input id="short-answer" maxlength="80" autocomplete="off" spellcheck="false" value="${esc(a||'')}" placeholder="填入一個詞、人名或數字…"></div>`;else body=`<div class="matching-paper">${q.left.map((s,i)=>`<div class="match-row"><span><b>${i+1}</b>${esc(s)}</span>${customSelect('match-'+i,a[i]===null?'':String(a[i]),[{value:'',label:'選擇搭檔'},...q.options.map((r,j)=>({value:String(j),label:r}))],'配對：'+s)}</div>`).join('')}</div>`;return shell(`${heading(MODE[p.mode]+' / '+(p.index+1)+'・'+n,p.mode==='term'?'學期問答':'考試作答')}<article class="exam-paper"><div class="paper-top"><span>${p.mode==='term'?termName():'姓名：'+esc(state.name)}</span><span>${p.index+1} / ${n}</span></div><div class="tags"><span>${q.examSubject}</span><span>${q.theme}</span><span>${{choice:'選擇',match:'配對',fill:'填答'}[q.type]}</span><span class="difficulty">${'★'.repeat(q.difficulty)}</span></div><h2>${esc(q.text)}</h2>${countdown}${body}</article><div class="question-nav">${p.mode==='term'?button('← 上一題','previous','text-button',p.index===0?'disabled':''):'<span>逐題作答</span>'}<span class="muted">${p.answers.filter((_,i)=>paperReady(p,i)).length} / ${n}</span>${button(p.index===n-1?'交卷 →':'下一題 →','next','primary',paperReady(p,p.index)?'':'disabled')}</div>`,p.mode==='term'?1:2);}
+  : `<p class="exam-clock"><strong id="question-clock">剩 ${Math.max(0,Math.ceil((p.clockStart+choiceLimit(q)-Date.now())/1000))} 秒</strong><small>可更改選項，按下一題或交卷才停止計時</small></p>`):'';
+ let body='';if(q.type==='choice')body=`<div class="answers">${q.options.map((s,i)=>`<button class="answer ${a===i?'selected':''}" data-action="answer" data-id="${i}" aria-pressed="${a===i}" ${locked?'disabled':''}><b>${'ABCD'[i]}</b><span>${esc(s)}</span><i>${a===i?'✓':'○'}</i></button>`).join('')}</div>`;else if(q.type==='fill')body=`<div class="fill-task"><label for="short-answer">你的答案</label><input id="short-answer" maxlength="80" autocomplete="off" spellcheck="false" value="${esc(a||'')}" placeholder="填入一個詞、人名或數字…"></div>`;else body=`<div class="matching-paper">${q.left.map((s,i)=>`<div class="match-row"><span><b>${i+1}</b>${esc(s)}</span>${customSelect('match-'+i,a[i]===null?'':String(a[i]),[{value:'',label:'選擇搭檔'},...q.options.map((r,j)=>({value:String(j),label:r}))],'配對：'+s)}</div>`).join('')}</div>`;return shell(`${heading(MODE[p.mode]+' / '+(p.index+1)+'・'+n,p.mode==='term'?'學期問答':'考試作答')}<article class="exam-paper"><div class="paper-top"><span>${p.mode==='term'?termName():'姓名：'+esc(state.name)}</span><span>${p.index+1} / ${n}</span></div><div class="tags"><span>${q.examSubject}</span><span>${q.theme}</span><span>${{choice:'選擇',match:'配對',fill:'填答'}[q.type]}</span><span class="difficulty">${'★'.repeat(q.difficulty)}</span></div><h2>${esc(q.text)}</h2>${countdown}${body}</article><div class="question-nav">${p.mode==='term'?button('← 上一題','previous','text-button',p.index===0?'disabled':''):'<span>逐題作答</span>'}<span class="muted">${p.answers.filter((_,i)=>paperReady(p,i)).length} / ${n}</span>${button(p.index===n-1?'交卷 →':'下一題 →','next','primary',(paperReady(p,p.index)||answerReady(q,a))?'':'disabled')}</div>`,p.mode==='term'?1:2);}
 function solution(q,key){if(q.type==='choice')return q.options[Number(key)];if(q.type==='fill')return key.split('/')[0];return key.split(',').map((v,i)=>q.left[i]+' → '+q.options[Number(v)]).join('；');}
 function reviewView(paper,result){return `<details class="panel review"><summary>看看答案與解析</summary>${paper.questions.map((q,i)=>`<div class="review-item"><span class="${result.review[i].correct?'good':'bad'}">${result.review[i].correct?'✓ 正確':result.review[i].fraction>0?'◐ 部分答對':'↗ 記住這一次'} · ${q.examSubject}</span><h3>${esc(q.text)}</h3><p>${esc(solution(q,result.review[i].answer))}</p>${result.review[i].points!=null?`<small>限時作答得分：${result.review[i].points} / 5</small>`:''}<small>${esc(result.review[i].explanation)}</small></div>`).join('')}</details>`;}
 function eventView(){const e=state.event;return shell(`${heading(termName(),'學期小插曲')}${semesterStrip(1)}<section class="event-card"><img src="${e.image}" alt="校園事件插畫"><div class="event-content"><span class="event-tag">突發狀況</span><h2>${e.title}</h2><div class="event-choices">${e.choices.map((c,i)=>`<button data-action="event-choice" data-id="${i}"><b>${c.text}</b><span>${c.delta.map((v,j)=>{
@@ -643,7 +675,10 @@ function interviewView(){
  if(!q)return shell(`${heading('個人申請 / 第二階段','面試已完成')}
   <div class="button-row end">${button('查看放榜 →','enter-interview')}</div>`,3);
  return shell(`${heading('個人申請 / 第二階段','面試 '+(index+1)+' / 3')}
-  <article class="exam-paper"><p>每個做法各有取捨，請選最接近你想法的一項。</p>
+  <article class="exam-paper interview-paper"><div class="interview-banner">
+   <div><span class="eyebrow">面試小教室</span><p>每個做法各有取捨，各校也會看重不同的做事方式。</p></div>
+   <img src="/assets/scenes/interview.svg" alt="" width="176" height="108">
+  </div>
    <h2>${esc(q.prompt)}</h2><div class="answers">${q.options.map((option,i)=>
     button(`<b>${'ABCD'[i]}</b><span>${esc(option.text)}</span>`,'interview-answer','answer',`data-id="${i}"`)).join('')}</div>
   </article>`,3);
@@ -662,16 +697,28 @@ async function action(a,b){
  if(a==='select-option'){chooseSelect(b.dataset.key,b.dataset.value);return;}
  if(a==='answer'){
   const p=state.paper,q=p.questions[p.index];
-  if(timedChoice(p,q)){
-   if(p.elapsed[p.index]!=null)return;
-   const elapsed=Math.max(0,Date.now()-p.clockStart);
-   p.elapsed[p.index]=Math.min(elapsed,choiceLimit(q));
-   p.answers[p.index]=elapsed<choiceLimit(q)?Number(b.dataset.id):null;
-  }else p.answers[p.index]=Number(b.dataset.id);
+  if(timedChoice(p,q)&&(p.elapsed[p.index]!=null||Date.now()-p.clockStart>=choiceLimit(q))){
+   updatePaperClock();
+   return;
+  }
+  p.answers[p.index]=Number(b.dataset.id);
   save();render();
  }
  else if(a==='previous'){if(state.paper.mode!=='term')return;openSelect=null;state.paper.index=Math.max(0,state.paper.index-1);save();render();window.scrollTo({top:0,behavior:'instant'});}
- else if(a==='next'){const p=state.paper;if(!paperReady(p,p.index))return;openSelect=null;if(p.index===p.questions.length-1)await submitPaper();else{p.index++;delete p.clockStart;save();render();window.scrollTo({top:0,behavior:'instant'});}}
+ else if(a==='next'){
+  const p=state.paper,i=p.index,q=p.questions[i];
+  if(timedChoice(p,q)&&p.elapsed[i]==null){
+   const limit=choiceLimit(q),elapsed=Math.max(0,Date.now()-p.clockStart);
+   if(elapsed<limit&&!answerReady(q,p.answers[i]))return;
+   p.elapsed[i]=Math.min(elapsed,limit);
+   if(elapsed>=limit)p.answers[i]=null;
+   save();
+  }
+  if(!paperReady(p,i))return;
+  openSelect=null;
+  if(i===p.questions.length-1)await submitPaper();
+  else{p.index++;delete p.clockStart;go('quiz');}
+ }
  else if(a==='enter-school')go('round');
  else if(a==='start-term')await startPaper('term');
  else if(a==='event-choice')resolveEvent(Number(b.dataset.id));
@@ -756,5 +803,31 @@ $('#collection-button').onclick=openCollection;
 window.addEventListener('hashchange',()=>{collectionOpen=location.hash==='#collection';openSelect=null;render();});
 $('#help-button').onclick=()=>$('#help-dialog').showModal();$('#close-help').onclick=()=>$('#help-dialog').close();$('#restart-button').onclick=()=>{if(!busy)action('restart');};$('#confirm-cancel').onclick=()=>$('#confirm-dialog').close();$('#achievement-button').onclick=showAchievements;$('#close-achievements').onclick=()=>$('#achievement-dialog').close();
 $('#photo-input').addEventListener('change',async e=>{if(!state||state.ending!=='admitted'||photoBusy)return;photoBusy=true;busy=true;try{await uploadPhoto(e.target.files[0]);toast('照片已更新，只保存在此瀏覽器。');}catch(error){toast(error.message);}finally{photoBusy=false;busy=false;e.target.value='';}});
-async function boot(){try{const responses=await Promise.all(['/catalog.json','/minigames.json','/songs.json','/events.json','/interviews.json'].map(url=>fetch(url,{cache:'no-cache'})));if(responses.some(r=>!r.ok))throw new Error('校園資料讀取失敗');[catalog,miniBank,songs,events,interviewBank]=await Promise.all(responses.map(r=>r.json()));registerAchievementExpansion();programs=catalog.programs.map(p=>{const u=university(p.university);return{...p,universityName:u.name,realName:u.realName,abbr:u.abbr,type:u.type,area:u.area,source:p.source||u.source};});collection=readStore(COLLECTION_KEY,{programs:{}});if(!collection||!collection.programs||typeof collection.programs!=='object'||Array.isArray(collection.programs))collection={programs:{}};achievements=readStore(ACH_KEY,{});seen=readStore(SEEN_KEY,[]);miniSeen=readStore(MINI_KEY,[]);try{legacy=['daiwan-next-chapter-v1','daiwan-next-chapter-v2','daiwan-classroom-v3','daiwan-campus-v4'].some(k=>!!localStorage.getItem(k));const s=readStore(KEY,null);if(s?.version===5&&typeof s.name==='string'&&s.attrs?.length===5&&s.aptitude?.length===5&&s.round>=0&&s.round<=5)state=s;}catch{storageOK=false;}recordCollection();if(state){restoreMiniHistory();state.gameOrder=state.gameOrder?.map(id=>id==='lyric-fill'?'lyric-artist':id);if(state.game?.type==='lyric-fill'&&!state.game.done){state.game=null;if(state.stage==='game')state.stage='dice';}saveStore(KEY,state);}if(state?.ending&&state.achievementVersion!==6){unlockAchievements();save();}if(state?.stage==='game'&&savedBoardNeedsRefresh(state.game)){state.game=null;startGame();}else render();}catch(e){app.innerHTML=`<div class="boot-error"><h1>校園資料還沒準備好。</h1><p>${esc(e.message)}，請確認Java已啟動。</p><button class="primary" onclick="location.reload()">重新整理</button></div>`;}}
+const THEME_KEY='daiwan-theme-v1';
+const THEMES={
+ campus:{color:'#285345',label:'CLASSROOM EDITION / 同學，上課了。'},
+ retro:{color:'#8f3d2a',label:'RETRO CAMPUS / 放學後見。'},
+ hongkong:{color:'#173e46',label:'放學茶記 / 今日照常營業。'},
+};
+function applyTheme(id){
+ const selected=Object.hasOwn(THEMES,id)?id:'campus';
+ const theme=THEMES[selected];
+ document.documentElement.dataset.theme=selected;
+ document.querySelector('meta[name="theme-color"]').content=theme.color;
+ $('.brand small').textContent=theme.label;
+ document.querySelectorAll('[data-theme-choice]').forEach(button=>{
+  button.setAttribute('aria-pressed',String(button.dataset.themeChoice===document.documentElement.dataset.theme));
+ });
+}
+applyTheme(readStore(THEME_KEY,'campus'));
+$('#theme-button').onclick=()=>$('#theme-dialog').showModal();
+$('#close-themes').onclick=()=>$('#theme-dialog').close();
+$('#theme-dialog').addEventListener('click',e=>{
+ const choice=e.target.closest('[data-theme-choice]');
+ if(!choice)return;
+ const id=choice.dataset.themeChoice;
+ applyTheme(id);
+ saveStore(THEME_KEY,id);
+});
+async function boot(){try{const responses=await Promise.all(['/catalog.json','/minigames.json','/songs.json','/events.json','/interviews.json'].map(url=>fetch(url,{cache:'no-cache'})));if(responses.some(r=>!r.ok))throw new Error('校園資料讀取失敗');[catalog,miniBank,songs,events,interviewBank]=await Promise.all(responses.map(r=>r.json()));registerAchievementExpansion();programs=catalog.programs.map(p=>{const u=university(p.university);return{...p,universityName:u.name,realName:u.realName,abbr:u.abbr,type:u.type,area:u.area,source:p.source||u.source};});collection=readStore(COLLECTION_KEY,{programs:{}});if(!collection||!collection.programs||typeof collection.programs!=='object'||Array.isArray(collection.programs))collection={programs:{}};achievements=readStore(ACH_KEY,{});seen=readStore(SEEN_KEY,[]);miniSeen=readStore(MINI_KEY,[]);try{legacy=['daiwan-next-chapter-v1','daiwan-next-chapter-v2','daiwan-classroom-v3','daiwan-campus-v4'].some(k=>!!localStorage.getItem(k));const s=readStore(KEY,null);if(s?.version===5&&typeof s.name==='string'&&s.attrs?.length===5&&s.aptitude?.length===5&&s.round>=0&&s.round<=5)state=s;}catch{storageOK=false;}recordCollection();if(state){restoreMiniHistory();state.gameOrder=state.gameOrder?.map(id=>id==='lyric-fill'?'lyric-artist':id);refreshMiniOrder();if(state.game?.type==='lyric-fill'&&!state.game.done){state.game=null;if(state.stage==='game')state.stage='dice';}saveStore(KEY,state);}if(state?.ending&&state.achievementVersion!==6){unlockAchievements();save();}if(state?.stage==='game'&&savedBoardNeedsRefresh(state.game)){state.game=null;startGame();}else render();}catch(e){app.innerHTML=`<div class="boot-error"><h1>校園資料還沒準備好。</h1><p>${esc(e.message)}，請確認Java已啟動。</p><button class="primary" onclick="location.reload()">重新整理</button></div>`;}}
 boot();

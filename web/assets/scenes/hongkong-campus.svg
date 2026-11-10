@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 680">
+ <rect width="800" height="680" fill="#142736"/>
+ <path d="M0 495q110-91 258-80t246-94 296-58v417H0Z" fill="#21364a"/>
+ <path d="M410 505V293h54v212m14 0V358h70v147m28 0V225h59v280m22 0V269h44v236m14 0V311h62v194" fill="#2d4553" stroke="#142736" stroke-width="6"/>
+ <path d="M429 324h16m-16 28h16m-16 28h16m57 13h22m-22 25h22m-22 24h22m69-177h25m-25 29h25m-25 29h25m65-22h17m-17 30h17m58 12h22m-22 26h22" stroke="#f0ba65" stroke-width="4" opacity=".85"/>
+ <path d="M0 523h800v157H0Z" fill="#122632"/>
+ <path d="M341 559h415m-333 22h352m-220 22h161m-318 34h230" stroke="#68b5a4" stroke-width="3" opacity=".45"/>
+ <rect x="423" y="328" width="230" height="67" rx="7" fill="#1b3040" stroke="#ff9169" stroke-width="4"/>
+ <rect x="432" y="337" width="212" height="49" rx="4" fill="none" stroke="#e8b86d" stroke-width="2"/>
+ <text x="538" y="372" fill="#ffe1a0" font-size="25" font-family="sans-serif" letter-spacing="8" text-anchor="middle">青春茶記</text>
+ <rect x="625" y="437" width="124" height="31" rx="4" fill="#1b3040" stroke="#73d4bc" stroke-width="3"/>
+ <text x="686" y="458" fill="#b1efda" font-size="14" font-family="sans-serif" letter-spacing="4" text-anchor="middle">放學時段</text>
+ <circle cx="708" cy="69" r="29" fill="#f3ca84"/>
+</svg>

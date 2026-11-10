@@ -147,3 +147,95 @@
  .stage-interview .answers{gap:6px}
  .stage-interview .answer{min-height:44px;padding:8px}
 }
+
+/* The visual theme can change without replacing any game controls or timers. */
+:root[data-theme=campus]{
+ --paper:#eff3e8;--sheet:#fffdf3;--ink:#254137;--green:#285e4c;
+ --line:#ccd9c9;--muted:#536c60;--theme-ink:#234a3d;--theme-soft:#e2ecdf;
+ --theme-accent:#e8bc65;--theme-shadow:#a9c0aa;
+}
+:root[data-theme=retro]{
+ --paper:#fae9ce;--sheet:#fff5df;--ink:#3e3327;--green:#9b432a;
+ --line:#ce9e73;--muted:#694a35;--theme-ink:#813b29;--theme-soft:#f5dfbb;
+ --theme-accent:#e9a64b;--theme-shadow:#c88d62;
+}
+:root[data-theme=hongkong]{
+ --paper:#efe9d6;--sheet:#fff7e4;--ink:#2b3a37;--green:#21585a;
+ --line:#a5af96;--muted:#465b53;--theme-ink:#174d50;--theme-soft:#e0e7d4;
+ --theme-accent:#f3b976;--theme-shadow:#8ca293;
+}
+[data-theme=campus] body{
+ background-image:repeating-linear-gradient(0deg,transparent 0 23px,#8da98d22 23px 24px);
+}
+[data-theme=retro] body{
+ background-image:radial-gradient(#925a3b29 .8px,transparent 1px);
+ background-size:7px 7px;
+}
+[data-theme=hongkong] body{
+ background-image:linear-gradient(90deg,#738f6920 1px,transparent 1px),linear-gradient(#738f6920 1px,transparent 1px);
+ background-size:22px 22px;
+}
+[data-theme] .topbar{border-bottom:2px solid var(--line)}
+[data-theme] .brand,[data-theme] .text-button{color:var(--theme-ink)}
+[data-theme] .brand-mark,[data-theme] .primary,[data-theme] .mobile-preferences-link{
+ color:white;background:var(--green);box-shadow:0 4px 0 var(--theme-ink)
+}
+[data-theme] .secondary,[data-theme] .select-trigger,[data-theme] .search-field{
+ color:var(--theme-ink);border-color:var(--line);background:var(--sheet)
+}
+[data-theme] .panel,[data-theme] .exam-paper,[data-theme] .entry-paper,[data-theme] .game-panel,
+[data-theme] .event-card,[data-theme] .school-card,[data-theme] .collection-school,[data-theme] .dialog-content{
+ background-color:var(--sheet);border-color:var(--line);box-shadow:0 4px 0 var(--theme-shadow)
+}
+[data-theme] .attribute-board,[data-theme] .preferences,[data-theme] .route-return,[data-theme] .question-nav{
+ background:var(--theme-soft);border-color:var(--line)
+}
+[data-theme] .heading .eyebrow,[data-theme] .paper-top,[data-theme] .theme-options small{color:var(--muted)}
+[data-theme] .answer,[data-theme] .pair-card,[data-theme] .match-row{border-color:var(--line);color:var(--ink)}
+[data-theme] .answer.selected,[data-theme] .pair-card.selected{
+ background:var(--theme-soft);border-color:var(--green);box-shadow:0 0 0 1px var(--green)
+}
+[data-theme] .answer.selected>b,[data-theme] .steps .active b,[data-theme] .play-steps .active b{background:var(--green);color:#fff}
+[data-theme] .meter>i{background:var(--green)}
+[data-theme=campus] .campus-hero{border:7px solid #906d47}
+[data-theme=campus] .hero-shade{background:linear-gradient(105deg,#102f28ed 8%,#173b32b5 48%,transparent 80%)}
+[data-theme=campus] .hero-sticker{background:#f2d580;color:#284739}
+[data-theme=retro] .campus-hero{
+ border:3px solid #813b29;border-radius:34px 34px 10px 10px;
+ background:#183d3d url("./assets/scenes/retro-campus.svg") center/cover
+}
+[data-theme=hongkong] .campus-hero{
+ border:4px double #64b6a4;border-radius:12px;
+ background:#142736 url("./assets/scenes/hongkong-campus.svg") center/cover
+}
+:is([data-theme=retro],[data-theme=hongkong]) .campus-hero>img{visibility:hidden}
+:is([data-theme=retro],[data-theme=hongkong]) .hero-shade{background:linear-gradient(90deg,#112624d9,transparent 77%)}
+[data-theme=retro] .hero-sticker{background:#f2ba66;color:#562d20;border:2px solid #fff1cf}
+[data-theme=hongkong] .hero-sticker{background:#184f51;color:#ffe1a0;border:2px solid #e9ab78;box-shadow:0 0 16px #e9ab7875}
+[data-theme=retro] :is(.entry-paper,.exam-paper,.school-card){border-radius:9px}
+[data-theme=hongkong] :is(.entry-paper,.exam-paper,.school-card){border-radius:6px;border-left:4px solid #397c76}
+[data-theme] .hero-copy em{color:#ffe4a8}
+.theme-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:15px 0}
+.theme-options button{
+ text-align:left;border:1px solid var(--line);border-radius:10px;padding:8px;
+ color:var(--ink);background:var(--sheet)
+}
+.theme-options button[aria-pressed=true]{border-color:var(--green);outline:2px solid var(--green)}
+.theme-options i{display:block;height:46px;margin-bottom:6px;border-radius:6px}
+.theme-options [data-theme-choice=campus] i{background:linear-gradient(140deg,#285345 52%,#d7e6d2 52%)}
+.theme-options [data-theme-choice=retro] i{background:linear-gradient(140deg,#b45c32 52%,#efc17c 52%)}
+.theme-options [data-theme-choice=hongkong] i{background:linear-gradient(140deg,#143741 52%,#74b2a3 52%)}
+.theme-options b,.theme-options small{display:block}
+.theme-options small{font-size:10px}
+.interview-banner{
+ display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 12px;
+ border-radius:14px;background:var(--theme-soft);border:1px solid var(--line)
+}
+.interview-banner img{width:min(32%,176px);height:auto;flex-shrink:0}
+.interview-banner p{font-size:13px}
+@media(max-width:760px){
+ .interview-banner{gap:8px;padding:6px 8px}
+ .interview-banner img{width:84px}
+ .theme-options{gap:7px}
+ .theme-options button{padding:6px}
+}

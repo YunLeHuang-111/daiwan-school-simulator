@@ -9,7 +9,7 @@ function gradeForm(p,subjects,round,wrong=false){const form={mode:p.mode,subject
  for(const seed of [0,42,4294967295])for(let round=0;round<6;round++){const paper=await parity('paper',{mode:'term',round,seed,attrs:'30,55,80,45,65'});await parity('grade',gradeForm(paper,'',round));await parity('grade',gradeForm(paper,'',round,true));}
  for(const [mode,subjects] of [['gsat',['國文','英文','數學A','數學B','自然','社會']],['split',['數學甲','數學乙','物理','化學','生物','歷史','地理','公民與社會']]])for(const selected of [...subjects.map(s=>[s]),subjects]){const joined=selected.join(','),paper=await parity('paper',{mode,seed:4294967295,round:5,attrs:'90,75,70,45,30',subjects:joined,previousRoute:'apply'});await parity('grade',gradeForm(paper,joined,5));await parity('grade',gradeForm(paper,joined,5,true));}
  // A maximal journey must keep every question distinct even after exhausting cross-run freshness.
- const used=[],prompts=new Set();
+ const used=[],prompts=new Set(),termCategories=new Set();
  const exams=[
   ...[0,1,2,3,4].map(round=>({mode:'term',round})),
   {mode:'gsat',round:4,subjects:'國文,英文,數學A,數學B,自然,社會'},
@@ -22,9 +22,12 @@ function gradeForm(p,subjects,round,wrong=false){const form={mode:p.mode,subject
    const prompt=q.text.normalize('NFKC').trim().toLowerCase().replace(/\s+/g,'');
    assert(!used.includes(q.id)&&!prompts.has(prompt),q.id);
    used.push(q.id);prompts.add(prompt);
+   if(exam.mode==='term'){
+    assert.equal(q.subject,'校園趣聞');assert(!termCategories.has(q.theme));termCategories.add(q.theme);
+   }
   }
  }
- assert.equal(used.length,54);
+ assert.equal(used.length,54);assert.equal(termCategories.size,12);
  for(const seed of [0,42,4294967295])for(const route of ['star','apply','distribution'])for(const p of data.programs.filter((_,i)=>i%23===0)){const form={seed,route,program:p.id,preferences:p.id,attrs:'80,80,75,65,55',aptitude:'60,65,65,60,60',portfolio:90,rank:5};for(const s of route==='distribution'?p.split:p.subjects)form['s.'+s]=route==='distribution'?56:14;await parity('admission',form);}
  for(const university of ['ntua','tnua','tnnua']){
   for(const route of ['star','apply','distribution']){
