@@ -9,7 +9,7 @@ const MODE={term:'學期挑戰',gsat:'學科能力測驗',split:'分科測驗'};
 const clamp=(n,min=0,max=100)=>Math.max(min,Math.min(max,n));
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toFixed(1).replace(/\.0$/,'');
-let state=null,welcome=true,busy=false,catalog=null,programs=[],miniBank=[],songs=[],events=[],interviewBank=[];
+let state=null,welcome=true,busy=false,catalog=null,programs=[],archivedPrograms=[],miniBank=[],songs=[],events=[],interviewBank=[];
 let storageOK=true,legacy=false,photoBusy=false,collectionOpen=location.hash==='#collection';
 let collection={programs:{}};
 let pendingSeed=randomSeed();
@@ -48,6 +48,8 @@ function registerAchievementExpansion(){
  for(const school of catalog.highSchools||[]){
   registerAchievement('school','graduate-'+school.id,'畢業章・'+school.name,
    '從 '+school.name+' 完成一段旅程','🎒');
+  registerAchievement('school','admit-from-'+school.id,'升學章・'+school.name,
+   '就讀 '+school.name+' 並接受大學錄取','🎓',()=>state.school.id===school.id&&state.ending==='admitted');
  }
  const abilities=['🔢','📚','🗺️','🎨','🎼'];
  const stages=[[65,'紮根'],[75,'熟手'],[85,'亮眼'],[90,'專精'],[95,'出色'],[100,'滿點']];
@@ -147,7 +149,16 @@ async function api(path,data){if(document.documentElement.dataset.runtime==='bro
 function termName(){return TERMS[state.round];}
 function attrBars(){return state.attrs.map((v,i)=>`<div class="attribute"><span>${ATTR[i]}</span><div class="meter"><i style="width:${v}%"></i></div><b>${v}</b></div>`).join('');}
 function routeName(route){return{star:'繁星推薦',apply:'個人申請',distribution:'分科分發'}[route];}
-function university(id){return catalog.universities.find(u=>u.id===id);}
+function university(id){
+ return catalog.universities.find(u=>u.id===id)??catalog.archive?.universities.find(u=>u.id===id);
+}
+function historicalProgram(id){
+ return programs.find(p=>p.id===id)??archivedPrograms.find(p=>p.id===id);
+}
+function hydrateProgram(p){
+ const u=university(p.university);
+ return {...p,universityName:u.name,realName:u.realName,abbr:u.abbr,type:u.type,area:u.area,source:p.source||u.source};
+}
 function crest(u,cls='crest'){return `<img class="${cls}" src="${u.crest}" alt="${esc(u.name)}原創校徽" width="80" height="80">`;}
 function traitScore(){return Math.round(state.attrs.reduce((n,v,i)=>n+v*.65+state.aptitude[i]*.35,0)/5);}
 function customSelect(key,value,items,label=''){const options=items.map(x=>typeof x==='string'?{value:x,label:x}:x);const selected=options.find(x=>String(x.value)===String(value));return `<div class="custom-select ${openSelect===key?'is-open':''}" data-select-wrap="${key}"><button type="button" class="select-trigger" role="combobox" aria-label="${esc(label||key)}" aria-expanded="${openSelect===key}" aria-controls="list-${key}" data-action="toggle-select" data-key="${key}"><span>${esc(selected?.label||label||'請選擇')}</span><i>⌄</i></button>${openSelect===key?`<div class="select-menu" id="list-${key}" role="listbox" aria-label="${esc(label)}">${options.map(o=>`<button type="button" role="option" aria-selected="${String(o.value)===String(value)}" data-action="select-option" data-key="${key}" data-value="${esc(o.value)}"><span>${esc(o.label)}</span>${String(o.value)===String(value)?'✓':''}</button>`).join('')}</div>`:''}</div>`;}
@@ -220,7 +231,10 @@ function updatePaperClock(){
  }
 }
 setInterval(updatePaperClock,200);
-async function submitPaper(){const p=state.paper;if(!p.answers.every((_,i)=>paperReady(p,i)))return;const data={mode:p.mode,subjects:p.subjects.join(','),round:state.round,ids:p.questions.map(q=>q.id).join(',')};if(p.timed)data.timed='1';p.questions.forEach((q,i)=>{if(p.timed&&q.type==='choice')data['ms'+i]=p.elapsed[i];data['label'+i]=q.examSubject;data['a'+i]=Array.isArray(p.answers[i])?p.answers[i].join(','):p.answers[i];});const result=await api('grade',data);result.penalties=applyQuizPenalty(p,result);if(p.mode==='term'){const avg=state.attrs.slice(0,3).reduce((a,b)=>a+b,0)/3,daily=Math.round(clamp(46+avg*.45+state.portfolio*.1)),quiz=Math.round(clamp(32+avg*.6)),total=Math.round(daily*.2+quiz*.2+result.exam*.6);state.lastRound={...result,daily,quiz,total,term:termName(),game:'',gameScore:0,event:''};state.history.push({...state.lastRound});if(state.round===4){const average=state.history.reduce((n,r)=>n+r.total,0)/5;state.rank=1+state.peers.filter(v=>v>average).length;}state.event=structuredClone(events.find(e=>e.id===state.eventOrder[state.round]));state.event.done=false;go('event');}else if(p.mode==='gsat'){state.gsat=result.scores;state.gsatRecord={paper:structuredClone(p),result};go('gsatResult');}else{state.division=result.scores;state.splitRecord={paper:structuredClone(p),result};go('splitResult');}}
+async function submitPaper(){const p=state.paper;if(!p.answers.every((_,i)=>paperReady(p,i)))return;const data={mode:p.mode,subjects:p.subjects.join(','),round:state.round,ids:p.questions.map(q=>q.id).join(',')};if(p.timed)data.timed='1';if(p.mode==='gsat'){
+ data.aptitude=state.aptitude.join(',');
+ data.attrs=state.attrs.join(',');
+}p.questions.forEach((q,i)=>{if(p.timed&&q.type==='choice')data['ms'+i]=p.elapsed[i];data['label'+i]=q.examSubject;data['a'+i]=Array.isArray(p.answers[i])?p.answers[i].join(','):p.answers[i];});const result=await api('grade',data);result.penalties=applyQuizPenalty(p,result);if(p.mode==='term'){const avg=state.attrs.slice(0,3).reduce((a,b)=>a+b,0)/3,daily=Math.round(clamp(46+avg*.45+state.portfolio*.1)),quiz=Math.round(clamp(32+avg*.6)),total=Math.round(daily*.2+quiz*.2+result.exam*.6);state.lastRound={...result,daily,quiz,total,term:termName(),game:'',gameScore:0,event:''};state.history.push({...state.lastRound});if(state.round===4){const average=state.history.reduce((n,r)=>n+r.total,0)/5;state.rank=1+state.peers.filter(v=>v>average).length;}state.event=structuredClone(events.find(e=>e.id===state.eventOrder[state.round]));state.event.done=false;go('event');}else if(p.mode==='gsat'){state.gsat=result.scores;state.gsatRecord={paper:structuredClone(p),result};go('gsatResult');}else{state.division=result.scores;state.splitRecord={paper:structuredClone(p),result};go('splitResult');}}
 function resolveEvent(i){const e=state.event;if(e.done||!e.choices[i])return;const c=e.choices[i],changes=[];c.delta.forEach((d,j)=>{const before=state.attrs[j];state.attrs[j]=clamp(before+d);const actual=state.attrs[j]-before;if(actual)changes.push(ATTR[j]+(actual>0?'＋':'')+actual);});e.done=true;e.choice=i;state.history.at(-1).event=e.title;state.history.at(-1).eventChoice=c.text;roll();toast(changes.join(' · '));}
 function roll(){if(!state.event?.done)return;if(!state.dice.length){state.dice=Array.from({length:1+Math.floor(rng()*6)},()=>1+Math.floor(rng()*6));state.dieIndex=0;state.assignments=[];}go('dice');}
 function assign(i){if(!Number.isInteger(i)||i<0||i>4||state.attrs[i]>=100||state.dieIndex>=state.dice.length)return;const n=Math.min(state.dice[state.dieIndex],100-state.attrs[i]);state.attrs[i]+=n;state.assignments.push({attr:i,added:n});state.allocatedAttrs=[...new Set([...(state.allocatedAttrs||[]),i])];state.dieIndex++;save();render();}
@@ -356,14 +370,21 @@ function admissionEstimate(p){
  const talentFloor=art?Math.max(p.talentFloor,58):apply?0:p.talentFloor;
  if(exam<examFloor||talent<talentFloor)return 0;
  let score;
- if(apply)score=exam*.4+talent*.3+(state.interview?.answers?.length===3?interviewScore(p):75)*.3;
+ const interview=apply&&state.interview?.answers?.length===3?interviewScore(p):80;
+ if(apply)score=exam*.4+talent*.3+interview*.3;
  else if(state.route==='star')score=art?exam*.2+(100-state.rank)*.15+talent*.65:exam*.5+(100-state.rank)*.25+talent*.25;
  else score=art?exam*.25+talent*.75:exam*.7+talent*.3;
- const cap={medical:18,pharmacy:25,top:35,midTech:46,midOther:57,public:70,privateTech:83}[p.selectivity]??98;
- return Math.round(clamp(100/(1+Math.exp((p.threshold-score)/5)),.5,cap)*10)/10;
+ const topSupport=apply&&p.selectivity==='top'
+  ?clamp((exam-85)/8,0,1)*clamp((talent-48)/12,0,1)*clamp((interview-74)/10,0,1):0;
+ const cap=({medical:18,pharmacy:25,top:35,midTech:46,midOther:57,public:70,privateTech:83}[p.selectivity]??98)+10*topSupport;
+ const threshold=p.threshold-9*topSupport;
+ return Math.round(clamp(100/(1+Math.exp((threshold-score)/5)),.5,cap)*10)/10;
 }
 function resetFilters(){filter={search:'',area:'全部',type:'全部',group:'全部',university:'全部',sort:'chance-desc'};openSelect=null;}
-function setRoute(route){state.route=route;state.preferences=[];state.starSchool=null;state.starGroup=null;resetFilters();go('universities');}
+function applicationClosed(){return state.applyCompleted||state.lastAdmissionRoute==='apply';}
+function setRoute(route){
+ if(route==='apply'&&applicationClosed())return;
+ state.route=route;state.preferences=[];state.starSchool=null;state.starGroup=null;resetFilters();go('universities');}
 function prepareSplit(){if(state.stage!=='admissionResult'||!['star','apply'].includes(state.lastAdmissionRoute)){toast('先完成繁星或個申放榜，再決定是否考分科。');return;}const start=()=>{state.admission=null;state.splitSubjects=['數學乙','歷史','地理','公民與社會'];go('splitSelect');};if(state.stage==='admissionResult'&&state.admission.accepted)confirmAction('放棄這次錄取？','原錄取不保留，將以分科成績重新選填。',start);else start();}
 function admissionForm(program,preferences){
  const data={route:state.route,program:program.id,preferences:preferences.join(','),
@@ -418,6 +439,7 @@ function finishAdmission(results,admitted){
  state.lastAdmissionRoute=state.route;
  state.admission={accepted:!!admitted,...admitted,results};
  if(state.route==='star')state.starUsed=true;
+ if(state.route==='apply')state.applyCompleted=true;
  go('admissionResult');
 }
 async function finishInterview(){
@@ -443,7 +465,7 @@ async function finishInterview(){
  finishAdmission(results,admitted);
 }
 async function submitUniversities(){
- if(!state.preferences.length)return;
+ if(!state.preferences.length||(state.route==='apply'&&applicationClosed()))return;
  const max=state.route==='distribution'?10:3;
  const preferences=[...state.preferences],choices=preferences.map(id=>programs.find(p=>p.id===id));
  if(choices.length>max)throw new Error('志願數超過上限。');
@@ -472,7 +494,7 @@ async function submitUniversities(){
  }
  finishAdmission(results,admitted);
 }
-function admittedProgram(){return state.ending==='admitted'?programs.find(p=>p.id===state.admission.program):null;}
+function admittedProgram(){return state.ending==='admitted'?historicalProgram(state.admission?.program):null;}
 function finishEnding(kind){state.ending=kind;if(kind==='admitted')recordCollection();state.studentId||='DW'+String(state.originSeed%100000000).padStart(8,'0');unlockAchievements();go('ending');}
 function unlockAchievements(){if(state.endLogged&&state.achievementVersion===6)return;const p=admittedProgram(),ids=[];if(p){ids.push('first');if(state.admission.preference===1)ids.push('firstchoice');ids.push(state.route==='distribution'?'split':state.route,p.type==='公立'?'national':'private');if(p.group===8)ids.push('medicine');if([4,5,6].includes(p.group))ids.push('artist');}else ids.push('retake');if(p){if(['medical','pharmacy','top','midTech','midOther'].includes(p.selectivity))ids.push('elite');if(['ntu','nccu'].includes(p.university))ids.push(p.university);if(p.college==='外國語文學院')ids.push('language');if(p.college==='商學院')ids.push('business');if(p.college==='傳播學院')ids.push('media');if(state.history.some(h=>h.gameFailed||h.penalties?.some(n=>n)))ids.push('comeback');}['science','words','society','visual','melody'].forEach((id,i)=>{if(state.attrs[i]>=80)ids.push(id);});if(state.attrs.some(n=>n===100))ids.push('maxed');if(state.attrs.every(n=>n>=60))ids.push('balanced');if(state.school.tier===5)ids.push('rare');ids.push(state.school.type==='公立'?'publichs':'privatehs');if(state.gsat&&Object.values(state.gsat).length>=4&&Object.values(state.gsat).every(n=>n===15))ids.push('gsatfull');if(state.division&&Object.values(state.division).length>=3&&Object.values(state.division).every(n=>n===60))ids.push('splitfull');for(const [game,id] of [['conan-unit','conan'],['conan-order','conan'],['flags','flags'],['colors','colorist']])if(state.history.some(h=>h.gameId===game&&h.gameScore===100))ids.push(id);if(state.history.length===6&&state.history.every(h=>h.correct===2))ids.push('quizmaster');if(state.history.length===6&&state.history.every(h=>h.gameScore>=80))ids.push('playmaster');if(p){if(['nthu','nycu','ncku','ncu','nchu','nsysu','ccu','ntnu','tmu','tnua'].includes(p.university))ids.push(p.university);if(p.group===6)ids.push('dance');if(p.selectivity==='pharmacy')ids.push('pharmacy');}if(state.attrs.every(n=>n>=70))ids.push('all70');if(state.attrs.filter(n=>n>=80).length>=3)ids.push('three80');if(state.rank<=10)ids.push('top10');if(state.gsat?.英文===15)ids.push('english15');if(state.gsat?.數學A===15||state.gsat?.數學B===15)ids.push('math15');if(state.history.some(h=>h.total>=90))ids.push('term90');if(state.history.find(h=>h.term==='高三下')?.correct===2)ids.push('lastperfect');if(state.history.length===6&&state.history.every(h=>h.correct>=1))ids.push('consistent');if((state.allocatedAttrs||[]).length===5)ids.push('fivealloc');if(new Set(state.history.filter(h=>!h.gameFailed&&h.gameScore>=60).map(h=>h.gameId)).size>=5)ids.push('fivegames');for(const [game,id] of [['lyric-artist','lyricwin'],['lyric-fill','lyricwin'],['mahjong','mahjongwin'],['memory','memorywin']])if(state.history.some(h=>h.gameId===game&&h.gameScore===100))ids.push(id);achievements._seeds=[...new Set([...(achievements._seeds||[]),state.originSeed])];if(achievements._seeds.length>=3)ids.push('explorer');const extra=additionalAchievementIds(p);
  const earned=[...ids.slice(0,p&&state.admission.preference===1?2:1),...extra.journey,...ids,...extra.challenges];
@@ -480,7 +502,7 @@ function unlockAchievements(){if(state.endLogged&&state.achievementVersion===6)r
  for(const id of new Set(earned)){if(state.newAchievements.length===5)break;if(!achievements[id]){achievements[id]={date:new Intl.DateTimeFormat('zh-TW',{timeZone:'Asia/Taipei'}).format(new Date())};state.newAchievements.push(id);}}state.endLogged=true;state.achievementVersion=6;saveStore(ACH_KEY,achievements);}
 function recordCollection(){
  if(state?.ending!=='admitted'||!state.admission?.accepted)return;
- const p=programs.find(p=>p.id===state.admission.program);if(!p||collection.programs[p.id])return;
+ const p=historicalProgram(state.admission.program);if(!p||collection.programs[p.id])return;
  collection.programs[p.id]={date:new Intl.DateTimeFormat('zh-TW',{timeZone:'Asia/Taipei'}).format(new Date()),university:p.university,route:state.route};
  if(!saveStore(COLLECTION_KEY,collection))toast('收藏儲存失敗，請檢查瀏覽器儲存空間。');
 }
@@ -496,12 +518,19 @@ function collectionView(){
    <article><span>解鎖科系</span><strong>${unlocked.length}<small> / ${programs.length}</small></strong></article>
    <div>${button('← 回到遊戲','close-collection','secondary')}</div>
   </div>
-  <div class="collection-schools">${catalog.universities.map(collectionSchool).join('')}</div>
+  <div class="collection-schools">${catalog.universities.map(u=>collectionSchool(u)).join('')}</div>
+  ${archivedCollection()}
   <p class="tiny-note">接受錄取後解鎖，收藏會保留在此瀏覽器。</p>
  </section>`;
 }
-function collectionSchool(u){
- const departments=programs.filter(p=>p.university===u.id);
+function archivedCollection(){
+ const earned=archivedPrograms.filter(p=>collection.programs[p.id]);
+ if(!earned.length)return '';
+ const ids=new Set(earned.map(p=>p.university));
+ return `<h2>歷屆收藏</h2><div class="collection-schools">${[...ids].map(id=>collectionSchool(university(id),earned)).join('')}</div>`;
+}
+function collectionSchool(u,pool=programs){
+ const departments=pool.filter(p=>p.university===u.id);
  const count=departments.filter(p=>collection.programs[p.id]).length;
  return `<details name="collection-university" class="collection-school ${count?'has-unlocks':''}" data-university="${u.id}">
   <summary>${crest(u)}<div><h2>${esc(u.name)}</h2><span>${count} / ${departments.length} 系已解鎖</span></div></summary>
@@ -522,13 +551,17 @@ function renderAchievements(){
   achievementCategory==='all'||(achievementCategory==='unlocked'?achievements[id]:category===achievementCategory));
  const filters=ACHIEVEMENT_CATEGORIES.map(([id,name])=>
   `<button type="button" class="secondary" data-achievement-category="${id}" aria-pressed="${achievementCategory===id}">${name}</button>`).join('');
+ const archive=(catalog.archive?.universities||[]).filter(u=>achievements['campus-'+u.id]);
+ const historical=achievementCategory==='unlocked'&&archive.length?`<h3>歷屆成就</h3><div class="achievement-grid">
+  ${archive.map(u=>`<article class="achievement unlocked"><span>🏫</span><b>入學信・${esc(u.name)}</b><small>舊版錄取紀錄</small></article>`).join('')}
+ </div>`:'';
  const cards=visible.map(([id,name,note,icon])=>`<article class="achievement ${achievements[id]?'unlocked':'locked'}">
   <span>${achievements[id]?icon:'🔒'}</span><b>${achievements[id]?esc(name):'尚未發現'}</b>
   <small>${achievements[id]?esc(note):'試試不同的選擇與結局。'}</small></article>`).join('');
  $('#achievement-content').innerHTML=`<span class="eyebrow">平行青春的收藏</span>
   <h2>隱藏成就 <small>${count} / ${ACHIEVEMENTS.length}</small></h2>
   <div class="achievement-filters" role="group" aria-label="成就分類">${filters}</div>
-  ${cards?`<div class="achievement-grid">${cards}</div>`:'<p>這個分類目前還沒有成就。</p>'}`;
+  ${cards?`<div class="achievement-grid">${cards}</div>`:'<p>這個分類目前還沒有成就。</p>'}${historical}`;
 }
 function showAchievements(){
  renderAchievements();
@@ -560,7 +593,7 @@ function downloadStory(){
    <dl>${details.filter(([,value])=>value).map(([label,value])=>`<dt>${label}</dt><dd>${esc(value)}</dd>`).join('')}</dl>
   </article></li>`;
  }).join('');
- const awards=(state.newAchievements||[]).slice(0,5).map(id=>ACHIEVEMENTS.find(item=>item[0]===id)).filter(Boolean);
+ const awards=(state.newAchievements||[]).slice(0,5).map(id=>ACHIEVEMENTS.find(item=>item[0]===id)??(id.startsWith('campus-')&&university(id.slice(7))?[id,'入學信・'+university(id.slice(7)).name,'','🏫']:null)).filter(Boolean);
  const result=program?`${program.universityName}｜${program.name}`:'重考生';
  const html=`<!doctype html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -637,8 +670,16 @@ function gameView(){const g=state.game;let content='';if(g.done)content=`<div cl
 function examSelectView(split=false){const names=split?SPLIT:GSAT,selected=split?state.splitSubjects:state.gsatSubjects;return shell(`${heading(split?'分科測驗':'學科能力測驗','選擇考科')}<div class="exam-count"><b>${selected.length*3}</b><span>題考卷 <small>每考科3題</small></span></div><section class="exam-paper"><div class="subject-checks">${names.map(s=>`<label class="${selected.includes(s)?'selected':''}"><input name="exam-subject" type="checkbox" value="${s}" ${selected.includes(s)?'checked':''}><b>${s}</b><small>最高 ${split?60:15} 級分</small></label>`).join('')}</div><details class="rules"><summary>科系採計參考</summary><div class="requirement-list">${Array.from(new Map(programs.map(p=>[p.subjects.join(',')+'|'+p.split.join(','),p])).values()).map(p=>`<div><span>${split?p.split.join('、'):p.subjects.join('、')}</span><small>例如 ${p.universityName} ${p.name}</small></div>`).join('')}</div></details></section><div class="button-row end exam-start">${button('領取考卷 →',split?'start-split':'start-gsat','primary',selected.length?'':'disabled')}</div>`,2);}
 function scoreTiles(scores,max=15){return `<div class="subject-grid major-scores">${Object.entries(scores).map(([s,v])=>`<div><span>${s}</span><b>${v}</b><small>／${max}級分</small></div>`).join('')}</div>`;}
 function reportStats(){const avg=state.history.length?state.history.slice(0,5).reduce((n,h)=>n+h.total,0)/Math.min(5,state.history.length):0;return `<section class="report-summary"><div class="report-highlight"><span>在校排名</span><strong>前 ${state.rank}<small>%</small></strong><div class="rank-line"><i style="width:${100-state.rank}%"></i></div></div><div><span>在校平均</span><b>${fmt(avg)}</b><small>高一至高三上</small></div><div><span>目前資質</span><b>${traitScore()}</b><small>能力與起始資質綜合</small></div><div><span>學習歷程</span><b>${state.portfolio}</b><small>／100</small></div></section>`;}
-function examResultView(split=false){const scores=split?state.division:state.gsat,record=split?state.splitRecord:state.gsatRecord;return shell(`${heading(MODE[split?'split':'gsat']+' / 成績單','這次，是你答出來的成績。')}${scoreTiles(scores,split?60:15)}${reportStats()}${penaltyNotice(record.result.penalties)}<div class="button-row end">${button(split?'選填分發志願 →':'繼續最後一學期 →',split?'open-distribution':'continue-senior')}</div>${reviewView(record.paper,record.result)}`,2);}
-function routesView(){return shell(`${heading('我的升學檔案','先看看自己，再決定方向。')}${reportStats()}<div class="section-title"><h2>學測成績</h2><span>${Object.keys(state.gsat).length} 科</span></div>${scoreTiles(state.gsat)}<div class="section-title"><h2>選擇升學管道</h2></div><div class="route-grid">${[['star','繁星推薦','同一所大學、同一類組，最多三個科系。','🌟'],['apply','個人申請','依照興趣與專長，最多三個科系。','📒']].map(([r,t,desc,icon],i)=>`<article class="route-card"><span class="route-icon">${icon}</span><h2>${t}</h2><p>${desc}</p>${button('選擇這條路 →',r==='distribution'?'prepare-split':'choose-route',i===1?'primary':'secondary',`data-route="${r}" ${r==='star'&&(state.rank>50||state.starUsed)?'disabled':''}`)}</article>`).join('')}</div>`,3);}
+function aptitudeAdjustments(scores,rawScores){
+ if(!rawScores)return '';
+ const changed=Object.keys(scores).filter(subject=>scores[subject]!==rawScores[subject]);
+ return `<details class="rules"><summary>級分與資質調整</summary>
+  <p>各科依相關資質和能力最多微調 1 級分。加分最高到 14 級分。</p>
+  ${changed.length?`<ul>${changed.map(subject=>`<li>${esc(subject)} ${rawScores[subject]} → ${scores[subject]} 級分</li>`).join('')}</ul>`:'<p>本次各科級分維持原始成績。</p>'}
+ </details>`;
+}
+function examResultView(split=false){const scores=split?state.division:state.gsat,record=split?state.splitRecord:state.gsatRecord;return shell(`${heading(MODE[split?'split':'gsat']+' / 成績單','這次，是你答出來的成績。')}${scoreTiles(scores,split?60:15)}${aptitudeAdjustments(scores,record.result.rawScores)}${reportStats()}${penaltyNotice(record.result.penalties)}<div class="button-row end">${button(split?'選填分發志願 →':'繼續最後一學期 →',split?'open-distribution':'continue-senior')}</div>${reviewView(record.paper,record.result)}`,2);}
+function routesView(){return shell(`${heading('我的升學檔案','先看看自己，再決定方向。')}${reportStats()}<div class="section-title"><h2>學測成績</h2><span>${Object.keys(state.gsat).length} 科</span></div>${scoreTiles(state.gsat)}<div class="section-title"><h2>選擇升學管道</h2></div><div class="route-grid">${[['star','繁星推薦','同一所大學、同一類組，最多三個科系。','🌟'],['apply','個人申請','依照興趣與專長，最多三個科系。','📒']].map(([r,t,desc,icon],i)=>`<article class="route-card"><span class="route-icon">${icon}</span><h2>${t}</h2><p>${desc}</p>${button('選擇這條路 →',r==='distribution'?'prepare-split':'choose-route',i===1?'primary':'secondary',`data-route="${r}" ${(r==='star'&&(state.rank>50||state.starUsed)||r==='apply'&&applicationClosed())?'disabled':''}`)}</article>`).join('')}</div>`,3);}
 function preferences(max){return `<aside class="preferences" id="preferences-panel" aria-label="我的志願清單"><div class="preference-heading"><h3>我的志願序</h3><b>${state.preferences.length} / ${max}</b></div>${button('送出志願 →','submit-universities','primary wide',state.preferences.length?'':'disabled')}<ol>${state.preferences.map((id,i)=>{const p=programs.find(x=>x.id===id);return `<li><b>${i+1}</b><div><strong>${p.universityName}</strong><small>${p.name}</small><div class="preference-controls"><button data-action="move" data-id="${id}" data-dir="-1" aria-label="志願上移" ${i?'':'disabled'}>↑</button><button data-action="move" data-id="${id}" data-dir="1" aria-label="志願下移" ${i===state.preferences.length-1?'disabled':''}>↓</button><button data-action="remove" data-id="${id}">移除</button></div></div></li>`;}).join('')}</ol>${state.preferences.length?'':'<div class="empty-note">＋<br>把想去的地方排進來。</div>'}<small class="tiny-note">機會也會受到科系資質影響。</small></aside>`;}
 function starSchoolResults(){const list=sortedOptions(catalog.universities.filter(u=>searchKey(u.name+u.realName+u.abbr).includes(searchKey(filter.search))),u=>Math.max(...programs.filter(p=>p.university===u.id).map(admissionEstimate)));return `${list.map(u=>`<button class="university-choice" data-action="star-school" data-id="${u.id}">${crest(u)}<h3>${u.name}</h3><span>${u.type}</span><small class="school-chance">最高預估 ${fmt(Math.max(...programs.filter(p=>p.university===u.id).map(admissionEstimate)))}%</small></button>`).join('')}`;}
 function starSchoolView(){return `${heading('繁星推薦 / 先選大學','把星光，投向一個方向。')}<div class="star-process"><span class="current">1 選大學</span><span>2 選類組</span><span>3 排三系</span></div><label class="search-field school-search"><span>⌕</span><input id="catalog-search" placeholder="搜尋大學…" value="${esc(filter.search)}" aria-label="搜尋大學"></label><div class="sort-toolbar">${sortSelect()}</div><div class="university-grid" id="catalog-results">${starSchoolResults()}</div>`;}
@@ -683,9 +724,11 @@ function interviewView(){
     button(`<b>${'ABCD'[i]}</b><span>${esc(option.text)}</span>`,'interview-answer','answer',`data-id="${i}"`)).join('')}</div>
   </article>`,3);
 }
-function admissionView(){const a=state.admission,p=a.accepted?programs.find(p=>p.id===a.program):null,u=p?university(p.university):null;return shell(`${heading('放榜日',p?'下一站，有你的名字。':'這次沒錄取，還有另一條路。')}${p?`<article class="letter admission-color" style="--school-color:${u.color}">${crest(u,'letter-crest')}<span class="accept-label">ADMITTED</span><h2>${p.universityName}</h2><h3>${p.name}</h3><p>${esc(state.name)} 同學，恭喜！</p><small>${a.safety?'滿級分備用校系':'第 '+a.preference+' 志願'} · ${routeName(state.route)}</small>${button('接受錄取，領取學生證 →','accept')}</article>`:''}<details class="panel review" ${p?'':'open'}><summary>本次志願結果</summary>${a.results.map(r=>{const p=programs.find(p=>p.id===r.id);return `<div class="review-item"><h3>${p.universityName} · ${p.name}</h3><p>${r.reason}${r.floor!=null?' · 學測折算 '+r.score+' / '+r.floor:' · 預估機會 '+fmt(r.chance)+'%'}${r.interview!=null?' · 面試 '+r.interview+' 分':''}</p></div>`;}).join('')}</details><div class="button-row">${state.route==='star'&&!a.accepted?button('改走個人申請 →','failed-star-apply','secondary'):''}${['apply','distribution'].includes(state.route)&&!a.accepted?button('調整志願','revise','secondary'):''}${state.route!=='distribution'?button(p?'放棄錄取，改考分科':'挑戰分科測驗 →','prepare-split','secondary'):''}${button('選擇重考','retake','text-button')}</div>`,3);}
+function admissionView(){const a=state.admission,p=a.accepted?historicalProgram(a.program):null,u=p?university(p.university):null;return shell(`${heading('放榜日',p?'下一站，有你的名字。':'這次沒錄取，還有另一條路。')}${p?`<article class="letter admission-color" style="--school-color:${u.color}">${crest(u,'letter-crest')}<span class="accept-label">ADMITTED</span><h2>${p.universityName}</h2><h3>${p.name}</h3><p>${esc(state.name)} 同學，恭喜！</p><small>${a.safety?'滿級分備用校系':'第 '+a.preference+' 志願'} · ${routeName(state.route)}</small>${button('接受錄取，領取學生證 →','accept')}</article>`:''}<details class="panel review" ${p?'':'open'}><summary>本次志願結果</summary>${a.results.map(r=>{const p=historicalProgram(r.id);return `<div class="review-item"><h3>${p.universityName} · ${p.name}</h3><p>${r.reason}${r.floor!=null?' · 學測折算 '+r.score+' / '+r.floor:' · 預估機會 '+fmt(r.chance)+'%'}${r.interview!=null?' · 面試 '+r.interview+' 分':''}</p></div>`;}).join('')}</details><div class="button-row">${state.route==='star'&&!a.accepted?button('改走個人申請 →','failed-star-apply','secondary'):''}${state.route==='distribution'&&!a.accepted?button('調整志願','revise','secondary'):''}${state.route!=='distribution'?button(p?'放棄錄取，改考分科':'挑戰分科測驗 →','prepare-split','secondary'):''}${button('選擇重考','retake','text-button')}</div>`,3);}
 function studentCard(){const p=admittedProgram(),u=university(p.university);return `<div class="student-card" id="student-card" style="--school-color:${u.color};--school-accent:${u.accent}"><div class="card-school">${crest(u,'card-crest')}<div><h2>${p.universityName}</h2><small>學生證 / STUDENT ID</small></div><span class="card-chip">▤</span></div><div class="card-content"><img class="card-portrait" id="card-portrait" src="${state.photo||defaultPortrait()}" alt="${esc(state.name)}的學生證頭貼"><div class="card-info"><span>學生姓名 / NAME</span><h3>${esc(state.name)}</h3><span>錄取學系 / DEPARTMENT</span><strong>${p.name}</strong><span>學號 / STUDENT NO.</span><b class="student-number">${state.studentId}</b></div></div><div class="card-bottom"><span>準大學生 · ${routeName(state.route)}</span><span>LeleHuang / 遊戲紀念卡</span></div></div>`;}
-function endingView(){const p=admittedProgram(),title=!p?'每次再出發，都不會白走。':p.group===8?'白袍新章，從今天開始。':[4,5,6].includes(p.group)?'下一站，讓創作繼續。':state.route==='distribution'?'夏日逆轉，寫下新的一頁。':'你的青春，有了新的下一站。';return shell(`${heading('畢業紀念 / YOUR NEXT CHAPTER',title)}${p?studentCard():`<div class="retake-illustration"><img src="/assets/scenes/rooftop.svg" alt="等待下一次出發的校園"><h2>重考生 · 再準備一次</h2></div>`}${p?`<div class="photo-actions">${button('上傳自己的照片','upload-photo','secondary')}${state.photo?button('恢復預設頭貼','reset-photo','text-button'):''}<small>照片只存於此瀏覽器</small></div>`:''}${state.newAchievements?.length?`<section class="unlocked-banner"><span>✦ 解鎖新成就</span><div>${state.newAchievements.slice(0,5).map(id=>{const a=ACHIEVEMENTS.find(x=>x[0]===id);return `<b>${a[3]} ${a[1]}</b>`;}).join('')}</div></section>`:''}<article class="panel evaluation"><span class="eyebrow">寫給你的畢業評語</span><p>${esc(evaluation())}</p></article><section class="panel"><h3>這趟旅程的成長</h3>${attrBars()}</section><div class="button-row end">${p?button('下載學生證 PNG ↓','download-card'):''}${button('查看校系圖鑑','open-collection','secondary')}${button('下載旅程紀念冊','download-story','secondary')}${button('再寫一個故事','restart','text-button')}</div>`,4);}
+function endingView(){const p=admittedProgram(),title=!p?'每次再出發，都不會白走。':p.group===8?'白袍新章，從今天開始。':[4,5,6].includes(p.group)?'下一站，讓創作繼續。':state.route==='distribution'?'夏日逆轉，寫下新的一頁。':'你的青春，有了新的下一站。';return shell(`${heading('畢業紀念 / YOUR NEXT CHAPTER',title)}${p?studentCard():`<div class="retake-illustration"><img src="/assets/scenes/rooftop.svg" alt="等待下一次出發的校園"><h2>重考生 · 再準備一次</h2></div>`}${p?`<div class="photo-actions">${button('上傳自己的照片','upload-photo','secondary')}${state.photo?button('恢復預設頭貼','reset-photo','text-button'):''}<small>照片只存於此瀏覽器</small></div>`:''}${state.newAchievements?.length?`<section class="unlocked-banner"><span>✦ 解鎖新成就</span><div>${state.newAchievements.slice(0,5).map(id=>{const a=ACHIEVEMENTS.find(x=>x[0]===id);
+ const retired=id.startsWith('campus-')?university(id.slice(7)):null;
+ return a?`<b>${a[3]} ${esc(a[1])}</b>`:retired?`<b>🏫 入學信・${esc(retired.name)}</b>`:'';}).join('')}</div></section>`:''}<article class="panel evaluation"><span class="eyebrow">寫給你的畢業評語</span><p>${esc(evaluation())}</p></article><section class="panel"><h3>這趟旅程的成長</h3>${attrBars()}</section><div class="button-row end">${p?button('下載學生證 PNG ↓','download-card'):''}${button('查看校系圖鑑','open-collection','secondary')}${button('下載旅程紀念冊','download-story','secondary')}${button('再寫一個故事','restart','text-button')}</div>`,4);}
 function render(){if(!catalog)return;openSelect=openSelect||null;$('#restart-button').hidden=!state||collectionOpen;$('#achievement-button').textContent='成就 '+ACHIEVEMENTS.filter(([id])=>achievements[id]).length+'/'+ACHIEVEMENTS.length;if(collectionOpen){app.innerHTML=collectionView();return;}if(welcome||!state)app.innerHTML=welcomeView();else{const views={enrolled:enrolledView,round:roundView,quiz:paperView,event:eventView,dice:diceView,game:gameView,gsatSelect:()=>examSelectView(),splitSelect:()=>examSelectView(true),gsatResult:()=>examResultView(),splitResult:()=>examResultView(true),routes:routesView,universities:universitiesView,applyScreen:applyScreenView,interview:interviewView,admissionResult:admissionView,ending:endingView};if(!views[state.stage]){welcome=true;app.innerHTML=welcomeView();return;}app.innerHTML=views[state.stage]();}}
 async function action(a,b){
  if(a==='open-collection'){openCollection();return;}
@@ -761,7 +804,7 @@ async function action(a,b){
   else go('interview');
  }
  else if(a==='failed-star-apply')setRoute('apply');
- else if(a==='revise')setRoute(state.route);
+ else if(a==='revise'&&state.route==='distribution')setRoute('distribution');
  else if(a==='accept')finishEnding('admitted');
  else if(a==='retake')confirmAction('選擇重新準備？','這輪會以重考生結局結束，旅程與解鎖成就仍會留下。',()=>finishEnding('retake'));
  else if(a==='upload-photo')$('#photo-input').click();
@@ -829,5 +872,23 @@ $('#theme-dialog').addEventListener('click',e=>{
  applyTheme(id);
  saveStore(THEME_KEY,id);
 });
-async function boot(){try{const responses=await Promise.all(['/catalog.json','/minigames.json','/songs.json','/events.json','/interviews.json'].map(url=>fetch(url,{cache:'no-cache'})));if(responses.some(r=>!r.ok))throw new Error('校園資料讀取失敗');[catalog,miniBank,songs,events,interviewBank]=await Promise.all(responses.map(r=>r.json()));registerAchievementExpansion();programs=catalog.programs.map(p=>{const u=university(p.university);return{...p,universityName:u.name,realName:u.realName,abbr:u.abbr,type:u.type,area:u.area,source:p.source||u.source};});collection=readStore(COLLECTION_KEY,{programs:{}});if(!collection||!collection.programs||typeof collection.programs!=='object'||Array.isArray(collection.programs))collection={programs:{}};achievements=readStore(ACH_KEY,{});seen=readStore(SEEN_KEY,[]);miniSeen=readStore(MINI_KEY,[]);try{legacy=['daiwan-next-chapter-v1','daiwan-next-chapter-v2','daiwan-classroom-v3','daiwan-campus-v4'].some(k=>!!localStorage.getItem(k));const s=readStore(KEY,null);if(s?.version===5&&typeof s.name==='string'&&s.attrs?.length===5&&s.aptitude?.length===5&&s.round>=0&&s.round<=5)state=s;}catch{storageOK=false;}recordCollection();if(state){restoreMiniHistory();state.gameOrder=state.gameOrder?.map(id=>id==='lyric-fill'?'lyric-artist':id);refreshMiniOrder();if(state.game?.type==='lyric-fill'&&!state.game.done){state.game=null;if(state.stage==='game')state.stage='dice';}saveStore(KEY,state);}if(state?.ending&&state.achievementVersion!==6){unlockAchievements();save();}if(state?.stage==='game'&&savedBoardNeedsRefresh(state.game)){state.game=null;startGame();}else render();}catch(e){app.innerHTML=`<div class="boot-error"><h1>校園資料還沒準備好。</h1><p>${esc(e.message)}，請確認Java已啟動。</p><button class="primary" onclick="location.reload()">重新整理</button></div>`;}}
+function reconcileAdmissionCatalog(){
+ const active=new Set(programs.map(p=>p.id));
+ state.preferences=(state.preferences||[]).filter(id=>active.has(id));
+ if(['applyScreen','interview'].includes(state.stage)){
+  const application=state.application;
+  const affected=!application||application.preferences.some(id=>!active.has(id))||(application.safety&&!active.has(application.safety));
+  if(affected){
+   state.application=null;
+   state.stage='universities';
+  }
+ }else if(state.stage==='universities'&&state.route==='apply'&&applicationClosed()&&state.admission){
+  state.stage='admissionResult';
+ }
+ if(state.starSchool&&!catalog.universities.some(u=>u.id===state.starSchool)){
+  state.starSchool=null;
+  state.starGroup=null;
+ }
+}
+async function boot(){try{const responses=await Promise.all(['/catalog.json','/minigames.json','/songs.json','/events.json','/interviews.json'].map(url=>fetch(url,{cache:'no-cache'})));if(responses.some(r=>!r.ok))throw new Error('校園資料讀取失敗');[catalog,miniBank,songs,events,interviewBank]=await Promise.all(responses.map(r=>r.json()));registerAchievementExpansion();programs=catalog.programs.map(hydrateProgram);archivedPrograms=(catalog.archive?.programs||[]).map(hydrateProgram);collection=readStore(COLLECTION_KEY,{programs:{}});if(!collection||!collection.programs||typeof collection.programs!=='object'||Array.isArray(collection.programs))collection={programs:{}};achievements=readStore(ACH_KEY,{});seen=readStore(SEEN_KEY,[]);miniSeen=readStore(MINI_KEY,[]);try{legacy=['daiwan-next-chapter-v1','daiwan-next-chapter-v2','daiwan-classroom-v3','daiwan-campus-v4'].some(k=>!!localStorage.getItem(k));const s=readStore(KEY,null);if(s?.version===5&&typeof s.name==='string'&&s.attrs?.length===5&&s.aptitude?.length===5&&s.round>=0&&s.round<=5)state=s;}catch{storageOK=false;}recordCollection();if(state){reconcileAdmissionCatalog();restoreMiniHistory();state.gameOrder=state.gameOrder?.map(id=>id==='lyric-fill'?'lyric-artist':id);refreshMiniOrder();if(state.game?.type==='lyric-fill'&&!state.game.done){state.game=null;if(state.stage==='game')state.stage='dice';}saveStore(KEY,state);}if(state?.ending&&state.achievementVersion!==6){unlockAchievements();save();}if(state?.stage==='game'&&savedBoardNeedsRefresh(state.game)){state.game=null;startGame();}else render();}catch(e){app.innerHTML=`<div class="boot-error"><h1>校園資料還沒準備好。</h1><p>${esc(e.message)}，請確認Java已啟動。</p><button class="primary" onclick="location.reload()">重新整理</button></div>`;}}
 boot();

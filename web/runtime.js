@@ -18,7 +18,7 @@ const vector=v=>{const a=String(v??'').split(',');if(a.length!==5)throw Error('�
 function labels(f){if(f.mode==='term'){int(f.round,0,5);return ['流行文化','生活推理'];}const allowed=f.mode==='gsat'?GSAT:f.mode==='split'?SPLIT:[],a=String(f.subjects??'').split(',');if(!a.length||new Set(a).size!==a.length||a.some(s=>!allowed.includes(s)))throw Error('請選擇有效且不重複的應考科目。');return a;}
 function sources(s){return ({'流行文化':['校園趣聞','影視','動漫','體育','時事','音樂'],'生活推理':['校園趣聞','國文','英文','數學','自然','歷史','地理','公民','藝術','常識'],'數學A':['數學'],'數學B':['數學'],'數學甲':['數學'],'數學乙':['數學'],'自然':['自然','物理','化學','生物'],'社會':['歷史','地理','公民'],'公民與社會':['公民']})[s]||[s];}
 function ability(s){if(['國文','英文'].includes(s))return 1;if(['歷史','地理','公民','公民與社會','社會','流行文化'].includes(s))return 2;return s==='藝術'?3:s==='音樂'?4:0;}
-function active(q){return !(['英文','數學'].includes(q.subject)&&q.difficulty>2)&&!(q.subject==='英文'&&['Literary bookshelf','Authors and works'].includes(q.theme))&&!(q.subject==='數學'&&['數學史與解謎','數學史','典籍考古'].includes(q.theme))&&!(q.subject==='音樂'&&['歌詞選字','歌手點名','emoji猜歌','歌名謎語'].includes(q.theme));}
+function active(q){return !(['英文','數學'].includes(q.subject)&&q.difficulty>2&&!q.id.startsWith('advanced-match-'))&&!(q.subject==='英文'&&['Literary bookshelf','Authors and works'].includes(q.theme))&&!(q.subject==='數學'&&['數學史與解謎','數學史','典籍考古'].includes(q.theme))&&!(q.subject==='音樂'&&['歌詞選字','歌手點名','emoji猜歌','歌名謎語'].includes(q.theme));}
 const norm=s=>String(s).normalize('NFKC').trim().toLowerCase().replace(/\s+/g,'');
 function songKey(q){
  if(q.subject!=='音樂')return '';
@@ -61,10 +61,12 @@ class Engine {
  constructor(data){this.data=data;this.questions=new Map(data.questions.map(q=>[q.id,q]));this.programs=new Map(data.programs.map(p=>[p.id,p]));}
  request(path,f){switch(path){case 'enroll':return this.enroll(f);case 'paper':return this.paper(f);case 'grade':return this.grade(f);case 'admission':return this.admission(f);default:throw Error('找不到這個API。');}}
  enroll(f){if(!['male','female'].includes(f.gender)||!['公立','私立'].includes(f.schoolType))throw Error('請選擇性別與公私立偏好。');const r=new JavaRandom(seed(f)),all=this.data.schools.filter(s=>s.type===f.schoolType&&(s.gender==='all'||s.gender===f.gender));let draw=r.nextInt(all.reduce((a,s)=>a+s.weight,0)),school=all[0];for(const s of all){draw-=s.weight;if(draw<0){school=s;break;}}const attrs=[],aptitude=[];for(const b of school.base){attrs.push(Math.max(0,Math.min(100,b+r.nextInt(7)-3)));aptitude.push(Math.max(20,Math.min(85,b+8+(school.tier-3)*2+r.nextInt(11)-5)));}const {weight,...publicSchool}=school;return {school:publicSchool,attrs,aptitude};}
- pick(label,type,level,used,seen,current,facts,categories,r,theme){
+ pick(label,type,level,used,seen,current,facts,categories,r,theme,advanced){
   let candidates=this.data.questions.filter(q=>sources(label).includes(q.subject)&&q.type===type&&active(q)
    &&!used.has(q.id)&&!current.has(questionPrompt(q))&&!questionFingerprints(q).some(key=>facts.has(key))&&!used.has(songKey(q)));
   if(!candidates.length)throw Error('本科題庫不足，無法再抽出未作答的題目。');
+  const preferred=candidates.filter(q=>q.id.startsWith('advanced-match-')===advanced);
+  if(preferred.length)candidates=preferred;
   const trivia=candidates.filter(q=>q.subject==='校園趣聞');
   if(trivia.length)candidates=trivia;
   const leastUsed=Math.min(...candidates.map(q=>categories.get(questionCategory(q))||0));
@@ -87,7 +89,7 @@ class Engine {
    rememberQuestion(q,used,current,facts,categories);
   }
   const r=new JavaRandom(BigInt(seed(f))^BigInt(hash(f.mode))^BigInt(hash(String(f.round??'0')))^BigInt(hash('['+subjects.join(', ')+']')));const questions=[],per=f.mode==='term'?1:3;
-  for(const label of subjects)for(let j=0;j<per;j++){const type=f.mode==='term'?'choice':j===0?'choice':j===1?'match':label==='英文'?'choice':'fill';const a=attrs[ability(label)];let level=f.mode==='term'?(a<45&&Number(f.round)<2?2:3):j===0?2:3;if(a>=75||['數學A','數學甲'].includes(label))level=3;if(label==='英文')level=2;if(label.startsWith('數學'))level=['數學A','數學甲'].includes(label)||a>=75?2:1;const theme=label==='英文'?(j===1?(r.nextBoolean()?'Screen matching':'Grammar matching'):j===0?'Movie clues':'Grammar practice'):label.startsWith('數學')?(type==='choice'&&r.nextBoolean()?'數學家點名':''):'';questions.push(this.pick(label,type,level,used,seen,current,facts,categories,r,theme));}
+  for(const label of subjects)for(let j=0;j<per;j++){const type=f.mode==='term'?'choice':j===0?'choice':j===1?'match':label==='英文'?'choice':'fill';const a=attrs[ability(label)];let level=f.mode==='term'?(a<45&&Number(f.round)<2?2:3):j===0?2:3;if(a>=75||['數學A','數學甲'].includes(label))level=3;if(label==='英文')level=2;if(label.startsWith('數學'))level=['數學A','數學甲'].includes(label)||a>=75?2:1;const theme=label==='英文'?(j===1?(r.nextBoolean()?'Screen matching':'Grammar matching'):j===0?'Movie clues':'Grammar practice'):label.startsWith('數學')?(type==='choice'&&r.nextBoolean()?'數學家點名':''):'';questions.push(this.pick(label,type,level,used,seen,current,facts,categories,r,theme,f.mode==='gsat'&&type==='match'));}
   return {mode:f.mode,questions};
  }
  fraction(q,a){if(q.type==='choice')return int(a,0,q.options.length-1)===Number(q.key)?1:0;if(q.type==='fill'){if(!String(a??'').trim()||String(a).length>80)throw Error('請完成短填答（最多80字元）。');return q.key.split('/').some(k=>norm(k)===norm(a))?1:0;}const parts=String(a??'').split(',');if(parts.length!==q.left.length)throw Error('請完成所有配對。');const indices=parts.map(v=>int(v,0,q.options.length-1));if(new Set(indices).size!==parts.length)throw Error('配對選項不可重複。');const keys=q.key.split(',').map(Number);return indices.filter((v,i)=>v===keys[i]).length/parts.length;}
@@ -126,6 +128,16 @@ class Engine {
   const scores=Object.fromEntries([...grades].map(([label,g])=>[
    label,Math.round(multiplier*(g.points+(g.weight?g.earned/g.weight*(15-g.choices*5):0)))
   ]));
+  if(f.mode==='gsat'&&f.aptitude!==undefined){
+   const aptitude=vector(f.aptitude),attrs=vector(f.attrs);
+   const rawScores={...scores};
+   for(const label of subjects){
+    const i=ability(label),raw=rawScores[label],readiness=aptitude[i]*.65+attrs[i]*.35;
+    if(readiness<55)scores[label]=Math.max(0,raw-1);
+    else if(readiness>=76&&raw>=4&&raw<14)scores[label]=raw+1;
+   }
+   return {scores,rawScores,correct,review};
+  }
   return {scores,correct,review};
  }
  admission(f){const route=f.route;if(!['star','apply','distribution'].includes(route))throw Error('未知升學管道。');const ids=String(f.preferences??'').split(','),limit=route==='distribution'?10:3;if(ids.length>limit||!ids.length||new Set(ids).size!==ids.length)throw Error('志願數量不符。');const choices=ids.map(id=>this.programs.get(id));if(choices.some(p=>!p))throw Error('校系不存在。');if(route==='star'&&(new Set(choices.map(p=>p.university)).size!==1||new Set(choices.map(p=>p.group)).size!==1))throw Error('繁星僅能選一校、一類組，至多三系。');const p=this.programs.get(f.program);if(!p||!ids.includes(p.id))throw Error('校系不在志願內。');const attrs=vector(f.attrs),apt=vector(f.aptitude),portfolio=num(f.portfolio,0,100),rank=num(f.rank,1,100),split=route==='distribution',subjects=split?p.split:p.subjects;
@@ -138,7 +150,7 @@ class Engine {
    return {accepted,score:Math.round(exam*10)/10,floor:examFloor,chance:accepted?100:0,
     reason:accepted?'通過一階':'未達一階學測門檻'};
   }
-  const interview=apply?num(f.interview??75,0,100):0;
+  const interview=apply?num(f.interview??80,0,100):0;
   let score;
   if(apply)score=exam*.4+talent*.3+interview*.3;
   else if(route==='star')score=art?exam*.2+(100-rank)*.15+talent*.65:exam*.5+(100-rank)*.25+talent*.25;
@@ -146,8 +158,12 @@ class Engine {
   const talentFloor=art?Math.max(p.talentFloor,58):apply?0:p.talentFloor;
   const qualified=route!=='star'||rank<=p.maxRank,screened=exam>=examFloor&&talent>=talentFloor;
   const safety=apply&&f.safety==='1'&&screened&&exam>=100&&['public','privateTech','private'].includes(p.selectivity);
-  const cap={medical:18,pharmacy:25,top:35,midTech:46,midOther:57,public:70,privateTech:83}[p.selectivity]??98;
-  const chance=safety?100:qualified&&screened?Math.max(.5,Math.min(cap,100/(1+Math.exp((p.threshold-score)/5)))):0;
+  const unit=value=>Math.max(0,Math.min(1,value));
+  const topSupport=apply&&p.selectivity==='top'
+   ?unit((exam-85)/8)*unit((talent-48)/12)*unit((interview-74)/10):0;
+  const cap=({medical:18,pharmacy:25,top:35,midTech:46,midOther:57,public:70,privateTech:83}[p.selectivity]??98)+10*topSupport;
+  const threshold=p.threshold-9*topSupport;
+  const chance=safety?100:qualified&&screened?Math.max(.5,Math.min(cap,100/(1+Math.exp((threshold-score)/5)))):0;
   const draw=new JavaRandom(BigInt.asIntN(64,BigInt(seed(f))*6364136223846793005n)^BigInt(hash(p.id))^BigInt(hash(route))).nextDouble()*100,accepted=draw<chance;
   return {accepted,score:Math.round(score*10)/10,chance:Math.round(chance*10)/10,reason:safety?'滿級分備用錄取':!qualified?'在校排名未達門檻':!screened?(exam<examFloor?'考試門檻未達標':'科系資質未達標'):accepted?'錄取':'本輪未錄取'};
  }

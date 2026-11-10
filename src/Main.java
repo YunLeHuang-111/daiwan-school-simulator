@@ -115,7 +115,7 @@ public class Main {
     // Retired questions remain available only to grade already-saved papers.
     static boolean active(Question q){
         return !(q.subject.equals("音樂")&&List.of("歌詞選字","歌手點名","emoji猜歌","歌名謎語").contains(q.theme))
-            &&!(List.of("英文","數學").contains(q.subject)&&q.difficulty>2)
+            &&!(List.of("英文","數學").contains(q.subject)&&q.difficulty>2&&!q.id.startsWith("advanced-match-"))
             &&!(q.subject.equals("英文")&&List.of("Literary bookshelf","Authors and works").contains(q.theme))
             &&!(q.subject.equals("數學")&&List.of("數學史與解謎","數學史","典籍考古").contains(q.theme));
     }
@@ -162,10 +162,12 @@ public class Main {
         if(!song.isEmpty())used.add(song);
         categories.merge(questionCategory(q),1,Integer::sum);
     }
-    static Question pick(String label,String type,int level,Set<String> used,Set<String> seen,Set<String> current,Set<String> facts,Map<String,Integer> categories,Random random,String preferredTheme) {
+    static Question pick(String label,String type,int level,Set<String> used,Set<String> seen,Set<String> current,Set<String> facts,Map<String,Integer> categories,Random random,String preferredTheme,boolean advanced) {
         List<Question> candidates=QUESTIONS.stream().filter(q->sources(label).contains(q.subject)&&q.type.equals(type)&&active(q)
             &&!used.contains(q.id)&&!current.contains(questionPrompt(q))&&questionFingerprints(q).stream().noneMatch(facts::contains)&&!used.contains(songKey(q))).toList();
         if(candidates.isEmpty())throw new IllegalArgumentException("本科題庫不足，無法再抽出未作答的題目。");
+        List<Question> preferred=candidates.stream().filter(q->q.id.startsWith("advanced-match-")==advanced).toList();
+        if(!preferred.isEmpty())candidates=preferred;
         List<Question> trivia=candidates.stream().filter(q->q.subject.equals("校園趣聞")).toList();
         if(!trivia.isEmpty())candidates=trivia;
         if(preferredTheme.isEmpty()){
@@ -206,7 +208,7 @@ public class Main {
                 if(label.equals("英文"))level=2;
                 if(label.startsWith("數學"))level=List.of("數學A","數學甲").contains(label)||ability>=75?2:1;
                 String theme=label.equals("英文")?(j==1?(r.nextBoolean()?"Screen matching":"Grammar matching"):j==0?"Movie clues":"Grammar practice"):label.startsWith("數學")?(type.equals("choice")&&r.nextBoolean()?"數學家點名":""):"";
-                Question q=pick(label,type,level,used,seen,current,facts,categories,r,theme);result.add(q.publicData(label));
+                Question q=pick(label,type,level,used,seen,current,facts,categories,r,theme,mode.equals("gsat")&&type.equals("match"));result.add(q.publicData(label));
             }
         }
         json(ex,200,Map.of("mode",mode,"questions",result));
@@ -266,7 +268,17 @@ public class Main {
             double value=points.getOrDefault(label,0)+(total>0?earned.get(label)/total*(15-5*choices.getOrDefault(label,0)):0);
             scores.put(label,(int)Math.round(value*(max/15)));
         }
-        json(ex,200,Map.of("scores",scores,"correct",correct,"review",review));
+        if(mode.equals("gsat")&&f.containsKey("aptitude")){
+            double[] aptitude=vector(f.get("aptitude")),attrs=vector(f.getOrDefault("attrs",""));
+            Map<String,Integer> rawScores=new LinkedHashMap<>(scores);
+            for(String label:subjects){
+                int i=abilityIndex(label),raw=rawScores.get(label);
+                double readiness=aptitude[i]*.65+attrs[i]*.35;
+                if(readiness<55)scores.put(label,Math.max(0,raw-1));
+                else if(readiness>=76&&raw>=4&&raw<14)scores.put(label,raw+1);
+            }
+            json(ex,200,Map.of("scores",scores,"rawScores",rawScores,"correct",correct,"review",review));
+        }else json(ex,200,Map.of("scores",scores,"correct",correct,"review",review));
     }
     record Program(String id,String university,int group,double threshold,int maxRank,List<String> gsat,List<String> split,double[] weights,double examFloor,double talentFloor,String selectivity,Double applyFloor){}
     static final Map<String,Program> PROGRAMS=new HashMap<>();
@@ -277,6 +289,7 @@ public class Main {
         }}catch(IOException e){throw new ExceptionInInitializerError("找不到data/programs.tsv。");}
     }
     static double[] vector(String value){String[] p=value.split(",");if(p.length!=5)throw new IllegalArgumentException("需要五項能力。");return Arrays.stream(p).mapToDouble(x->number(x,0,100)).toArray();}
+    static double unit(double value){return Math.max(0,Math.min(1,value));}
     static void admission(HttpExchange ex,Map<String,String> f)throws IOException {
         String route=f.getOrDefault("route","");if(!List.of("star","apply","distribution").contains(route))throw new IllegalArgumentException("未知升學管道。");
         String[] preferences=f.getOrDefault("preferences","").split(",");int limit=route.equals("distribution")?10:3;
@@ -299,7 +312,7 @@ public class Main {
                 "chance",passed?100:0,"reason",passed?"通過一階":"未達一階學測門檻"));
             return;
         }
-        double interview=apply?number(f.getOrDefault("interview","75"),0,100):0;
+        double interview=apply?number(f.getOrDefault("interview","80"),0,100):0;
         double score=switch(route){
             case "apply" -> exam*.4+talent*.3+interview*.3;
             case "star" -> art?exam*.2+(100-rank)*.15+talent*.65:exam*.5+(100-rank)*.25+talent*.25;
@@ -310,8 +323,11 @@ public class Main {
         boolean screened=exam>=examFloor&&talent>=talentFloor;
         boolean safety=apply&&"1".equals(f.get("safety"))&&screened&&exam>=100
             &&List.of("public","privateTech","private").contains(p.selectivity);
-        int cap=switch(p.selectivity){case "medical"->18;case "pharmacy"->25;case "top"->35;case "midTech"->46;case "midOther"->57;case "public"->70;case "privateTech"->83;default->98;};
-        double chance=safety?100:qualified&&screened?Math.max(.5,Math.min(cap,100/(1+Math.exp((p.threshold-score)/5)))):0;
+        double topSupport=apply&&p.selectivity.equals("top")
+            ?unit((exam-85)/8)*unit((talent-48)/12)*unit((interview-74)/10):0;
+        double threshold=p.threshold-9*topSupport;
+        double cap=(switch(p.selectivity){case "medical"->18;case "pharmacy"->25;case "top"->35;case "midTech"->46;case "midOther"->57;case "public"->70;case "privateTech"->83;default->98;})+10*topSupport;
+        double chance=safety?100:qualified&&screened?Math.max(.5,Math.min(cap,100/(1+Math.exp((threshold-score)/5)))):0;
         double draw=new Random(seed(f)*6364136223846793005L^p.id.hashCode()^route.hashCode()).nextDouble()*100;
         boolean accepted=draw<chance;
         json(ex,200,Map.of("accepted",accepted,"score",Math.round(score*10)/10.0,"chance",Math.round(chance*10)/10.0,

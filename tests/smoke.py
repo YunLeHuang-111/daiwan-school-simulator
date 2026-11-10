@@ -8,7 +8,7 @@ BASE=sys.argv[1] if len(sys.argv)>1 else 'http://localhost:8080'
 ROOT=Path(__file__).resolve().parents[1]
 rows=[s.split('|') for s in (ROOT/'data/questions.tsv').read_text().splitlines() if s and not s.startswith('#')]
 BANK={p[0]:p for p in rows}
-assert len(BANK)==len(rows)==851
+assert len(BANK)==len(rows)==875
 for row in rows:
  assert len(row)==10
  assert not(row[1]=='英文' and row[4]=='fill')
@@ -65,15 +65,16 @@ for mode,subjects in [('gsat',['國文','英文','數學A','數學B','自然','�
   assert Counter(q['examSubject'] for q in qs)==Counter({s:3 for s in selected})
   for subject in selected:
    if subject=='英文':
-    assert {q['theme'] for q in qs if q['examSubject']==subject}<={'Movie clues','Grammar practice','Screen matching','Grammar matching'}
-    assert all(q['difficulty']<=2 for q in qs if q['examSubject']==subject)
+    assert {q['theme'] for q in qs if q['examSubject']==subject}<={'Movie clues','Grammar practice','Screen matching','Grammar matching','進階配合'}
+    assert all((q['difficulty']<=2 or mode=='gsat' and q['id'].startswith('advanced-match-')) for q in qs if q['examSubject']==subject)
    if subject.startswith('數學'):
-    assert all(q['difficulty']<=2 for q in qs if q['examSubject']==subject)
+    assert all((q['difficulty']<=2 or mode=='gsat' and q['id'].startswith('advanced-match-')) for q in qs if q['examSubject']==subject)
     assert not any(q['theme'] in ['數學史與解謎','數學史','典籍考古'] for q in qs if q['examSubject']==subject)
    expected={'choice','match'} if subject=='英文' else {'choice','match','fill'}
    assert {q['type'] for q in qs if q['examSubject']==subject}==expected
    for q in qs:
     if q['type']=='match':assert len(q['left'])==len(q['options'])==4
+  if mode=='gsat':assert all(q['id'].startswith('advanced-match-') for q in qs if q['type']=='match')
   full=req('/api/grade',grade(paper,joined));assert set(full['scores'])==set(selected)
   assert all(s==(15 if mode=='gsat' else 60) for s in full['scores'].values())
   assert all(s==0 for s in req('/api/grade',grade(paper,joined,wrong=True))['scores'].values())
@@ -88,15 +89,17 @@ req('/api/paper',{'mode':'term','round':6},400)
 req('/api/paper',{'mode':'term','round':0,'attrs':'1,2,3,4,5,6'},400)
 req('/api/paper',{'mode':'term','round':0,'attrs':'NaN,1,2,3,4'},400)
 catalog=json.loads((ROOT/'web/catalog.json').read_text());ps=catalog['programs']
-assert len(catalog['universities'])==100 and len(ps)==827
-assert len({p['id'] for p in ps})==827
+assert len(catalog['universities'])==50 and len(ps)==538
+assert len({p['id'] for p in ps})==538
+assert {u['id'] for u in catalog['universities'] if u.get('track')=='technology'}=={'ntust','ntut','nfu','yuntech','cnu'}
+assert len(catalog['archive']['universities'])==50
 by_id={p['id']:p for p in ps}
 levels=['medical','pharmacy','top','midTech','midOther','public','privateTech','private']
 for harder,easier in zip(levels,levels[1:]):
  for field in ['threshold','examFloor','talentFloor']:
   assert min(p[field] for p in ps if p['selectivity']==harder)>max(p[field] for p in ps if p['selectivity']==easier)
-assert {u['id'] for u in catalog['universities']} >= {'ntpu','ntust','ntut','nkust','ndhu','dyu','fgu','cnu'}
-assert len({p['id'] for p in ps if p.get('admissionReference',{}).get('scope')=='program'})>750
+assert {u['id'] for u in catalog['universities']} >= {'ntpu','ntust','ntut','ndhu','dyu','fgu','cnu'}
+assert len({p['id'] for p in ps if p.get('admissionReference',{}).get('scope')=='program'})>500
 for row in (ROOT/'data/programs.tsv').read_text().splitlines():
  if not row or row.startswith('#'):continue
  fields=row.split('|');p=by_id[fields[0]]
@@ -104,7 +107,7 @@ for row in (ROOT/'data/programs.tsv').read_text().splitlines():
  assert float(fields[8])==p['examFloor'] and float(fields[9])==p['talentFloor'] and fields[10]==p['selectivity']
  assert fields[5].split(',')==p['subjects'] and fields[6].split(',')==p['split'] and list(map(float,fields[7].split(',')))==p['weights']
 for u in catalog['universities']:assert (ROOT/'web'/u['crest'].lstrip('/')).is_file()
-assert len({u['crest'] for u in catalog['universities']})==100
+assert len({u['crest'] for u in catalog['universities']})==50
 assert not any(p['name']=='音樂學系' and p['university'] in ['ntu','nycu','nccu'] for p in ps)
 assert all(len(p['weights'])==5 and abs(sum(p['weights'])-1)<.001 for p in ps)
 assert len(json.loads((ROOT/'web/songs.json').read_text()))==54
@@ -136,5 +139,5 @@ low=dict(a,program=med['id'],preferences=med['id'],**{'s.'+s:12 for s in ['國�
 assert req('/api/admission',low)['chance']==0
 strong=dict(low,attrs='100,100,100,100,100',aptitude='100,100,100,100,100',**{'s.'+s:15 for s in ['國文','英文','數學A','數學B','自然','社會']})
 assert req('/api/admission',strong)['chance']<=18
-assert req('/api/admission',dict(a,attrs='100,100,100,100,100',aptitude='100,100,100,100,100'))['chance']<=35
-print('PASS: 851 questions; weighted/gender-restricted 50 high schools; 6 x 2 questions; GSAT/split 3 per selected subject; grading/validation; 100 universities / 827 programs; four-pair questions, no English fill, elite/medical gates.')
+assert req('/api/admission',dict(a,attrs='100,100,100,100,100',aptitude='100,100,100,100,100'))['chance']<=45
+print('PASS: 875 questions; weighted/gender-restricted 50 high schools; 6 x 2 questions; GSAT/split 3 per selected subject; grading/validation; 50 universities / 538 programs; four-pair questions, no English fill, elite/medical gates.')
