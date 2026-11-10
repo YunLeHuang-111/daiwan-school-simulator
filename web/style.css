@@ -319,5 +319,6 @@
 .relay-clock strong{font-size:1.25em;font-variant-numeric:tabular-nums}
 .relay-feedback{color:#a84137}
 .relay-sequence{display:flex;justify-content:center;gap:clamp(4px,2vw,10px);margin:12px 0}
-.relay-sequence b{display:grid;place-items:center;min-width:0;width:2.2em;aspect-ratio:1;border:1px solid var(--line);border-radius:7px;background:var(--theme-soft)}
+.relay-sequence b{display:grid;place-items:center;min-width:0;width:3.4rem;aspect-ratio:1;font-size:clamp(1.5rem,6vw,2.35rem);line-height:1;border:1px solid var(--line);border-radius:7px;background:var(--theme-soft)}
 .relay-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.relay-grid button{font-size:clamp(1.8rem,8vw,2.5rem);min-height:52px;line-height:1}

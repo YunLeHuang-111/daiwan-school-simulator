@@ -384,6 +384,16 @@ const RECYCLE_ITEMS=[
  ['🤧','擦過鼻涕的衛生紙',2],['🩹','從手指撕下的用過 OK 繃',2],['🪥','刷毛已磨損的舊牙刷',2],['😷','戴過的一次性口罩',2],['🧽','破掉的洗碗海綿',2],['🧹','打掃地板掃起的灰塵',2],
  ['🥫','倒空、沖洗過的鐵罐',3],['🍾','倒空的完整玻璃瓶',3],['🧴','倒空、洗過的塑膠瓶',3],['🥤','喝完、沖過的鋁製飲料罐',3],['🫙','洗乾淨的玻璃果醬罐',3],['💧','喝完水的空寶特瓶',3],
 ];
+const RECYCLE_CHALLENGES=[
+ ['📦','包裹裡沒沾膠帶的乾燥紙板',0],['🎁','拆開後平整、沒有亮膜的包裝紙',0],
+ ['📝','寫過字但沒沾油、也沒護貝的紙',0],['✉️','已拆掉塑膠透明窗的乾紙信封',0],
+ ['🍊','撕掉塑膠標籤後的橘子皮',1],['🍎','切掉果肉後剩下的蘋果皮',1],
+ ['🥕','煮之前削下的紅蘿蔔皮',1],['🥬','從塑膠包裝拿出來的生菜外葉',1],
+ ['🍕','已撕下、沾滿油漬的披薩紙板',2],['🧾','外層已護貝的紙標籤',2],
+ ['📰','吸過油的廚房紙巾',2],['🍟','內層貼著塑膠膜的油膩點心袋',2],
+ ['🥫','撕掉紙標籤、洗淨後留下的鋁罐',3],['🍯','刮掉殘渣並洗過的空玻璃蜂蜜罐',3],
+ ['🧴','已拆標籤並洗淨的空寶特瓶',3],['🥫','取出內容物並沖過的鋼製罐頭盒',3],
+];
 const BINS=['乾淨紙類','果皮與生菜葉','一般垃圾','空瓶與罐'];
 const STACK_LEVELS=5;
 const RELAY_SYMBOLS=[['★','星形'],['●','圓形'],['▲','三角形'],['■','方形'],['◆','菱形'],['♥','愛心']];
@@ -410,7 +420,9 @@ function newPuzzle(type){
   g.recalled=0;
   g.phase='ready';
  }else if(type==='recycle'){
-  g.items=shuffle(BINS.flatMap((_,bin)=>freshSample(RECYCLE_ITEMS.filter(item=>item[2]===bin),1,item=>'recycle:'+item[1])));
+  const key=item=>'recycle:'+item[1];
+  // Bins can repeat, so the last item cannot be guessed by elimination.
+  g.items=shuffle([...freshSample(RECYCLE_CHALLENGES,3,key),...freshSample(RECYCLE_ITEMS,1,key)]);
  }else{
   g.prizes=shuffle([100,86,72,60]);
  }
@@ -504,8 +516,8 @@ function puzzleBoard(g){
  }
  if(g.type==='recycle'){
   const [icon,item]=g.items[g.steps];
-  return `<p class="game-instruction">先讀物品名稱和狀態，再點校園對應的回收桶或垃圾桶。</p>${progress}
-   <p class="puzzle-item"><span aria-hidden="true">${icon}</span> 手上的物品：${item}</p>
+  return `<p class="game-instruction">看材質和使用狀態，選擇校園的分類桶。同一個桶可能用不只一次。</p>${progress}
+   <p class="puzzle-item"><span aria-hidden="true">${icon}</span> ${esc(item)}</p>
    <div class="puzzle-grid recycle-grid">${BINS.map((bin,i)=>button(bin,'puzzle-tile','secondary',`data-id="${i}"`)).join('')}</div>`;
  }
  return `<p class="game-instruction">挑一個幸運袋。每袋都有獎，能抽到多少就看運氣！</p>
