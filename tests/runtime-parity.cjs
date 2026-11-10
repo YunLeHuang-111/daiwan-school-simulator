@@ -5,7 +5,8 @@ function termCategory(q){
  if(q.subject==='校園趣聞')return q.theme==='銀幕世界'?'影視':q.theme;
  if(q.subject==='地理')return '臺灣旅行';
  if(q.subject==='常識')return '麻將';
- if(q.subject==='時事')return q.theme.includes('中職')||q.text.includes('台灣大賽')?'棒球':'其他運動';
+ if(q.subject==='影視'&&['台劇','韓劇','泰劇','甄嬛傳'].includes(q.theme))return q.theme;
+ if(q.subject==='時事')return q.theme.includes('中職')||q.text.includes('台灣大賽')?'棒球':q.theme.endsWith('新聞')&&q.theme!=='足球新聞'?'時事':'其他運動';
  if(q.subject==='音樂')return q.theme.startsWith('K-pop')?'韓流':'歌曲';
  if(q.subject==='體育')return /棒球|職棒|投手|打者|壘/.test(q.text)?'棒球':'其他運動';
  return q.subject;
@@ -66,10 +67,10 @@ function gradeForm(p,subjects,round,wrong=false){const form={mode:p.mode,subject
    const scoreFirst={...form,attrs:'50,50,50,75,75',aptitude:'50,50,50,65,70'};
    for(const s of subjects)scoreFirst['s.'+s]=max;
    const higherExam=await parity('admission',scoreFirst);
-   if(route!=='apply')assert(artFirst.score>higherExam.score&&artFirst.chance>=higherExam.chance);
+   if(route==='distribution')assert(artFirst.score>higherExam.score&&artFirst.chance>=higherExam.chance);
    else assert(higherExam.score>artFirst.score);
    const weak=await parity('admission',{...scoreFirst,attrs:'100,100,100,35,35',aptitude:'100,100,100,35,35'});
-   assert.equal(weak.chance,0);
+   if(route!=='star')assert.equal(weak.chance,0);
   }
  }
  for(const [subject,mode,edges,limit] of [
@@ -100,7 +101,7 @@ function gradeForm(p,subjects,round,wrong=false){const form={mode:p.mode,subject
  const weaker=await parity('admission',{...base,phase:'final',interview:60});
  assert.equal(better.score-weaker.score,9);
  const aptitudePaper=await parity('paper',{mode:'gsat',subjects:'國文',round:4});
- assert(aptitudePaper.questions.some(q=>q.id.startsWith('advanced-match-')));
+ assert(aptitudePaper.questions.some(q=>q.id.startsWith('chinese-modern-')));
  const aptitudeGrade=gradeForm(aptitudePaper,'國文',4);
  const modest=await parity('grade',{...aptitudeGrade,aptitude:'50,45,50,50,50',attrs:'50,60,50,50,50'});
  assert.equal(modest.rawScores.國文,15);assert.equal(modest.scores.國文,14);
@@ -114,6 +115,24 @@ function gradeForm(p,subjects,round,wrong=false){const form={mode:p.mode,subject
  assert(strongTop.chance>=25&&strongTop.chance<=45);
  const weakerTop=await parity('admission',{...topForm,phase:'final',interview:79});
  assert(weakerTop.chance<strongTop.chance);
+ for(const [university,limit] of [['ntu',20],['nccu',20],['ncu',30],['ccu',30]]){
+  const p=data.programs.find(p=>p.university===university);
+  const f={...base,route:'star',program:p.id,preferences:p.id,rank:limit,schoolScore:88};
+  for(const subject of p.subjects)f['s.'+subject]=15;
+  const good=await parity('admission',f);
+  assert.equal(good.score,91);
+  assert(good.chance>0);
+  assert.equal((await parity('admission',{...f,rank:limit+1})).chance,0);
+  assert.equal((await parity('admission',{...f,schoolScore:80})).score,85);
+ }
+ const answerPaper=await parity('paper',{mode:'gsat',subjects:'英文,國文',round:4});
+ const answerGrade={...gradeForm(answerPaper,'英文,國文',4),timed:'1'};
+ answerPaper.questions.forEach((q,i)=>{if(q.type==='choice')answerGrade['ms'+i]=q.examSubject==='英文'?8001:30000;});
+ const batch=await parity('grade',answerGrade);
+ for(const [i,q] of answerPaper.questions.entries()){
+  const single=await parity('answer',{...answerGrade,id:q.id,label:q.examSubject,answer:answerGrade['a'+i],ms:answerGrade['ms'+i]??''});
+  assert.deepEqual(single,batch.review[i]);
+ }
  await parity('paper',{mode:'split',subjects:'物理'});await parity('enroll',{seed:5,gender:'other',schoolType:'公立'});
  console.log('PASS:',count,'Java/browser runtime parity cases, including seed boundaries, grading, selected subjects, admission.');
 })().catch(err=>{console.error(err);process.exitCode=1;});

@@ -51,7 +51,7 @@ const orders=await p.evaluate(()=>{
 });
 assert(orders.every(({types})=>new Set(types).size===6));
 assert(orders.slice(1).every(({ids},i)=>ids.some(id=>!orders[i].ids.includes(id))));
-assert.equal(new Set(orders.flatMap(({types})=>types)).size,7);
+assert.equal(new Set(orders.flatMap(({types})=>types)).size,8);
 await p.screenshot({path:'/tmp/daiwan-compact-dice.png'});
 await p.setViewportSize({width:390,height:844});
 await p.evaluate(()=>{state.route='apply';state.rank=5;state.round=5;state.attrs=[85,85,85,85,85];state.aptitude=[75,75,75,75,75];state.portfolio=90;state.gsat=Object.fromEntries(GSAT.map(s=>[s,15]));state.history=TERMS.map(term=>({term,total:90,correct:2,gameScore:100}));state.preferences=['tku-0','fcu-0','fju-0'];welcome=false;resetFilters();go('universities');});

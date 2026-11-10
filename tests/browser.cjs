@@ -10,6 +10,12 @@ async function answer(p){const q=await p.evaluate(()=>state.paper.questions[stat
  if(q.type==='choice')await p.locator(`[data-action="answer"][data-id="${key}"]`).click();
  else if(q.type==='fill')await p.locator('#short-answer').fill(key.split('/')[0]);
  else for(const [i,v] of key.split(',').entries()){await p.locator(`[data-select-wrap="match-${i}"] .select-trigger`).click();await p.locator(`[data-select-wrap="match-${i}"] [data-value="${v}"]`).click();}
+ await confirmAnswer(p,'答對');
+}
+async function confirmAnswer(p,status){
+ await click(p,'next');
+ assert((await p.locator('.answer-result strong').innerText()).includes(status));
+ assert((await p.locator('.answer-result').innerText()).includes('正確答案'));
  await click(p,'next');
 }
 async function paper(p,n){for(let i=0;i<n;i++)await answer(p);}
@@ -40,10 +46,14 @@ async function win(p){if(await p.locator('[data-action="memory-ready"]').count()
    await p.setViewportSize({width:1440,height:1000});
   }
   if(r===0){const b=await p.evaluate(()=>JSON.stringify(state.paper));await resume(p);assert.equal(await p.evaluate(()=>JSON.stringify(state.paper)),b);}
-  await paper(p,2);await p.waitForSelector('[data-action="event-choice"]');assert.equal(await p.evaluate(()=>state.lastRound.correct),2);assert.equal(await p.evaluate(()=>state.lastRound.rewards.reduce((a,b)=>a+b,0)),4);assert(await p.locator('.reward-notice').isVisible());
+  await paper(p,2);await p.waitForSelector('[data-action="event-continue"]');assert.equal(await p.evaluate(()=>state.lastRound.correct),2);assert.equal(await p.evaluate(()=>state.lastRound.rewards.reduce((a,b)=>a+b,0)),4);assert(await p.locator('.reward-notice').isVisible());
   if(r===0){await p.screenshot({path:'/tmp/daiwan-v6-event.png',fullPage:true});await mobile(p,'event');}
-  const before=await p.evaluate(()=>({attrs:[...state.attrs],delta:state.event.choices[0].delta}));await p.locator('[data-action="event-choice"][data-id="0"]').click();
-  assert.deepEqual(await p.evaluate(()=>state.attrs),before.attrs.map((v,i)=>Math.max(0,Math.min(100,v+before.delta[i]))));
+  assert.equal(await p.locator('[data-action="event-choice"]').count(),0);
+  assert(await p.locator('.event-card img').isVisible());
+  const before=await p.evaluate(()=>[...state.attrs]);
+  if(r===0){await resume(p);assert.deepEqual(await p.evaluate(()=>state.attrs),before);}
+  await click(p,'event-continue');
+  assert.deepEqual(await p.evaluate(()=>state.attrs),before);
   const dice=await p.evaluate(()=>state.dice);assert(dice.length>=1&&dice.length<=6&&dice.every(v=>v>=1&&v<=6));
   if(r===0){const b=await p.evaluate(()=>JSON.stringify([state.dice,state.seed,state.attrs]));await resume(p);assert.equal(await p.evaluate(()=>JSON.stringify([state.dice,state.seed,state.attrs])),b);}
   while(await p.evaluate(()=>state.dieIndex<state.dice.length)){const i=await p.evaluate(()=>state.attrs.indexOf(Math.min(...state.attrs)));if(await p.evaluate(()=>state.attrs.every(v=>v===100))){await click(p,'full-dice');break;}await p.locator(`[data-action="assign"][data-id="${i}"]`).click();}
@@ -52,6 +62,19 @@ async function win(p){if(await p.locator('[data-action="memory-ready"]').count()
   await click(p,'next-round');
   if(r===4){for(const s of ['數學A','自然'])await p.locator(`[name="exam-subject"][value="${s}"]`).check();await click(p,'start-gsat');await p.waitForSelector('[data-action="answer"]');assert.equal(await p.evaluate(()=>state.paper.questions.length),18);assert.equal(await p.locator('[data-action=previous]').count(),0);await paper(p,18);await p.waitForSelector('[data-action="continue-senior"]');assert((await p.evaluate(()=>Object.values(state.gsatRecord.result.rawScores))).every(v=>v===15));assert((await p.evaluate(()=>Object.values(state.gsat))).every(v=>v===14||v===15));await click(p,'continue-senior');}
  }
+ const enrolled=await p.evaluate(()=>structuredClone(state));
+ await p.evaluate(async()=>{
+  for(let i=0;;i++){
+   const seed='CISHIOU'+i;
+   const data=await api('enroll',{seed:hashSeed(seed),gender:'female',schoolType:'私立'});
+   if(data.school.id==='hs5'){await startRun('慈修試玩',seed,'female','私立');break;}
+  }
+ });
+ assert((await p.locator('.school-perk').innerText()).includes('多擲 1 顆'));
+ await p.evaluate(()=>{state.event={done:true};const old=rng;rng=()=>.99;try{roll();}finally{rng=old;}});
+ assert.equal(await p.locator('.dice-tray .die').count(),7);
+ await mobile(p,'seven dice');
+ await p.evaluate(s=>{state=s;go('routes');},enrolled);
  assert.equal(await p.evaluate(()=>state.history.length),6);assert(await p.locator('.report-summary').isVisible());assert.equal(await p.locator('.subject-grid>div').count(),6);await mobile(p,'routes');
  await p.screenshot({path:'/tmp/daiwan-v6-report.png',fullPage:true});
  const routeState=await p.evaluate(()=>structuredClone(state));
@@ -68,9 +91,15 @@ async function win(p){if(await p.locator('[data-action="memory-ready"]').count()
    assert.equal(await p.locator('[data-action=mini-answer]').count(),0);
   }
   const gameStart=await p.evaluate(()=>structuredClone(state));await win(p);
+  if(source.type==='luck'){
+   await p.evaluate(s=>{state=s;go('game');},gameStart);
+   await p.locator(`[data-action="puzzle-tile"][data-id="${gameStart.game.puzzle.prizes.indexOf(60)}"]`).click();
+   assert.equal(await p.evaluate(()=>state.game.score),60);
+   assert.equal(await p.evaluate(()=>state.game.mistakes),0);
+   continue;
+  }
   await p.evaluate(s=>{state=s;go('game');},gameStart);
   if(source.type==='memory')await click(p,'memory-ready');
-  if(source.type==='pattern')await click(p,'puzzle-ready');
   const beforeFailure=await p.evaluate(()=>state.attrs[state.game.attr]);
   for(let strike=0;strike<2;strike++){
    const g=await p.evaluate(()=>state.game);
@@ -89,16 +118,17 @@ async function win(p){if(await p.locator('[data-action="memory-ready"]').count()
  // Both wrong term questions deduct the relevant abilities exactly once.
  await p.evaluate(s=>{state=structuredClone(s);state.round=0;resetRound();go('round');},routeState);await click(p,'start-term');await p.waitForSelector('[data-action="answer"]');
  const preQuiz=await p.evaluate(()=>[...state.attrs]);const quizQs=await p.evaluate(()=>state.paper.questions);
- for(const q of quizQs){const wrong=(Number(BANK[q.id][8])+1)%4;await p.locator(`[data-action="answer"][data-id="${wrong}"]`).click();await click(p,'next');}
- await p.waitForSelector('[data-action="event-choice"]');const loss=await p.evaluate(()=>state.lastRound.penalties);assert.equal(loss.reduce((a,b)=>a+b,0),6);
- assert.deepEqual(await p.evaluate(()=>state.attrs),preQuiz.map((n,i)=>n-loss[i]));assert(await p.locator('.penalty-notice').isVisible());
+ for(const q of quizQs){const wrong=(Number(BANK[q.id][8])+1)%4;await p.locator(`[data-action="answer"][data-id="${wrong}"]`).click();await confirmAnswer(p,'答錯');}
+ await p.waitForSelector('[data-action="event-continue"]');const loss=await p.evaluate(()=>state.lastRound.penalties);assert.equal(loss.reduce((a,b)=>a+b,0),6);
+ const storyDelta=await p.evaluate(()=>state.event.delta);
+ assert.deepEqual(await p.evaluate(()=>state.attrs),preQuiz.map((n,i)=>n-loss[i]+storyDelta[i]));assert(await p.locator('.penalty-notice').isVisible());
  const savedQuiz=await p.evaluate(()=>JSON.stringify([state.attrs,state.lastRound.penalties]));await resume(p);assert.equal(await p.evaluate(()=>JSON.stringify([state.attrs,state.lastRound.penalties])),savedQuiz);
  // One correct and one wrong: rewards and losses are both visible and persist.
  await p.evaluate(s=>{state=structuredClone(s);state.round=0;resetRound();go('round');},routeState);await click(p,'start-term');await p.waitForSelector('[data-action="answer"]');
- const mixedBefore=await p.evaluate(()=>[...state.attrs]);await answer(p);let current=await p.evaluate(()=>state.paper.questions[state.paper.index]);await p.locator(`[data-action="answer"][data-id="${(Number(BANK[current.id][8])+1)%4}"]`).click();await click(p,'next');await p.waitForSelector('[data-action="event-choice"]');
- const mixed=await p.evaluate(()=>({penalties:state.lastRound.penalties,rewards:state.lastRound.rewards,attrs:state.attrs}));assert.equal(mixed.rewards.reduce((a,b)=>a+b,0),2);assert.equal(mixed.penalties.reduce((a,b)=>a+b,0),3);assert.deepEqual(mixed.attrs,mixedBefore.map((n,i)=>n-mixed.penalties[i]+mixed.rewards[i]));assert(await p.locator('.reward-notice').isVisible());assert(await p.locator('.penalty-notice').isVisible());
+ const mixedBefore=await p.evaluate(()=>[...state.attrs]);await answer(p);let current=await p.evaluate(()=>state.paper.questions[state.paper.index]);await p.locator(`[data-action="answer"][data-id="${(Number(BANK[current.id][8])+1)%4}"]`).click();await confirmAnswer(p,'答錯');await p.waitForSelector('[data-action="event-continue"]');
+ const mixed=await p.evaluate(()=>({penalties:state.lastRound.penalties,rewards:state.lastRound.rewards,attrs:state.attrs,event:state.event.delta}));assert.equal(mixed.rewards.reduce((a,b)=>a+b,0),2);assert.equal(mixed.penalties.reduce((a,b)=>a+b,0),3);assert.deepEqual(mixed.attrs,mixedBefore.map((n,i)=>n-mixed.penalties[i]+mixed.rewards[i]+mixed.event[i]));assert(await p.locator('.reward-notice').isVisible());assert(await p.locator('.penalty-notice').isVisible());
  const mixedSaved=await p.evaluate(()=>JSON.stringify([state.attrs,state.lastRound]));await resume(p);assert.equal(await p.evaluate(()=>JSON.stringify([state.attrs,state.lastRound])),mixedSaved);
- await p.evaluate(s=>{state=s;go('routes');},routeState);
+ await p.evaluate(s=>{state=structuredClone(s);state.rank=20;go('routes');},routeState);
  await p.locator('[data-route="star"]').click();assert.equal(await p.locator('.university-choice').count(),50);assert(!/[A-Za-z]/.test((await p.locator('.university-choice h3, .university-choice > span').allTextContents()).join('')));const starRates=(await p.locator('.school-chance').allTextContents()).map(t=>Number(t.match(/[\d.]+/)[0]));assert(starRates.every((n,i)=>!i||n<=starRates[i-1]));
  await p.locator('[data-select-wrap="sort"] .select-trigger').click();await p.locator('[data-select-wrap="sort"] [data-value="chance-asc"]').click();await mobile(p,'star school sort');await p.locator('[data-action="star-school"][data-id="ntu"]').click();assert.equal(await p.locator('[data-action="add"]').count(),0);
  await p.locator('[data-action="star-group"][data-id="1"]').click();assert((await p.evaluate(()=>[...new Set(programs.filter(x=>x.university===state.starSchool&&x.group===state.starGroup).map(x=>x.group))])).length===1);
@@ -138,5 +168,5 @@ async function win(p){if(await p.locator('[data-action="memory-ready"]').count()
  await p.evaluate(s=>{state=structuredClone(s);go('routes');},routeState);assert.equal(await p.locator('[data-action="prepare-split"]').count(),0);await p.locator('[data-route="apply"]').click();await p.evaluate(id=>{state.preferences=[id];save();render();},chosen);await click(p,'submit-universities');await interview(p);await p.waitForSelector('[data-action="prepare-split"]');await click(p,'prepare-split');if(await p.locator('#confirm-dialog').isVisible())await p.locator('#confirm-ok').click();for(const c of await p.locator('[name="exam-subject"]').all())await c.check();await click(p,'start-split');await p.waitForSelector('[data-action="answer"]');assert.equal(await p.evaluate(()=>state.paper.questions.length),24);await paper(p,24);await p.waitForSelector('[data-action="open-distribution"]');await click(p,'open-distribution');
  for(let i=0;i<10;i++)await p.locator('[data-action="add"]:not(:disabled)').first().click();assert.equal(await p.evaluate(()=>state.preferences.length),10);assert.equal(await p.locator('[data-action="add"]:not(:disabled)').count(),0);await click(p,'submit-universities');await p.waitForSelector('[data-action="retake"]');await click(p,'retake');await p.locator('#confirm-ok').click();assert.equal(await p.evaluate(()=>state.ending),'retake');assert(await p.locator('.retake-illustration').isVisible());assert(await p.evaluate(()=>!!achievements.retake));
  await click(p,'restart');await p.locator('#confirm-ok').click();assert.equal(await p.evaluate(()=>state),null);assert(await p.evaluate(()=>!!readStore(ACH_KEY,{}).first));await p.locator('#player-name').fill('男生試玩');await p.locator('[name="gender"][value="male"]').check();await p.locator('[name="schoolType"][value="私立"]').check();await p.locator('#start-form button').click();await p.waitForSelector('[data-action="enter-school"]');assert((await p.evaluate(()=>defaultPortrait())).endsWith('/assets/avatar-male.svg'));assert.equal(await p.evaluate(()=>state.school.type),'私立');assert(['all','male'].includes(await p.evaluate(()=>state.school.gender)));const bounds=await p.evaluate(()=>{const saved=[...state.attrs];state.attrs=[100,0,100,0,100];const p={mode:'term',questions:[{subject:'數學'},{subject:'英文'}]},r={review:[{fraction:1},{fraction:0}]};const loss=applyQuizPenalty(p,r);const result={attrs:state.attrs,loss,rewards:r.rewards};state.attrs=saved;return result;});assert.deepEqual(bounds.attrs,[100,0,100,0,100]);assert.equal(bounds.loss.reduce((a,b)=>a+b,0),0);assert.equal(bounds.rewards.reduce((a,b)=>a+b,0),0);assert.deepEqual(errors,[]);
- console.log('PASS: six semesters, 22 mini-game themes, event/dice persistence, 18-question GSAT / 24-question split, admission limits, custom dropdown keyboard, photos/PNG, achievements, both endings, mobile layouts.');
+ console.log('PASS: six semesters, 23 mini-game themes, event/dice persistence, 18-question GSAT / 24-question split, admission limits, custom dropdown keyboard, photos/PNG, achievements, both endings, mobile layouts.');
 }finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

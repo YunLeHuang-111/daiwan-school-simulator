@@ -1178,7 +1178,8 @@
       ]
     ]
   },
-  {"id": "pattern", "name": "記憶接力", "type": "pattern", "attr": 4, "image": "stage"},
-  {"id": "maze", "name": "校園迷宮", "type": "maze", "attr": 2, "image": "library"},
-  {"id": "sum", "name": "湊數挑戰", "type": "sum", "attr": 0, "image": "lab"}
+  {"id": "stack", "name": "房子疊疊樂", "type": "stack", "attr": 3, "image": "stage"},
+  {"id": "football", "name": "足球攻防", "type": "football", "attr": 0, "image": "baseball"},
+  {"id": "recycle", "name": "校園垃圾分類", "type": "recycle", "attr": 2, "image": "lab"},
+  {"id": "luck", "name": "校慶幸運袋", "type": "luck", "attr": 4, "image": "stage"}
 ]

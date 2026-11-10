@@ -58,6 +58,7 @@ public class Main {
                 case "/api/enroll" -> enroll(ex,f);
                 case "/api/paper" -> paper(ex,f);
                 case "/api/grade" -> grade(ex,f);
+                case "/api/answer" -> json(ex,200,reviewAnswer(f.getOrDefault("mode",""),labels(f,f.getOrDefault("mode","")),f.get("id"),f.getOrDefault("label",""),f.get("answer"),f.get("ms"),"1".equals(f.get("timed"))).review);
                 case "/api/admission" -> admission(ex,f);
                 default -> json(ex,404,Map.of("error","找不到這個API。"));
             }
@@ -115,7 +116,7 @@ public class Main {
     // Retired questions remain available only to grade already-saved papers.
     static boolean active(Question q){
         return !(q.subject.equals("音樂")&&List.of("歌詞選字","歌手點名","emoji猜歌","歌名謎語").contains(q.theme))
-            &&!(q.difficulty>2&&(q.subject.equals("英文")||q.subject.equals("數學")&&!q.id.startsWith("advanced-match-")))
+            &&!(q.difficulty>2&&(q.subject.equals("英文")||q.subject.equals("數學")&&!q.id.startsWith("advanced-match-")&&!q.id.startsWith("math-concept-")))
             &&!(q.subject.equals("英文")&&List.of("Literary bookshelf","Authors and works").contains(q.theme))
             &&!(q.subject.equals("數學")&&List.of("數學史與解謎","數學史","典籍考古").contains(q.theme));
     }
@@ -159,7 +160,8 @@ public class Main {
             case "校園趣聞" -> q.theme.equals("銀幕世界")?"影視":q.theme;
             case "地理" -> "臺灣旅行";
             case "常識" -> "麻將";
-            case "時事" -> q.theme.contains("中職")||q.text.contains("台灣大賽")?"棒球":"其他運動";
+            case "影視" -> List.of("台劇","韓劇","泰劇","甄嬛傳").contains(q.theme)?q.theme:"影視";
+            case "時事" -> q.theme.contains("中職")||q.text.contains("台灣大賽")?"棒球":q.theme.endsWith("新聞")&&!q.theme.equals("足球新聞")?"時事":"其他運動";
             case "音樂" -> q.theme.startsWith("K-pop")?"韓流":"歌曲";
             case "體育" -> questionCategory(q).equals("棒球")?"棒球":"其他運動";
             default -> q.subject;
@@ -177,11 +179,15 @@ public class Main {
         if(!song.isEmpty())used.add(song);
         categories.merge(questionCategory(q),1,Integer::sum);
     }
-    static Question pick(String label,String type,int level,Set<String> used,Set<String> seen,Set<String> current,Set<String> facts,Map<String,Integer> categories,Random random,String preferredTheme,boolean advanced,boolean term,Map<String,Integer> termCounts,boolean allowMahjong) {
-        List<Question> candidates=QUESTIONS.stream().filter(q->sources(label).contains(q.subject)&&q.type.equals(type)&&active(q)&&(!term||allowMahjong||!q.theme.contains("麻將"))
+    static Question pick(String label,String type,int level,Set<String> used,Set<String> seen,Set<String> current,Set<String> facts,Map<String,Integer> categories,Random random,String preferredTheme,boolean advanced,boolean term,Map<String,Integer> termCounts,long paperSeed) {
+        List<Question> candidates=QUESTIONS.stream().filter(q->sources(label).contains(q.subject)&&q.type.equals(type)&&active(q)&&(!term||(
+                (paperSeed%6==0||!q.theme.contains("麻將"))&&
+                (paperSeed%4!=1||!q.theme.contains("柯南")&&!q.text.contains("柯南"))&&
+                (paperSeed%4!=2||!termCategory(q).equals("棒球"))))
             &&!used.contains(q.id)&&!current.contains(questionPrompt(q))&&questionFingerprints(q).stream().noneMatch(facts::contains)&&!used.contains(songKey(q))).toList();
         if(candidates.isEmpty())throw new IllegalArgumentException("本科題庫不足，無法再抽出未作答的題目。");
-        List<Question> preferred=candidates.stream().filter(q->q.id.startsWith("advanced-match-")==advanced).toList();
+        String focus=label.startsWith("數學")?"math-concept-":label.equals("國文")&&type.equals("match")&&paperSeed%4!=0?"chinese-modern-":"";
+        List<Question> preferred=candidates.stream().filter(q->focus.isEmpty()?q.id.startsWith("advanced-match-")==advanced:q.id.startsWith(focus)).toList();
         if(!preferred.isEmpty())candidates=preferred;
         if(term){
             Map<String,Integer> local=new HashMap<>();
@@ -238,9 +244,9 @@ public class Main {
                 int level=mode.equals("term")?(ability<45&&integer(f.get("round"),0,5)<2?2:3):j==0?2:3;
                 if(ability>=75||List.of("數學A","數學甲").contains(label))level=3;
                 if(label.equals("英文"))level=2;
-                if(label.startsWith("數學"))level=List.of("數學A","數學甲").contains(label)||ability>=75?2:1;
+                if(label.startsWith("數學"))level=List.of("數學A","數學甲").contains(label)?3:2;
                 String theme=label.equals("英文")?(j==1?(r.nextBoolean()?"Screen matching":"Grammar matching"):j==0?"Movie clues":"Grammar practice"):label.startsWith("數學")?(type.equals("choice")&&r.nextBoolean()?"數學家點名":""):"";
-                Question q=pick(label,type,level,used,seen,current,facts,categories,r,theme,mode.equals("gsat")&&type.equals("match")&&!label.equals("英文"),mode.equals("term"),termCounts,paperSeed%6==0);result.add(q.publicData(label));
+                Question q=pick(label,type,level,used,seen,current,facts,categories,r,theme,mode.equals("gsat")&&type.equals("match")&&!label.equals("英文"),mode.equals("term"),termCounts,paperSeed);result.add(q.publicData(label));
             }
         }
         json(ex,200,Map.of("mode",mode,"questions",result));
@@ -258,6 +264,23 @@ public class Main {
         for(int i=0;i<parts.length;i++){int n=integer(parts[i],0,q.options.size()-1);if(!unique.add(n))throw new IllegalArgumentException("配對選項不可重複。");if(n==Integer.parseInt(keys[i]))hits++;}
         return hits/(double)parts.length;
     }
+    record AnswerResult(Question question,double score,Integer points,Map<String,Object> review){}
+    static AnswerResult reviewAnswer(String mode,List<String> subjects,String id,String label,String answer,String time,boolean timed){
+        Question q=QUESTIONS.stream().filter(x->x.id.equals(id)).findFirst().orElseThrow(()->new IllegalArgumentException("題目不存在。"));
+        if(!subjects.contains(label)||!sources(label).contains(q.subject))throw new IllegalArgumentException("試題不屬於所選科目。");
+        if(label.equals("英文")&&q.type.equals("fill"))throw new IllegalArgumentException("英文不使用填答題。");
+        boolean choice=timed&&!mode.equals("term")&&q.type.equals("choice"),math=label.startsWith("數學");
+        int limit=math?60000:30000,ms=choice?integer(time,0,limit):0;
+        double score=choice&&ms>=limit?0:fraction(q,answer==null?"":answer);
+        Map<String,Object> row=new LinkedHashMap<>(Map.of("id",id,"fraction",score,"correct",score==1,"answer",q.key,"explanation",q.explanation));
+        Integer points=null;
+        if(choice){
+            int[] edges=math?new int[]{8000,15000,20000,30000}:new int[]{5000,8000,10000,15000};
+            points=score==1?5-(int)Arrays.stream(edges).filter(edge->ms>edge).count():0;
+            row.put("points",points);
+        }
+        return new AnswerResult(q,score,points,row);
+    }
     static void grade(HttpExchange ex,Map<String,String> f)throws IOException {
         String mode=f.getOrDefault("mode","");List<String> subjects=labels(f,mode);
         String[] ids=f.getOrDefault("ids","").split(",");int count=mode.equals("term")?2:subjects.size()*3;
@@ -267,29 +290,20 @@ public class Main {
         Map<String,Integer> counts=new HashMap<>(),points=new HashMap<>(),choices=new HashMap<>();
         List<Object> review=new ArrayList<>();int correct=0;double sum=0,weight=0;
         for(int i=0;i<count;i++){
-            final String id=ids[i];Question q=QUESTIONS.stream().filter(x->x.id.equals(id)).findFirst().orElseThrow(()->new IllegalArgumentException("題目不存在。"));
             String label=f.getOrDefault("label"+i,"");
-            if(label.equals("英文")&&q.type.equals("fill"))throw new IllegalArgumentException("英文不使用填答題。");
-            if(!subjects.contains(label)||!sources(label).contains(q.subject))throw new IllegalArgumentException("試題不屬於所選科目。");
-            boolean choice=timed&&q.type.equals("choice"),math=label.startsWith("數學");
-            int limit=math?60000:30000,ms=choice?integer(f.get("ms"+i),0,limit):0;
-            double score=choice&&ms>=limit?0:fraction(q,f.getOrDefault("a"+i,""));
+            AnswerResult answer=reviewAnswer(mode,subjects,ids[i],label,f.get("a"+i),f.get("ms"+i),timed);
+            double score=answer.score,w=answer.question.difficulty;
             if(score==1)correct++;
             counts.merge(label,1,Integer::sum);
-            double w=q.difficulty;
             sum+=score*w;weight+=w;
-            Map<String,Object> row=new LinkedHashMap<>(Map.of("id",id,"fraction",score,"correct",score==1,"answer",q.key,"explanation",q.explanation));
-            if(choice){
-                int[] edges=math?new int[]{8000,15000,20000,30000}:new int[]{5000,8000,10000,15000};
-                int value=score==1?5-(int)Arrays.stream(edges).filter(edge->ms>edge).count():0;
-                points.merge(label,value,Integer::sum);
+            if(answer.points!=null){
+                points.merge(label,answer.points,Integer::sum);
                 choices.merge(label,1,Integer::sum);
-                row.put("points",value);
             }else{
                 earned.merge(label,score*w,Double::sum);
                 possible.merge(label,w,Double::sum);
             }
-            review.add(row);
+            review.add(answer.review);
         }
         int per=mode.equals("term")?1:3;
         if(subjects.stream().anyMatch(label->counts.getOrDefault(label,0)!=per))throw new IllegalArgumentException("各科題數不符。");
@@ -322,6 +336,11 @@ public class Main {
     }
     static double[] vector(String value){String[] p=value.split(",");if(p.length!=5)throw new IllegalArgumentException("需要五項能力。");return Arrays.stream(p).mapToDouble(x->number(x,0,100)).toArray();}
     static double unit(double value){return Math.max(0,Math.min(1,value));}
+    static int starRankLimit(Program p){
+        if(List.of("ntu","nthu","nycu","ncku","nccu").contains(p.university))return 20;
+        if(List.of("ncu","nchu","nsysu","ccu").contains(p.university))return 30;
+        return p.maxRank;
+    }
     static void admission(HttpExchange ex,Map<String,String> f)throws IOException {
         String route=f.getOrDefault("route","");if(!List.of("star","apply","distribution").contains(route))throw new IllegalArgumentException("未知升學管道。");
         String[] preferences=f.getOrDefault("preferences","").split(",");int limit=route.equals("distribution")?10:3;
@@ -347,12 +366,12 @@ public class Main {
         double interview=apply?number(f.getOrDefault("interview","80"),0,100):0;
         double score=switch(route){
             case "apply" -> exam*.4+talent*.3+interview*.3;
-            case "star" -> art?exam*.2+(100-rank)*.15+talent*.65:exam*.5+(100-rank)*.25+talent*.25;
+            case "star" -> exam*.25+number(f.getOrDefault("schoolScore",String.valueOf(100-rank)),0,100)*.75;
             default -> art?exam*.25+talent*.75:exam*.7+talent*.3;
         };
         double talentFloor=art?Math.max(p.talentFloor,58):apply?0:p.talentFloor;
-        boolean qualified=!route.equals("star")||rank<=p.maxRank;
-        boolean screened=exam>=examFloor&&talent>=talentFloor;
+        boolean qualified=!route.equals("star")||rank<=starRankLimit(p);
+        boolean screened=route.equals("star")?subjects.stream().allMatch(s->f.containsKey("s."+s)):exam>=examFloor&&talent>=talentFloor;
         boolean safety=apply&&"1".equals(f.get("safety"))&&screened&&exam>=100
             &&List.of("public","privateTech","private").contains(p.selectivity);
         double topSupport=apply&&p.selectivity.equals("top")
@@ -363,7 +382,7 @@ public class Main {
         double draw=new Random(seed(f)*6364136223846793005L^p.id.hashCode()^route.hashCode()).nextDouble()*100;
         boolean accepted=draw<chance;
         json(ex,200,Map.of("accepted",accepted,"score",Math.round(score*10)/10.0,"chance",Math.round(chance*10)/10.0,
-            "reason",safety?"滿級分備用錄取":!qualified?"在校排名未達門檻":!screened?exam<examFloor?"考試門檻未達標":"科系資質未達標":accepted?"錄取":"本輪未錄取"));
+            "reason",safety?"滿級分備用錄取":!qualified?"在校排名未達門檻":!screened?route.equals("star")?"缺少採計考科":exam<examFloor?"考試門檻未達標":"科系資質未達標":accepted?"錄取":"本輪未錄取"));
     }
     static Map<String, String> form(HttpExchange ex) throws IOException {
         String contentType = ex.getRequestHeaders().getFirst("Content-Type");

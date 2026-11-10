@@ -116,3 +116,10 @@
 - 曹格《世界唯一的妳》題名及用字依[滾石唱片官方 MV](https://www.youtube.com/watch?v=r_1FKAbbO7A)。
 - 韋禮安《如果可以》用字依[歌手官方 MV](https://www.youtube.com/watch?v=8MG--WuNW1Y)。
 - 伍佰與 China Blue《挪威的森林》用字依[滾石唱片官方 MV](https://www.youtube.com/watch?v=gPpZJlE0Ca8)。
+
+## 新增影劇與時事問答
+
+- 台劇劇情與卡司依 Netflix 的[華燈初上](https://www.netflix.com/tw/title/81477952)、[模仿犯](https://about.netflix.com/zh_tw/news/netflix-assembles-all-star-cast-to-do-justice-to-copycat-killer-adaptation)、[人選之人—造浪者](https://www.netflix.com/tw/title/81655481)、[影后](https://about.netflix.com/zh_tw/news/unveiling-the-next-chapter-in-chinese-language-entertainment)、[忘了我記得](https://www.netflix.com/tw/title/81730393)。
+- 韓劇劇情與卡司依 Netflix 的[愛的迫降](https://www.netflix.com/tw/title/81159258)、[非常律師禹英禑](https://www.netflix.com/tw/title/81518991)、[淚之女王](https://www.netflix.com/tw/title/81707950)。
+- 泰劇劇情依 Netflix 的[轉學來的女生](https://www.netflix.com/tw/title/80241947)、[絕廟騙局](https://www.netflix.com/tw/title/81517165)、[無主之屋](https://www.netflix.com/tw/title/81622918)。
+- 2026 時事依 [NASA 的阿提米絲二號返航紀錄](https://www.nasa.gov/news-release/nasa-welcomes-record-setting-artemis-ii-moonfarers-back-to-earth/)、[FIFA 世界盃冠軍公告](https://inside.fifa.com/organisation/news/spain-crowned-world-cup-2026-champions-new-york-new-jersey)與[美國影藝學院第 98 屆奧斯卡得獎名單](https://www.oscars.org/oscars/ceremonies/2026)。
