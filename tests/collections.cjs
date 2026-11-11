@@ -91,6 +91,12 @@ assert.match(await p.locator('.school-progress').innerText(),/高三下學期/);
 const rows=p.locator('#preference-order li');
 const readOrder=()=>rows.evaluateAll(nodes=>nodes.map(row=>row.dataset.preferenceId));
 const initialOrder=await readOrder();
+assert.equal(await rows.locator('.preference-crest').count(),initialOrder.length);
+await p.waitForFunction(()=>[...document.querySelectorAll('#preference-order .preference-crest')].every(img=>img.complete&&img.naturalWidth>0));
+assert(await rows.evaluateAll(nodes=>nodes.every(row=>{
+ const school=university(programs.find(program=>program.id===row.dataset.preferenceId).university);
+ return row.querySelector('.preference-crest').getAttribute('src')===school.crest;
+})));
 await p.locator('#preferences-panel').evaluate(panel=>panel.scrollIntoView({block:'start',behavior:'instant'}));
 const firstHandle=await rows.first().locator('.preference-handle').boundingBox();
 const lastRow=await rows.last().boundingBox();

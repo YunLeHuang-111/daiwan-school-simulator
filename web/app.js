@@ -378,12 +378,6 @@ function savedBoardNeedsRefresh(game){
 const PUZZLE_NAMES={stack:'房子疊疊樂',relay:'記憶接力・限時版',recycle:'校園垃圾分類',luck:'校慶幸運袋'};
 const RETIRED_GAMES={pattern:'stack',maze:'relay',football:'relay',sum:'recycle'};
 const PUZZLE_SKILLS=['stack','relay','recycle'];
-const RECYCLE_ITEMS=[
- ['📰','乾淨、乾燥的報紙',0],['📦','拆平的乾紙箱',0],['📄','沒有沾到油污的影印紙',0],['📃','乾燥的普通紙傳單',0],['✉️','沒有塑膠窗的紙信封',0],['📓','從筆記本拆下的乾淨紙頁',0],
- ['🍌','吃完香蕉剩下的皮',1],['🍎','吃完蘋果剩下的果核',1],['🥬','備料時摘下的生菜葉',1],['🍊','剝下來的橘子皮',1],['🍐','吃完梨子剩下的果皮',1],['🥭','削下來的芒果皮',1],
- ['🤧','擦過鼻涕的衛生紙',2],['🩹','從手指撕下的用過 OK 繃',2],['🪥','刷毛已磨損的舊牙刷',2],['😷','戴過的一次性口罩',2],['🧽','破掉的洗碗海綿',2],['🧹','打掃地板掃起的灰塵',2],
- ['🥫','倒空、沖洗過的鐵罐',3],['🍾','倒空的完整玻璃瓶',3],['🧴','倒空、洗過的塑膠瓶',3],['🥤','喝完、沖過的鋁製飲料罐',3],['🫙','洗乾淨的玻璃果醬罐',3],['💧','喝完水的空寶特瓶',3],
-];
 const RECYCLE_CHALLENGES=[
  ['📦','包裹裡沒沾膠帶的乾燥紙板',0],['🎁','拆開後平整、沒有亮膜的包裝紙',0],
  ['📝','寫過字但沒沾油、也沒護貝的紙',0],['✉️','已拆掉塑膠透明窗的乾紙信封',0],
@@ -393,6 +387,14 @@ const RECYCLE_CHALLENGES=[
  ['📰','吸過油的廚房紙巾',2],['🍟','內層貼著塑膠膜的油膩點心袋',2],
  ['🥫','撕掉紙標籤、洗淨後留下的鋁罐',3],['🍯','刮掉殘渣並洗過的空玻璃蜂蜜罐',3],
  ['🧴','已拆標籤並洗淨的空寶特瓶',3],['🥫','取出內容物並沖過的鋼製罐頭盒',3],
+];
+const RECYCLE_COMPARISONS=[
+ [['🍕','披薩盒乾燥、沒有油漬的上蓋',0],['🍕','披薩盒已吸飽油的底板',2]],
+ [['🎁','沒有亮膜、已拆下膠帶的包裝紙',0],['🎁','表面整片覆有塑膠亮膜的包裝紙',2]],
+ [['🥬','切菜時摘下、還沒煮過的高麗菜外葉',1],['🥬','用來包高麗菜、已撕下的塑膠膜',2]],
+ [['📦','拆下的乾淨牛皮紙包材',0],['📦','用來緩衝撞擊的塑膠泡棉包材',2]],
+ [['🍌','削下來的香蕉皮，已取下塑膠貼紙',1],['🍌','從香蕉皮撕下來的塑膠貼紙',2]],
+ [['🫙','倒空並洗淨的玻璃醬料罐',3],['🫙','拆下後沾滿醬料的紙封條',2]],
 ];
 const BINS=['乾淨紙類','果皮與生菜葉','一般垃圾','空瓶與罐'];
 const STACK_LEVELS=5;
@@ -422,7 +424,8 @@ function newPuzzle(type){
  }else if(type==='recycle'){
   const key=item=>'recycle:'+item[1];
   // Bins can repeat, so the last item cannot be guessed by elimination.
-  g.items=shuffle([...freshSample(RECYCLE_CHALLENGES,3,key),...freshSample(RECYCLE_ITEMS,1,key)]);
+  const [comparison]=freshSample(RECYCLE_COMPARISONS,1,pair=>'recycle-pair:'+pair[0][1]);
+  g.items=shuffle([...comparison,...freshSample(RECYCLE_CHALLENGES,2,key)]);
  }else{
   g.prizes=shuffle([100,86,72,60]);
  }
@@ -1007,8 +1010,12 @@ function preferences(max){
   ${ids.length>1?'<p class="preference-hint" id="preference-hint">按住 ≡ 拖曳排序</p>':''}
   <ol id="preference-order">${ids.map((id,i)=>{
    const p=programs.find(x=>x.id===id);
+   const school=university(p.university);
    return `<li data-preference-id="${id}"><b data-rank>${i+1}</b>
-    <div><strong>${p.universityName}</strong><small>${p.name}</small></div>
+    <div class="preference-school">
+     <span aria-hidden="true">${crest(school,'preference-crest')}</span>
+     <div class="preference-name"><strong>${esc(school.name)}</strong><small>${esc(p.name)}</small></div>
+    </div>
     <div class="preference-controls">
      ${ids.length>1?`<button type="button" class="preference-handle" aria-label="調整${esc(p.name)}的志願順序" aria-describedby="preference-hint" aria-keyshortcuts="ArrowUp ArrowDown Home End" title="拖曳排序，或用上下方向鍵">≡</button>`:''}
      <button data-action="remove" data-id="${id}">移除</button>
