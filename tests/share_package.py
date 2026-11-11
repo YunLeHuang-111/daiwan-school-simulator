@@ -1,6 +1,7 @@
 """Validate the static release, without third party dependencies."""
 from pathlib import Path
 import json,re,hashlib
+from urllib.parse import urlsplit
 ROOT=Path(__file__).resolve().parents[1];OUT=ROOT/'dist'
 html=(OUT/'index.html').read_text();app=(OUT/'app.js').read_text()
 assert 'data-runtime="browser"' in html
@@ -10,6 +11,12 @@ assert "'/assets/" not in app and '"/assets/' not in app
 assert "fetch('/" not in app
 manifest=json.loads((OUT/'build-manifest.json').read_text())['files']
 for name,digest in manifest.items():assert hashlib.sha256((OUT/name).read_bytes()).hexdigest()==digest,name
+og=dict(re.findall(r'<meta property="(og:[^"]+)" content="([^"]+)"',html))
+assert og['og:title']=='呆丸升學模擬'
+site,image=map(urlsplit,(og['og:url'],og['og:image']))
+assert site.scheme==image.scheme=='https' and site.netloc==image.netloc
+assert image.path.startswith(site.path)
+assert image.path.removeprefix(site.path) in manifest
 c=json.loads((OUT/'catalog.json').read_text())
 for u in c['universities']:assert (OUT/u['crest']).is_file()
 assert all(p.get('verifiedOn') and p.get('source','').startswith('https://') for p in c['programs'])
